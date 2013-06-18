@@ -1,24 +1,68 @@
 \chapter{Research Plan}
-
-	\section{Short Term}
-		
-		\subsection{SpiNNaker Interconnect Model}
-		
-			\subsubsection{Performance Benchmarking}
-			
-			\subsubsection{Interconnect Experiments}
-		
-		\subsection{Effects of Multicast}
-		
-		\subsection{Routing in Hybrid Topologies}
 	
-	\section{Longer Term}
+	Outline what work I hope to do with more detail on the near future.
+	
+	Gantt?
+	
+	\section{SpiNNaker Modelling}
 		
-		\subsection{Further Network Topologies}
+		In order to experiment with the way new interconnection options affect
+		SpiNNaker an accurate model is required. Will work with Mikel and Javier to
+		extend the SpiNNaker simulator used in the original paper to include models
+		of inter-board links.
 		
-		\subsection{`SpiNNaker 2' Architecture}
+		How long will this take?
+		
+		\subsection{Performance Benchmarking}
 			
-			\subsubsection{Types of Transmission}
+			Part of the aim of the work is to produce a comparison between this
+			software model, an FPGA model and a prototype system. Successful
+			comparison of the three will allow higher certainty in results obtained
+			from other work (namely the interconnect experiments to follow).
+		
+		\subsection{Interconnect Experiments}
 			
-			\subsubsection{Multiple Networks}
+			The model will be further extended to simulate new links between boards
+			and performance again tested.
+			
+				\subsubsection{Topologies}
+					
+					Topologies to test include: express cubes, small-world, \ldots
+				
+				\subsubsection{Routing}
+					
+					One major consideration when changing the topology is to create
+					appropriate routing schemes for each topology. In particular an
+					analysis of their use of routing table resource would be important.
+		
+	
+	\section{Effects of Multicast}
+		
+		Multicast networks are unusual in many respects and complicate things
+		somewhat. The model should be further extended to cope with multicast
+		traffic and further work carried out in this aim.
+		
+		How long will this take?
+	
+	\section{`SpiNNaker 2' Architecture}
+		
+		It is likely that a new version of SpiNNaker will be designed with some
+		funding coming in soon. Based on the research into the interconnect here,
+		would an alternative topology be appropriate?
+		
+		\subsection{Types of Transmission}
+			
+			Switching away from Silistix (they went bye-bye!), alternative
+			technologies, e.g. high-speed serial, might be used to link chips
+			together. Such technologies may have very different cost structures and
+			call for new network topologies. Given we currently have concentrated
+			multiplexed links, why not have the same for stuff lower down?
+		
+		\subsection{Multiple Networks}
+			
+			SpiNNaker's interconnect is obviously heavily targeted at neural
+			simulation but at the expense of other activities. For example, set-up and
+			management are a bit of a pain. Also, other algorithms don't suit it so
+			well. It is possible SpiNNaker will benefit from having a second network
+			for these purposes?
 

@@ -2,33 +2,88 @@
 	
 	\section{High-Speed Serial Link Modelling}
 		
+		In order to understand the effects of inserting non-uniformity to the
+		SpiNNaker Interconnect caused by the high speed links.
+		
 		\subsection{Objectives}
+			Try and find out what is going on.
+		
+		\subsection{Results}
+			Found a significant increase in average latency. Maybe this could be
+			overcome by making more use of that added processing time by jumping on
+			further ahead? Further simulation needs to be done anyhow...
 	
 	\section{SpiNNaker PCI-Express Interface}
 		
-		\subsection{High Speed Serial on FPGA}
+		One way of getting data from one part of the machine to the other would be
+		not to just dump it through another link but to pull it straight out into a
+		conventional computer via PCI-Express and then maybe re-route it with
+		fancier software or via the web.
 		
-		\subsection{Applications}
+		\subsection{PCI-Express}
+			
+			What is PCI-Express? How does it work? Where is it found?
+		
+		\subsection{High Speed Serial on FPGA}
+			
+			What is an FPGA? We have one on the boards. FPGAs contain hard-wired
+			blocks which do special purpose things, one such job is to do PCI-Express.
 	
 	\section{Wiring-Up Super Computers}
 		
-		\subsection{Topology}
+		A practical constraint on any interconnect is that it should be possible to
+		wire it up. In particular constraints exist on both on wire length and the
+		practical difficulty of connecting up the wires into the correct places.
+		Computers usually placed in racks. Tool can be used to study wiring
+		constraints of new links.
 		
 		\subsection{Wire-Length Limits}
+			
+			What type of signalling is possible? Why are long wires bad? How long is
+			long? Why not just the average wire length?
+		
+		\subsection{Topology}
+			
+			SpiNNaker has three dimensions of wiring connected in a torus. This has
+			long wires. A torus intuitively has long wires along the way which causes
+			a bit of a headache. You can slice it to make it rectangular, you can fold
+			it to make the wires short (must fold 4x2) and divvy up into cabinets..
 		
 		\subsection{\emph{SpiNNer} Wiring Guide Generator}
+			
+			A tool was built, manipulates nodes which are pre-connected with the
+			correct wiring graph. Produces instructions.
 		
 		\subsection{Further Work}
+			
+			Simplify instructions, alternative wirings.
 	
 	\section{Small-World Super Computers}
 		
+		In the same way that random search is generic (no free lunch), I tried
+		adding random wires. This is backed up by Watts and Strogatz's small-world
+		network producing algorithm. Built a model. Took into account wiring using
+		techniques in Wiring-Up Super Computers.
+		
 		\subsection{Results}
+			
+			Even with wire-length limits in place, when folded the effect is still
+			noticeable.
 		
 		\subsection{Further Work}
+			
+			Must try this with SpiNNaker topology and racks (maybe even better). Would
+			like to formalise the result into a formula.
 	
 	\section{Place and Route}
 		
-		\subsection{PACMAN}
+		Tests written for the Place and Route system for SpiNNaker-103. Gained some
+		experience with the task. 
+		
+		\subsection{Potential Improvements}
+			
+			The algorithms used for placement and routing are naive: generally greedy
+			algorithms.
 
 
 

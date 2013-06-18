@@ -1,46 +1,70 @@
 \chapter{Background}
 	\label{chap:background}
 	
-	\section{State of the Art}
+	Talk about things that have been done by others in the field and try and point
+	out any holes and where the pain points are.
 	
-		\subsubsection{Top 500}
+	\section{Top 500}
 		
-		\subsubsection{Neural Simulators}
+		Discuss the design of of various Top-500 machines or famous super computers.
+	
+	\section{Neural Simulators}
 		
-		\section{Spatial Computing}
-			
-			\subsection{Architectures}
-				
-				\subsubsection{Amorphous Computing}
-				
-				\subsubsection{Blob Computing}
-			
-			\subsection{Dynamic Interconnect}
-			
-			\subsection{Routing}
+		Discuss various neural-simulation based approaches, e.g. neuromorphic
+		computers, Blue Brain, BrainScaleS, FPGA based things, speak to Franchesco.
 	
 	\section{SpiNNaker}
 		
+		The architecture focused on by my research.
+		
 		\subsection{Neural Networks}
+			
+			Spiking neural networks. More precise definition of the type of traffic.
+		
+		\subsection{Real Time}
+			
+			Real time constraints. Simulations run as time-stepped divisions. Messages
+			are assumed to arrive at their destinations instantly because they should
+			all arrive by the deadline.
 		
 		\subsection{Topology}
 			
-			\subsubsection{Hexagons}
-			
-			\subsubsection{Addressing}
+			Due to the neural networks we're using, this is the sort of topology that
+			was made. Good for sending short messages to many targets at once. Bad at
+			system stuff though, also currently very much 2D unlike the brain. Have a
+			hexagonal toroid (picture) which is nice and regular but a pain to wire up.
 		
 		\subsection{Routing}
 			
-			\subsubsection{Dimension-Order Routing}
+			Routing is done by table based router. Entries for each turn or fork in a
+			packet path. Limited number of entries. Source address based routing (TLA
+			to be requested). All routing (currently) static and offline.
+			
+			\subsubsection{Routing Scheme}
+				
+				Current routing is very naive dimension order routing. Also highly
+				static and doesn't respond to network utilisation. The internet is
+				dynamic, maybe this should be too?
 			
 			\subsubsection{Multicast}
+				
+				Not much stuff on this at the moment. I am so shit I've not read
+				anything about it anyway so that needs to change.
 			
-			\subsubsection{Table Based Routing}
 		
 		\subsection{Hardware Abstractions}
+			
+			SpiNNaker is made up of 18 core chips on 48-chip boards in 12 card racks
+			in 5-rack cabinets in a 10 cabinet system. Woah.
 		
 		\subsection{Spin-Link}
+			
+			Boards are connected together via high speed serial links. 8 links per
+			board. First gen had two spare connections, new one has ring and one
+			spare. What can the spares be used for?
 	
 	
 	\section{High Speed Serial}
-
+		
+		Always on, power hungry. Better to have few of these running fast rather
+		than many running slow? Where are these used. What do they replace.

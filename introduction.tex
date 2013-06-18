@@ -1,5 +1,8 @@
 \chapter{Introduction}
 	
+	Some high-level motivation and context to sort of set the scene before going
+	into what other folk have done and what I'm hoping to do.
+	
 	\section{Parallel Computing}
 		
 		The race to drive up the speed of individual processor cores ground to a
@@ -7,16 +10,37 @@
 		number of transistors made available by Moore's law. In the years that
 		followed we've seen multi-core processors appearing in everything from
 		mobile phones to large super computers.
-			
+		
 		\subsection{Programming}
+			
+			Hard to program parallel systems - deadlocks, locality becomes an issue --
+			things can be a long way away. Cache tries to hide this but fails to
+			scale. Other approaches might work (e.g. spinnaker has slow step with
+			communication happening before the next step, i.e. synchronous model).
 		
 		\subsection{Architecture}
+			
+			Lots of computers must be connected together. Current styles are largely
+			regular. Each offers its own advantages to different tasks. More in
+			background chapter.
 	
 	\section{Computational Problems}
 		
+		Computers are faced with a wide range of problems all of which require
+		different patterns of communication between the different parts of the
+		program influencing the type of interconnect topology they suit.
+		
 		\subsection{TODO: More Examples}
 		
+		\subsection{Gossiping Algorithms}
+			
+			Generally lots of broadcast global messaging, sometimes with low
+			reliability requirements.
+		
 		\subsection{Fluid Dynamics}
+			
+			Such algorithms such as heat propagation in a material. Lots of
+			computation and very local, neighbour-to-neighbour communication.
 		
 		\subsection{Brain Simulation}
 			
@@ -41,12 +65,23 @@
 			in the simulated system. Various architectures have been designed to
 			solve this task and a selection are presented in Chapter
 			\ref{chap:background}.
+			
+			TODO: What is going on in brain simulators?
 	
 	\section{Architecture}
 		
+		Two major considerations when designing an architecture are the topology and
+		way in which packets will be routed around the system.
+		
 		\subsection{Topology}
+			
+			Again?
 		
 		\subsection{Routing}
+			
+			Again?
 		
 		\subsection{Multicast}
+			
+			Quite simple, really.
 
