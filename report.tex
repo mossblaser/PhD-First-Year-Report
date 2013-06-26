@@ -1,8 +1,31 @@
 \documentclass[a4paper,12pt,titlepage]{report}
 
+\usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{hyperref}
 \usepackage{fullpage}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{ifthen}
+
+% TikZ libraries
+\usetikzlibrary{hexagon}
+\usetikzlibrary{ hexagon
+               , positioning
+               , decorations.pathreplacing
+               , decorations.markings
+               }
+
+% Cache TikZ figures
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikzcache/]
+
+% Remove borders etc. from links added by hyperref
+\hypersetup{
+	colorlinks=false,
+	pdfborder={0 0 0},
+}
 
 \title{Improving the Interconnection Network of a Brain Simulator}
 \author{Jonathan Heathcote}
@@ -40,5 +63,8 @@
 	\input{preliminary-work}
 	\input{research-plan}
 	\input{conclusion}
+	
+	\bibliographystyle{plain}
+	\bibliography{report}
 	
 \end{document}

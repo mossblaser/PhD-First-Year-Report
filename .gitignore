@@ -1,0 +1,12 @@
+*.swp
+*~
+report.aux
+report.auxlock
+report.bbl
+report.blg
+report.lof
+report.log
+report.lot
+report.out
+report.toc
+report.pdf

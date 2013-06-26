@@ -29,34 +29,315 @@
 			What is an FPGA? We have one on the boards. FPGAs contain hard-wired
 			blocks which do special purpose things, one such job is to do PCI-Express.
 	
-	\section{Wiring-Up Super Computers}
+	\section{Wiring-Up Large SpiNNaker Machines}
 		
-		A practical constraint on any interconnect is that it should be possible to
-		wire it up. In particular constraints exist on both on wire length and the
-		practical difficulty of connecting up the wires into the correct places.
-		Computers usually placed in racks. Tool can be used to study wiring
-		constraints of new links.
+		% A practical constraint on any interconnect is that it should be possible to
+		% wire it up. In particular constraints exist on both on wire length and the
+		% practical difficulty of connecting up the wires into the correct places.
+		% Computers usually placed in racks. Tool can be used to study wiring
+		% constraints of new links.
 		
-		\subsection{Wire-Length Limits}
+		One of the practical constraints on the topologies which super-computers are
+		able to exploit is the use of wires to connect parts of the system together.
+		Chief amongst these concerns are the following:
+		
+		\begin{description}
 			
-			What type of signalling is possible? Why are long wires bad? How long is
-			long? Why not just the average wire length?
-		
-		\subsection{Topology}
+			\item[Wire Cost] The choice of cabling used has a direct impact on the
+			financial cost of the wiring. Higher quality materials or increased
+			numbers of wires can substantially drive up the cost of the cable and
+			connectors required.
 			
-			SpiNNaker has three dimensions of wiring connected in a torus. This has
-			long wires. A torus intuitively has long wires along the way which causes
-			a bit of a headache. You can slice it to make it rectangular, you can fold
-			it to make the wires short (must fold 4x2) and divvy up into cabinets..
-		
-		\subsection{\emph{SpiNNer} Wiring Guide Generator}
+			\item[Wire Length] Long wires have higher capacitances than short ones
+			which limits the rate at which data can be transmitted.
 			
-			A tool was built, manipulates nodes which are pre-connected with the
-			correct wiring graph. Produces instructions.
+			\item[Wiring Complexity] Ultimately the system will need to be assembled
+			(presumably) by hand and so keeping wiring patterns simple is important to
+			reduce the number of wiring mistakes.
+			
+		\end{description}
+		
+		The SpiNNaker interconnect topology was studied to confirm the existence of
+		a practical wiring scheme for the machine which satisfies all of the above
+		properties. The principles of the machine's construction suggested by
+		Davidson \cite{davidsonWiring} and Furber \cite{furber13email} were used as
+		the basis for a tool used to model and experiment with possible
+		configurations. This section explains the mapping developed and how it
+		meets the above requirements. Finally, the section concludes with a
+		description of the tool and the future work which remains.
+		
+		\subsection{SpiNNaker Boards}
+			
+			% SpiNNaker has three dimensions of wiring connected in a torus. This has
+			% long wires. A torus intuitively has long wires along the way which causes
+			% a bit of a headache. You can slice it to make it rectangular, you can fold
+			% it to make the wires short (must fold 4x2) and divvy up into cabinets..
+			
+			% TODO SpiNNaker topology back reference
+			
+			The SpiNNaker topology, as described in \S\ref{sec:todo}, consists of a
+			regular 2D grid of 18-core chips arranged in a toroid with
+			nearest-neighbour links travelling North, North-East and East. The
+			complete system will host 57,600 chips which are split up into 1,200
+			circuit boards of 48 chips each (Figure \ref{fig:spinn4labelled}). These
+			boards are equipped with a number of high-speed links, six of which are
+			used to connect them to their neighbours, the others are reserved for
+			other I/O.
+			
+			\begin{figure}
+				\center
+				\input{figures/spinn4labelled}
+				\caption{48-chip SpiNNaker Circuit Board}
+				\label{fig:spinn4labelled}
+			\end{figure}
+			
+			The chips on each circuit board are logically laid out as shown in Figure
+			\ref{fig:chipsOnBoard}. Touching edges represent a chip-to-chip connection
+			and the outer connections are connected to chips on neighbouring boards.
+			In order to reduce the number of wires required, the board-to-board
+			connections are carried via six high-speed links (labelled in the figure)
+			each carrying 8 chip-to-chip connections. The six directions correspond to
+			the six high-speed link connectors on the board used for board-to-board
+			links.
+			
+			By concentrating several connections onto one high-speed link the number
+			of wires is cut from 128 to 4. This substantially reduces the cost of the
+			cables and connectors involved, satisfying the `wire cost' concern.
+		
+		\subsection{Connecting Boards Together}
+			
+			\label{ref:connectingBoardsTogether}
+			
+			\begin{figure}
+				\center
+				\input{figures/chipsOnBoard}
+				\caption{Logical arrangement of chips on a circuit board}
+				\label{fig:chipsOnBoard}
+			\end{figure}
+			
+			In order to construct a toroid, at least three boards  must be combined as
+			shown in Figure \ref{fig:threeboard} (known as a threeboard).  Figure
+			\ref{fig:threeboardSliced} shows how the threeboard arrangement can be
+			turned into a sheet which in turn can be turned into a toroid by connecting
+			the opposing sides.
+			
+			\begin{figure}
+				\begin{subfigure}[b]{0.45\textwidth}
+					\center
+					\input{figures/threeboard}
+					\caption{Threeboard}
+					\label{fig:threeboard}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.45\textwidth}
+					\center
+					\input{figures/threeboardSliced}
+					\caption{Sliced Into A Sheet}
+					\label{fig:threeboardSliced}
+				\end{subfigure}
+				
+				\caption[A `threeboard']{A `threeboard', the minimal configuration of boards yielding a
+				toroid}
+			\end{figure}
+			
+			Arbitrarily large systems can be created by repeating the threeboard
+			pattern as shown in Figure \ref{fig:boardsLogical}. In the figure,
+			touching boards are connected and the lines represent wires which complete
+			the toroid by connecting opposing edges. It is clear that while the
+			majority of wires are very short (they connect two boards which are
+			side-by-side), some wires cross the entire system's length.
+			
+			\begin{figure}
+				\center
+				\input{|"python figures/boardsLogical.py"}
+				\caption[Logical arrangement of boards in a $4\times4$ threeboard
+				SpiNNaker system.]{Logical arrangement of boards in a $4\times4$
+				threeboard SpiNNaker system. Touching boards are connected. Coloured
+				lines represent long connections travelling {\color{red}North/South},
+				{\color{green}North-East/South-West} and {\color{blue}East/West}}
+				\label{fig:boardsLogical}
+			\end{figure}
+			
+			To remove long wires from a toroid network, the network can be folded. An
+			example of this process is shown for a simple ring-network (a
+			1-dimensional toroid) in Figure \ref{fig:folding}.
+			
+			\begin{figure}
+				\begin{subfigure}[b]{\textwidth}
+					\center
+					\input{figures/ringLong}
+					\caption{A Ring Network}
+					\label{fig:ringLong}
+				\end{subfigure}
+				
+				\vspace{2ex}
+				
+				\begin{subfigure}[b]{\textwidth}
+					\center
+					\input{figures/ringFolded}
+					\caption{Folded In Half}
+					\label{fig:ringFolded}
+				\end{subfigure}
+				
+				\vspace{2ex}
+				
+				\begin{subfigure}[b]{\textwidth}
+					\center
+					\input{figures/ringInterleaved}
+					\caption{Interleaved}
+					\label{fig:ringInterleaved}
+				\end{subfigure}
+				
+				\caption[Folding a ring network to reduce the maximum wire length]{The
+				process of folding a ring network to reduce the maximum wire length}
+				\label{fig:folding}
+			\end{figure}
+			
+			This process is generalised to SpiNNaker's boards as shown in Figure
+			\ref{fig:boardsFolded}.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{\textwidth}
+					\center
+					\input{|"python figures/boardsFoldedShift.py"}
+					\caption{Shift left boards to the right to form a rectangle.}
+					\label{fig:boardsFoldedShift}
+				\end{subfigure}
+				
+				\vspace{2ex}
+				
+				\begin{subfigure}[b]{\textwidth}
+					\center
+					\input{|"python figures/boardsFoldedSpaced.py"}
+					\caption{Fold along the gaps in this figure. Wires omitted for
+					clarity.}
+					\label{fig:boardsFoldedSpaced}
+				\end{subfigure}
+				
+				\vspace{2ex}
+				
+				\begin{subfigure}[b]{\textwidth}
+					\center
+					\input{|"python figures/boardsFoldedInterleaved.py"}
+					\caption{The (more complex) wiring after folding. Redrawn with squares
+					as hexagons don't visually fit together after folding and
+					interleaving.}
+					\label{fig:boardsFoldedInterleaved}
+				\end{subfigure}
+				
+				\caption[Folding SpiNNaker]{The process of folding SpiNNaker. Coloured
+				lines represent wires travelling {\color{red}North/South},
+				{\color{green}North-East/South-West} and {\color{blue}East/West}}
+				\label{fig:boardsFolded}
+			\end{figure}
+			
+			The first step (Figure \ref{fig:boardsFoldedShift}) transforms the
+			rhombus-like arrangement of boards into a rectangle which is more easily
+			folded.
+			
+			In the next step, the design is folded into four parts on the X-axis and
+			into two on the Y-axis (Figure \ref{fig:boardsFoldedSpaced}). It is
+			necessary to fold the X-axis into four as the long, diagonal wires don't
+			cross the entire system on the X-axis and instead reach half way. Folding
+			in two would not bring these points any closer\footnote{For example, the
+			wire travelling from the bottom left board to the top-middle board after
+			folding in two would now have to cross from one end of the system to the
+			other -- an even longer distance than it had to before.} while folding
+			into four brings them next to each other. As a result, the maximum wire
+			length is reduced.
+			
+			The final step in the process is to map the boards into their real-world
+			physical positions. The largest SpiNNaker system will be installed into a
+			series of cabinets, each containing a number of racks (shelves) into which
+			the boards are slotted and wired up. Figure \ref{fig:spinnaker106} shows a
+			possible rack placement scheme for the largest planned SpiNNaker system.
+			
+			\begin{figure}
+				\center
+				\includegraphics[width=\textwidth]{figures/spinnaker106}
+				\caption[The largest SpiNNaker machine mapped into cabinets and
+				racks]{The largest SpiNNaker machine with 1,200 boards ($20\times20$
+				threeboards) and 1,036,800 cores mapped into 10 cabinets of 5 racks
+				each.  Coloured lines represent wires connecting
+				{\color{red}North/South}, {\color{green}North-East/South-West} and
+				{\color{blue}East/West} links}
+				\label{fig:spinnaker106}
+			\end{figure}
+			
+			Even though the system is physically several meters long, the longest wire
+			will only be around one meter in length which is within the tolerances of
+			the high-speed link technology. This placement scheme, therefore, meets the
+			wire-length requirement.
+			
+		\subsection{Wiring Complexity}
+			
+			The final concern for the wiring is that it should not be too complex to
+			be completed by hand. The large-scale SpiNNaker machine will contain 3,600
+			wires and so it is clearly not practical to have to look up each
+			individual connection before wiring it up. Though it is clear that the
+			folded arrangement is substantially less regular than the original layout,
+			some regularity remains.
+			
+			For example, it is easy to see that wires making connections for a
+			particular direction (shown by the different colours in Figure
+			\ref{fig:spinnaker106} show a moderate degree of regularity. In addition,
+			the wiring for the North/South direction (shown in red) remains entirely
+			within a cabinet.
+			
+			By splitting up the wiring tasks by the logical direction (and thus by the
+			connector on the board) it is clear that a large amount of regularity
+			exists in each group of wires (see the different colours in Figure
+			\ref{fig:spinnaker106}). If the task is further split depending on whether
+			the wires stay with in a rack or cabinet, batches of identical racks and
+			cabinets can be wired up independently before being linked together later.
+			For example, the wires connecting North to South (shown in red) remain
+			entirely within a cabinet meaning all North/South wiring can be completed
+			independently for each cabinet.
+			
+			Based on the above partitioning scheme, the connections for all 3,600
+			wires can be described using only 53 instructions. This satisfies the
+			final constraint on wiring complexity.
+		
+		\subsection{`SpiNNer' Wiring Guide Generator}
+			
+			As part of this work SpiNNaker, a wiring modelling library and wiring
+			guide generator, was produced to assist in the construction of SpiNNaker
+			systems consisting of multiple boards. These tools helped avoid the error
+			prone process of manually visualising the various transformations.
+			
+			The modelling library allows transformations, such as folding, to be
+			easily applied to a network of boards. From the transformed network,
+			various measurements such as the maximum physical wire length can then be
+			directly determined. Using this library the largest SpiNNaker machine can
+			be described in 10 lines of code\footnote{This number includes only the
+			`functional' lines of code does not include `boilerplate' code for
+			importing libraries nor definitions of the physical dimensions of cabinets
+			and racks.}.
+			
+			The wiring guide generator produces illustrated\footnote{Many of the
+			figures in this section were adapted from wiring guides generated by
+			SpiNNer.} documents using \LaTeX{} which describe the wiring for
+			arbitrarily sized machines. Metrics such as the distribution of wire
+			lengths are included along with instructions for wiring the system up. At
+			the time of writing, the largest prototype system constructed, a single
+			threeboard, has been successfully wired up in a manner consistent with the
+			generated wiring guide.
 		
 		\subsection{Further Work}
 			
-			Simplify instructions, alternative wirings.
+			% Simplify instructions, alternative wirings.
+			
+			The wiring guide generator is currently only capable of producing
+			exhaustive wiring descriptions with one instruction for each of the 3,200
+			wires. The foundations for extracting regularity currently exist in
+			experimental form and must eventually be integrated into the wiring guide
+			generator.
+			
+			In addition, further work may be carried out to propose alternative wiring
+			schemes. The current scheme, a huge number of wires cross between
+			different cabinets. As a result a significant amount of the wiring cannot
+			be done in isolated batches. An alternative scheme may be able to reduce
+			this number and further simplify the task of wiring.
 	
 	\section{Small-World Super Computers}
 		

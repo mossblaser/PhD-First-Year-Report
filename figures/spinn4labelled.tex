@@ -1,0 +1,31 @@
+\begin{tikzpicture}[thick]
+	
+	\node[anchor=south west,inner sep=0] at (0,0) (image)
+		{\includegraphics[width=0.5\textwidth]{figures/spinn4.png}};
+	
+	\begin{scope}[x={(image.south east)},y={(image.north west)}]
+		%% Help with drawing
+		%\draw[help lines,xstep=.1,ystep=.1] (0,0) grid (1,1);
+		%\foreach \x in {0,1,...,9} { \node [anchor=north] at (\x/10,0) {0.\x}; }
+		%\foreach \y in {0,1,...,9} { \node [anchor=east] at (0,\y/10) {0.\y}; }
+		
+		\draw [decorate,decoration={brace,raise=1ex,amplitude=1ex}]
+		      (0.02,0.5) -- coordinate (left-label) (0.02,1.0);
+		\node [left=1em of left-label,text width=3.5cm,align=center]
+		      {High-Speed Links\\(Board-to-Board)};
+		
+		\draw [decorate,decoration={brace,raise=1ex,amplitude=1ex}]
+		      (0.97,1.0) -- coordinate (right-label) (0.97,0.5);
+		\node [right=1em of right-label,text width=3.5cm,align=center]
+		      {High-Speed Links\\(Other I/O)};
+		
+		\draw [decorate,decoration={brace,raise=1ex,amplitude=1ex}]
+		      (1.0,0.23) -- coordinate (power-label) (1.0,0.02);
+		\node [right=1em of power-label] {Power Connector};
+		
+		\draw [decorate,decoration={brace,raise=1ex,amplitude=1ex}]
+		      (0.0,0.08) -- coordinate (eth-label) (0.0,0.22);
+		\node [left=1em of eth-label] {Ethernet};
+	\end{scope}
+	
+\end{tikzpicture}
