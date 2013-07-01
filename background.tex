@@ -12,22 +12,28 @@
 		
 		Discuss various neural-simulation based approaches, e.g. neuromorphic
 		computers, Blue Brain, BrainScaleS, FPGA based things, speak to Franchesco.
+		
+		\subsection{Types}
+			
+			Spiking neural networks. More precise definition of the type of traffic.
 	
 	\section{SpiNNaker}
 		
-		The architecture focused on by my research.
+		% The architecture focused on by my research.
 		
-		\subsection{Neural Networks}
+		The SpiNNaker project is developing a super computer designed for running
+		real-time simulations of large networks of SNNs.
+		
+		\subsection{Real Time Simulation}
 			
-			Spiking neural networks. More precise definition of the type of traffic.
-		
-		\subsection{Real Time}
+			Alternative method is having matched delays for interconnect.
 			
 			Real time constraints. Simulations run as time-stepped divisions. Messages
 			are assumed to arrive at their destinations instantly because they should
-			all arrive by the deadline.
+			all arrive by the deadline. Can perfectly match deterministic software
+			models (though time stepping isn't so nice if it is very coarse).
 		
-		\subsection{Topology}
+		\subsection{Architecture}
 			
 			Due to the neural networks we're using, this is the sort of topology that
 			was made. Good for sending short messages to many targets at once. Bad at

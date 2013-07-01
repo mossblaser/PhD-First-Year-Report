@@ -1,35 +1,229 @@
 \chapter{Preliminary Work}
 	
-	\section{High-Speed Serial Link Modelling}
-		
-		In order to understand the effects of inserting non-uniformity to the
-		SpiNNaker Interconnect caused by the high speed links.
-		
-		\subsection{Objectives}
-			Try and find out what is going on.
-		
-		\subsection{Results}
-			Found a significant increase in average latency. Maybe this could be
-			overcome by making more use of that added processing time by jumping on
-			further ahead? Further simulation needs to be done anyhow...
+	% Various work done to build experience with interconnect simulation, SpiNNaker,
+	% built some useful tools (wiring) and to test the principle of adding
+	% connections (small world).
 	
-	\section{SpiNNaker PCI-Express Interface}
+	Preliminary work conducted so far aims to explore some of the practical issues
+	faced when designing interconnection networks. The work focuses on the
+	SpiNNaker architecture whose advanced state of development makes it a good
+	target for realistic experimentation.
+	
+	The first section describes an experiment to determine the way in which the
+	digital communication technologies on which an interconnection network is
+	built can affect its performance. One of the implications of choosing a
+	particular technology is that it may place constraints on the way the system
+	must be physically wired up. The second section proposes a practical wiring
+	scheme for large SpiNNaker machines. The chapter concludes with an experiment
+	to extend a SpiNNaker-like architecture to reduce average path length in the
+	network while respecting the wiring restrictions.
+	
+	% Rly?
+	%\section{PCI-Express and High-Speed Serial}
+	%	
+	%	One way of getting data from one part of the machine to the other would be
+	%	not to just dump it through another link but to pull it straight out into a
+	%	conventional computer via PCI-Express and then maybe re-route it with
+	%	fancier software or via the web.
+	%	
+	%	\subsection{PCI-Express}
+	%		
+	%		What is PCI-Express? How does it work? Where is it found?
+	%	
+	%	\subsection{High Speed Serial on FPGA}
+	%		
+	%		What is an FPGA? We have one on the boards. FPGAs contain hard-wired
+	%		blocks which do special purpose things, one such job is to do PCI-Express.
+	
+	\section{Interconnect Modelling}
 		
-		One way of getting data from one part of the machine to the other would be
-		not to just dump it through another link but to pull it straight out into a
-		conventional computer via PCI-Express and then maybe re-route it with
-		fancier software or via the web.
+		% In order to understand the effects of inserting non-uniformity to the
+		% SpiNNaker Interconnect caused by the high speed links.
 		
-		\subsection{PCI-Express}
+		An important factor in designing interconnection networks is the
+		technologies used to implement the links in the network. These choices
+		influence the network's performance as they control the costs involved in
+		sending a message across a link. This in turn can, for example, affect the
+		way packets need to be routed to make optimal use of the system's resources.
+		
+		At the chip-to-chip level, the SpiNNaker system is extremely homogeneous
+		with identical links connecting chips to their (also identical) neighbours.
+		Unfortunately, this homogeneity is broken when signals need to cross between
+		boards. The board-to-board links concentrate multiple chip-to-chip signals
+		onto a small number of high-speed serial links in order to reduce the cost
+		of wiring.
+		
+		Though the board-to-board connections are logically transparent, they will
+		inevitably result in some additional latency at the board boundaries. Figure
+		\ref{fig:boardToBoardSchematic} shows a high-level schematic of the
+		board-to-board links. At both ends of the link, additional processing and
+		buffering is required. Each link must collect packets from the attached
+		chips into frames which are then sent across the high-speed serial link,
+		requiring buffering at each stage. All of these steps incur additional
+		latency over a direct connection between two chips.
+		
+		\begin{figure}
+			\center
+			\input{figures/boardToBoardSchematic}
+			\caption[Schematic of the high-speed serial board-to-board
+			link.]{Simplified schematic of the processing stages encountered by a
+			packet crossing between boards connected via a high-speed serial link.}
+			\label{fig:boardToBoardSchematic}
+		\end{figure}
+		
+		The real-time nature of SpiNNaker's simulations means that the latency of
+		packets in the system can be very important. If a packet takes too long to
+		be delivered this counts as a failure of the system. Indeed, packets
+		travelling across the entire system may have to pass through a number of
+		these links potentially incurring a high latency penalty.
+		
+		The because latency between pairs of chips is no longer uniform, this
+		violates an assumptions made by current routing schemes. The cost of this
+		mistaken assumption is not known and one of the aims of this work was to
+		measure its impact.
+		
+		\subsection{Simulation}
 			
-			What is PCI-Express? How does it work? Where is it found?
-		
-		\subsection{High Speed Serial on FPGA}
+			To study the effects of the board-to-board links, a simplified simulation
+			of SpiNNaker's interconnect was built. The simulated model was based on
+			the work presented by Navaridas et al. in \cite{navaridas09} but using an
+			alternative simulator written in Python to speed up development. As the
+			high-speed serial links are under active development, they have been
+			modelled using the expected latency values for the completed system.
 			
-			What is an FPGA? We have one on the boards. FPGAs contain hard-wired
-			blocks which do special purpose things, one such job is to do PCI-Express.
+		\subsection{Results}
+			% Found a significant increase in average latency. Maybe this could be
+			% overcome by making more use of that added processing time by jumping on
+			% further ahead? Further simulation needs to be done anyhow...
+			
+			Simulations of systems containing a toroid of $4\times4$ threeboards (48
+			boards, 2,304 chips) were performed under various conditions.
+			
+			\subsubsection{Packet Latency}
+			
+				To test the effect of links on general packet latency, the network was
+				simulated with each chip generating a packet each CPU cycle with a
+				probability of 1\% to uniform-random destinations. The latency added by
+				the serial links can be seen in figure \ref{fig:min-time-for-hops} where
+				the minimum packet latency is shown against the number of links (hops)
+				used by the packet. The system is also shown using only chip-to-chip
+				links, with realistic high-speed serial links and with high-speed serial
+				links with exaggerated latencies (for illustrative purposes) as
+				board-to-board links.
+				
+				\begin{figure}
+					\centering
+					
+					\begin{subfigure}[t]{0.45\textwidth}
+						\centering
+						\includegraphics[width=\textwidth]{figures/min-time-for-hops}
+						\caption{Minimum latencies}
+						\label{fig:min-time-for-hops}
+					\end{subfigure}
+					\begin{subfigure}[t]{0.45\textwidth}
+						\centering
+						\includegraphics[width=\textwidth]{figures/median-time-for-hops-with-errbars}
+						\caption{Median latencies, error bars $=
+						0.1\times\textrm{Inter-Quartile Range}$}
+						\label{fig:median-time-for-hops-with-errbars}
+					\end{subfigure}
+					
+					
+					\caption{Packet latencies when using various types of board-to-board links}
+					\label{fig:time-for-hops}
+				\end{figure}
+				
+				Steps can be seen every time the number of hops passes a multiple of 8,
+				the number of consecutive chips in any single dimension on a board, after
+				which a serial link is crossed causing increased latency. This step
+				change can be clearly seen in the exaggerated links but is also visible in
+				realistic links.
+				
+				An extra step appears at 28 hops, the cause of which is not currently
+				known by the author.
+				
+				% 2-of-7 gradient: 27.2751
+				% S-ATA gradient: 49.209
+				% Extreme gradient: 118.013
+				
+				The median latency of an $n$-hop path increases smoothly as shown in
+				figure \ref{fig:median-time-for-hops-with-errbars} as the probability of
+				crossing a boundary increases with the number of hops carried out. From
+				the gradient of these lines it can be seen that the realistic serial links
+				result in an 80.4\% latency overhead.
+			
+			\subsubsection{Na\"ive Routing Effects}
+				
+				The routing scheme used by current SpiNNaker simulations is based on
+				dimension order routing. Here, packets traverse links in each dimension
+				in turn in order to arrive at their destinations.  This scheme assumes
+				that all `hops' take the same amount of time in order to generate routes
+				with minimal-latency. This assumption breaks down in heterogeneous
+				systems.
+				
+				Figure \ref{fig:packet-latency-unloaded} shows how the latencies vary
+				across an idle system from a single point. It can be seen that where board
+				boundaries (shown in white) are crossed there is a general increase in
+				latency. Because of this, the contours are visibly distorted from the
+				expected hexagonal shape. This is particularly visible at the bottom left
+				and top right of the figure.
+				
+				\begin{figure}
+					\centering
+					\includegraphics[width=0.7\textwidth]{figures/packet-latency-unloaded.pdf}
+					
+					\caption{Heat-map of average packet latency to each chip from the
+					central chip. Note: a skewed perspective is used.}
+					
+					\label{fig:packet-latency-unloaded}
+				\end{figure}
+				
+				A step in latency is also visible within individual boards as can be seen
+				in figure \ref{fig:packet-latency-closeup-exaggerated}. Here there are
+				clear edges where the dimension order routing traverses the dimensions in
+				an order which incurs an extra board crossing. This effect is visible as a
+				step-change in latency along the diagonals of the upper-right boards.
+		
+				\begin{figure}
+					\center
+					\includegraphics[width=0.7\textwidth]{figures/packet-latency-closeup-exaggerated.pdf}
+					
+					\caption{Latency to each chip from the central chip (24,24) to a section
+					of a $48\times{}48$ system. The serial latency in this system has been
+					exaggerated to aid visibility but the effect is still present with
+					realistic latencies.}
+					
+					\label{fig:packet-latency-closeup-exaggerated}
+				\end{figure}
+		
+		\subsection{Conclusions}
+			
+			Though at first sight the 80.4\% latency penalty seems severe, for
+			SpiNNaker's target of SNNs running at 1ms time steps this is not fatal.
+			The new median latency is still only around 7.5$\mu$s for the longest
+			possible path, very much smaller than 1ms deadline.  For much the same
+			reason, the effects of na\"ively routing packets should also not affect
+			current simulation schemes too significantly.
+			
+			% XXX: Do gossiping algorithms care about latency?
+			
+			For other applications which are more latency sensitive such as gossiping
+			algorithms or finer-grained neural simulations, the increase in latency
+			due to poor routing choices and the board-to-board links may still be
+			problematic.
+			
+			% TODO: Crossref for future simulator
+			
+			It is worth noting that the simulations carried out were limited in size ,
+			duration and traffic complexity by the performance of the simulator. An
+			improved simulator would allow larger models to be simulated using more
+			realistic networks. One possible approach is to extend the simulator used
+			by Navaridas et al. and this is discussed in \S\ref{sec:XXX}.
+		
 	
 	\section{Wiring-Up Large SpiNNaker Machines}
+		
+		\label{sec:wiring-up-large-spinnaker-machines}
 		
 		% A practical constraint on any interconnect is that it should be possible to
 		% wire it up. In particular constraints exist on both on wire length and the
@@ -157,9 +351,11 @@
 				\label{fig:boardsLogical}
 			\end{figure}
 			
-			To remove long wires from a toroid network, the network can be folded. An
-			example of this process is shown for a simple ring-network (a
-			1-dimensional toroid) in Figure \ref{fig:folding}.
+			\label{sec:folding-toroids}
+			
+			To remove long wires from a toroid network, the network can be folded
+			\cite{dally04}. An example of this process is shown for a simple
+			ring-network (a 1-dimensional toroid) in Figure \ref{fig:folding}.
 			
 			\begin{figure}
 				\begin{subfigure}[b]{\textwidth}
@@ -245,6 +441,8 @@
 			other -- an even longer distance than it had to before.} while folding
 			into four brings them next to each other. As a result, the maximum wire
 			length is reduced.
+			
+			\label{sec:mapping-spinnaker-to-cabinets}
 			
 			The final step in the process is to map the boards into their real-world
 			physical positions. The largest SpiNNaker system will be installed into a
@@ -341,30 +539,236 @@
 	
 	\section{Small-World Super Computers}
 		
-		In the same way that random search is generic (no free lunch), I tried
-		adding random wires. This is backed up by Watts and Strogatz's small-world
-		network producing algorithm. Built a model. Took into account wiring using
-		techniques in Wiring-Up Super Computers.
+		% In the same way that random search is generic (no free lunch), I tried
+		% adding random wires. This is backed up by Watts and Strogatz's small-world
+		% network producing algorithm. Built a model. Took into account wiring using
+		% techniques in Wiring-Up Super Computers.
 		
-		\subsection{Results}
+		Small-world networks are graphs with a very large number of nodes but,
+		within which, the maximum shortest-path length is very small, despite each
+		node having a only relatively small number of edges. They also contain
+		`clusters' of well connected nodes, in contrast with random graphs (which
+		may also fulfil the first criterion).
+		
+		This type of network is often found in nature, perhaps most famously in
+		social networks. This property was first observed in 1929 by Hungarian
+		author Frigyes Karinthy\cite{karinthy29} and has become popularly known as
+		the theory of `six degrees of separation'. This theory states that any two
+		people, chosen at random, there is a chain of 6 acquaintances which connects
+		them.
+		
+		This property of maintaining low maximum shortest-path length while still
+		remaining locally well connected is desirable property for certain
+		computational problems. In neural simulations most communication is local
+		but with some longer connections remaining. The clustering property of small
+		world networks means these local connections can be well catered for while
+		the low maximum shortest-path length means longer connections are still
+		quick for very large models.
+		
+		\subsection{Network Construction}
+		
+			Watts and Strogatz have proposed an algorithm for randomly constructing
+			networks with small-world properties\cite{watts98}. The algorithm begins
+			by creating a ring network with each node connecting to a fixed number of
+			its consecutive neighbours (Figure \ref{fig:ringNetworkB0}). In the next
+			step, with a probability of $\beta$, each edge may be replaced by a random
+			connection. For $0 < \beta < 1$, the networks produced exhibit varying
+			degrees of the small-world properties (Figure \ref{fig:ringNetworkB02}).
+			Finally, in the extreme case where $\beta=1$, the network devolves into a
+			random network (Figure \ref{fig:ringNetworkB1}).
 			
-			Even with wire-length limits in place, when folded the effect is still
-			noticeable.
+			\begin{figure}
+				\center
+				\begin{subfigure}[t]{0.3\textwidth}
+					\center
+					\input{figures/ringNetwork}
+					\caption{Ring ($\beta = 0.0$)}
+					\label{fig:ringNetworkB0}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.3\textwidth}
+					\center
+					\input{figures/ringNetworkB02}
+					\caption{Watts-Strogatz ($\beta = 0.2$)}
+					\label{fig:ringNetworkB02}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.3\textwidth}
+					\center
+					\input{figures/ringNetworkB1}
+					\caption{Random ($\beta = 1.0$)}
+					\label{fig:ringNetworkB1}
+				\end{subfigure}
+				
+				\caption{Watts-Strogatz networks shown with a range of rewiring
+				probabilities.}
+				\label{fig:ringNetwork}
+			\end{figure}
+			
+			This algorithm is readily extended to torus topologies. In this work, a
+			$k$-ary 2-cube was used as the initial network such as in Figure
+			\ref{fig:torusNetworkB0}. Random permutations are added to the network
+			resulting in a network such as Figure \ref{fig:torusNetworkB01}.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}[t]{0.45\textwidth}
+					\center
+					\input{figures/torusNetwork}
+					\caption{Unmodified torus ($\beta=0.0$)}
+					\label{fig:torusNetworkB0}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.45\textwidth}
+					\center
+					\input{figures/torusNetworkB01}
+					\caption{Rewired torus ($\beta=0.1$)}
+					\label{fig:torusNetworkB01}
+				\end{subfigure}
+				
+				\caption{Extension of the Watts-Strogatz model to a 6-ary 2-cube torus}
+				\label{fig:torusNetwork}
+			\end{figure}
+			
+			The a 6-ary 2-cube has an average shortest path length of $\frac{nk}{4}$.
+			This is because a packet travels (on average, under uniform random
+			traffic) $\frac{1}{4}$ of the way around each of the $n$, $k$-node-long
+			dimensions. In this case, that means the average path length is $\frac{2
+			\times 6}{4} = 3$.
+			
+			By contrast, for the rewired version shown, the average shortest path is
+			now reduced to 2.77 hops. As in Watts-Strogatz' networks, the average path
+			length has been brought down while much of the local connectivity remains.
+		
+		
+		\subsection{Experiments}
+			
+			Experiments using a simple graph model were carried out to determine the
+			effects of rewiring on shortest-path length. Figure
+			\ref{fig:smallWorldTorus} shows that the shortest-path length drops
+			rapidly but returns quickly diminish. As a result, it can be concluded
+			that the amount of rewiring required to produce a significant impact on
+			the shortest-path length.
+			
+			\begin{figure}
+				\center
+				\includegraphics[width=0.7\textwidth]{figures/smallWorldTorus}
+				\caption{Average shortest-path length for folded 40-ary 2-cube (mean of
+				10 runs, error bars show 1 standard deviation)}
+				\label{fig:smallWorldTorus}
+			\end{figure}
+			
+			Unfortunately, random wiring can be problematic for real-world systems.
+			As discussed in \S\ref{sec:wiring-up-large-spinnaker-machines}, long wires
+			are problematic for many interconnection topologies and adding random
+			wiring can cause many such links to be created. For example, in Figure
+			\ref{fig:torusNetworkB01} a long wire from the top right node stretches
+			almost to the bottom left node.
+			
+			To work around this problem, we first fold the network
+			(\S\ref{sec:folding-toroids}) to eliminate the long wires which connect up
+			the torus (Figure \ref{fig:torusNetworkFB0}). Next, rewiring is carried
+			out but with a limit on the maximum wire length which can be created
+			(Figure \ref{fig:torusNetworkFB01}).  This rewiring constrains the maximum
+			wire to be 3 units long (where a unit is the spacing between each node in
+			a given dimension). Even with this limitation on wire length, the maximum
+			path length still drops, this time to 2.73 (from 3 in the unwired
+			network), but now there are no long wires.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}[t]{0.45\textwidth}
+					\center
+					\input{figures/torusNetworkF}
+					\caption{Folded torus ($\beta=0.0$)}
+					\label{fig:torusNetworkFB0}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.45\textwidth}
+					\center
+					\input{figures/torusNetworkFB01}
+					\caption{Rewired torus ($\beta=0.1$)}
+					\label{fig:torusNetworkFB01}
+				\end{subfigure}
+				
+				\caption{Rewiring a folded torus with constrained maximum wire-length}
+				\label{fig:torusNetworkF}
+			\end{figure}
+			
+			To test the effects of limiting wire lengths when re-wiring, a parameter
+			sweep was carried out for a 40-ary 2-cube. The test was carried out after
+			folding once and twice in each dimension with a control where the network
+			was not folded. The results are given in Figure
+			\ref{fig:smallWorldLimitedWiring}.
+			
+			\begin{figure}
+				\center
+				\includegraphics[width=0.7\textwidth]{figures/smallWorldLimitedWiring}
+				\caption{Average shortest-path length for folded 40-ary 2-cube with 1\% rewiring}
+				\label{fig:smallWorldLimitedWiring}
+			\end{figure}
+			
+			It is clear that when wire lengths are most limited the average
+			shortest-path length improves when the network has been folded. This
+			result is intuitive because after folding, neighbouring boards are
+			no-longer topologically adjacent but instead may be at opposite ends of
+			the system. As a result, limiting wire lengths essentially `prefers' the
+			creation of longer links which are most likely to pull the average wire
+			length down.
+			
+			The other interesting effect is that above a certain threshold, allowing
+			longer wires has no significant effect on the average shortest-path
+			length. This may be because wires which stretch further than half-way
+			($\frac{k}{2}$ hops) along a given axis could be just as easily reached by
+			travelling the shorter distance the other way around the axis. This
+			longest useful wire length can be calculated as follows:
+			\[
+				\textrm{Maximum Useful Wire Length}
+					= \sqrt{n \left({\frac{k}{2}}\right)^2}
+					= \frac{k\sqrt{n}}{2}
+			\]
+			For a 40-ary 2-cube the maximum useful wire length is $20\sqrt{2} \approx
+			28.3$ which can be visually confirmed in the figure.
 		
 		\subsection{Further Work}
 			
-			Must try this with SpiNNaker topology and racks (maybe even better). Would
-			like to formalise the result into a formula.
-	
-	\section{Place and Route}
-		
-		Tests written for the Place and Route system for SpiNNaker-103. Gained some
-		experience with the task. 
-		
-		\subsection{Potential Improvements}
+			% Must try this with SpiNNaker topology and racks (maybe even better). Would
+			% like to formalise the result into a formula.
 			
-			The algorithms used for placement and routing are naive: generally greedy
-			algorithms.
+			When wire lengths are constrained, the uniformity of the connectivity in
+			the system is reduced. Figure \ref{fig:ringNetworkLimitedWires} shows the
+			possible random links in a small ring network after wire lengths have been
+			limited. The top and bottom nodes of the ring are likely to have a smaller
+			average shortest-paths than those near the left and right. This is because
+			random links created from the top and bottom nodes provide a longer
+			short-cut than those near the left and right.
+			
+			\begin{figure}
+				\center
+				\input{figures/ringNetworkLimitedWires}
+				\caption{Possible random links in a singly-folded ring network with
+				random wires limited to a length of 1 unit after laying out as in Figure
+				\ref{fig:ringInterleaved}}
+				\label{fig:ringNetworkLimitedWires}
+			\end{figure}
+			
+			Further work may study the effects of this non-uniformity of average path
+			length. The non-uniformity may be reduced in magnitude by using greater
+			degrees of folding or higher dimensional topologies. Further study may
+			show that realistic networks may have acceptable levels of non-uniformity
+			in practice.
+			
+			In addition, real systems are usually constrained to using standard
+			cabinets and racks as in \S\ref{sec:mapping-spinnaker-to-cabinets}. This
+			mapping may further alter the way length-limited random links can cause
+			non-uniform average shortest-path lengths. This work could be extended to
+			include this final mapping into more realistic physical placements.
+	
+	%\section{Place and Route}
+	%	
+	%	Tests written for the Place and Route system for SpiNNaker-103. Gained some
+	%	experience with the task. 
+	%	
+	%	\subsection{Potential Improvements}
+	%		
+	%		The algorithms used for placement and routing are naive: generally greedy
+	%		algorithms.
 
 
 
