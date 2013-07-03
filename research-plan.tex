@@ -1,48 +1,167 @@
 \chapter{Research Plan}
 	
-	Outline what work I hope to do with more detail on the near future.
+	In this chapter an outline of the work to be carried out is presented. Due to
+	the embryonic stage of the research, later work is presented with less detail.
+	Figure \ref{fig:plan-gantt} shows a Gantt chart containing the key stages of
+	the project which are outlined in chronological order in the sections below.
 	
-	Gantt?
+	\begin{figure}[b!]
+		\center
+		\input{figures/plan-gantt}
+		
+		\caption[Gantt chart of proposed research plan]{Gantt chart of proposed
+		research plan. Arrows indicate dependencies, thick lines indicate slack.
+		Note non-linear scale.}
+		\label{fig:plan-gantt}
+	\end{figure}
+	
 	
 	\section{SpiNNaker Modelling}
 		
-		In order to experiment with the way new interconnection options affect
-		SpiNNaker an accurate model is required. Will work with Mikel and Javier to
-		extend the SpiNNaker simulator used in the original paper to include models
-		of inter-board links.
+		% In order to experiment with the way new interconnection options affect
+		% SpiNNaker an accurate model is required. Will work with Mikel and Javier to
+		% extend the SpiNNaker simulator used in the original paper to include models
+		% of inter-board links.
+		%
+		% How long will this take?
 		
-		How long will this take?
+		% TODO: What journal?
 		
-		\subsection{Performance Benchmarking}
-			
-			Part of the aim of the work is to produce a comparison between this
-			software model, an FPGA model and a prototype system. Successful
-			comparison of the three will allow higher certainty in results obtained
-			from other work (namely the interconnect experiments to follow).
+		As part of the ongoing SpiNNaker project a study is being carried out to
+		compare how network simulations compare with the real hardware. As part of
+		this work, researchers have built an FPGA accelerated model of SpiNNaker's
+		interconnection network. The work hopes to verify the accuracy of the model
+		against both a traditional software model and also the final silicon
+		implementation. The results of this work are intended for publication in the
+		Journal of TODO by the end of September 2013.
 		
-		\subsection{Interconnect Experiments}
+		My participation in this project will be to develop the software simulation
+		to model and evaluate the network implemented in SpiNNaker. Once built, this
+		simulator will be valuable for my own research into alternative network
+		topologies.  This section outlines in further detail the motivation and
+		requirements for the simulator followed by a discussion of its applications
+		for my own work.
+		
+		\subsection{Software Simulator Limitations}
+		
+			The prototype software model is built on the INSEE simulator
+			\cite{navaridas11insee} which is designed to simulate a wide variety of
+			networks. Unfortunately, INSEE's router model is different from that found
+			in SpiNNaker and the FPGA model. The differences in their behaviour are
+			outlined below.
 			
-			The model will be further extended to simulate new links between boards
-			and performance again tested.
+			% TODO: elaborate
 			
-				\subsubsection{Topologies}
+			SpiNNaker makes use of store-and-forward routing where a message must be
+			fully received before it can be routed to the next point in its path. By
+			contrast, INSEE is designed to support cut-through routing where once the
+			first part of a message has been received it may immediately begin the
+			routing process.
+			
+			The other key difference between INSEE and the actual SpiNNaker
+			architecture is the way packets from incoming links are arbitrated. Figure
+			\ref{fig:arbitration} shows the arbitration schemes for INSEE and
+			SpiNNaker. INSEE uses a simple round-robin arbitration scheme while
+			SpiNNaker (and the FPGA model) use a tree of arbitrators\footnote{The
+			bandwidth available at each level of the arbitration tree scales with the
+			maximum input bandwidth for each level.}.
+			
+			\begin{figure}
+				\begin{subfigure}[t]{0.50\textwidth}
+					\center
+					\input{figures/arbitrationINSEE}
 					
-					Topologies to test include: express cubes, small-world, \ldots
+					\caption{INSEE}
+					\label{fig:arbitrationINSEE}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.50\textwidth}
+					\center
+					\input{figures/arbitrationSpiNNaker}
+					
+					\caption{SpiNNaker}
+					\label{fig:arbitrationSpiNNaker}
+				\end{subfigure}
 				
-				\subsubsection{Routing}
-					
-					One major consideration when changing the topology is to create
-					appropriate routing schemes for each topology. In particular an
-					analysis of their use of routing table resource would be important.
+				\caption[Incoming packet arbitration schemes in INSEE and
+				SpiNNaker]{Incoming packet arbitration schemes in INSEE and SpiNNaker.
+				Boxes marked `RR' are round-robin arbitrators, P1-P18 are connections to
+				local processor cores.}
+				\label{fig:arbitration}
+			\end{figure}
+			
+			This difference here extends beyond the order in which contesting requests
+			will be serviced. In INSEE, each input has a buffer associated with it
+			from which the router will extract messages and forward them to the input
+			buffer of the next node, one per simulated cycle. In the SpiNNaker design,
+			messages are buffered at each level of the tree and eventually placed in a
+			pipeline within the router (equivalent to further buffering) and an output
+			buffer. The interaction of all these buffers is not modelled by INSEE and
+			thus the results produced are less well matched with the actual SpiNNaker
+			system.
+			
+			% Part of the aim of the work is to produce a comparison between this
+			% software model, an FPGA model and a prototype system. Successful
+			% comparison of the three will allow higher certainty in results obtained
+			% from other work (namely the interconnect experiments to follow).
 		
+		\subsection{Simulator Improvement Plan}
+			
+			Given the limitations of INSEE mentioned in the previous section, two
+			possible approaches must be considered. Either INSEE must be modified to
+			incorporate a more realistic model of the router or an alternative
+			simulator must be used.  One important factor in the decision is the
+			`ramp-up' time required to gain familiarity with the INSEE code-base
+			compared with the time required to develop or extend an alternative
+			simulator. The other factor is the utility of the simulator for my own
+			research.
+			
+			Since INSEE is an established tool which has been used in similar work it
+			is potentially a strong choice. In order to determine its suitability for
+			this work and my own research a small amount of time will be initially
+			spent analysing its design. If it is found to be suitable development of
+			an extended version will commence.
+			
+			A possible alternative to INSEE is the simulator developed during the
+			preliminary interconnect study in \S\ref{sec:interconnect-modelling}.
+			Like INSEE, it has been already been used to simulate the SpiNNaker
+			Interconnect and so configurations exist for SpiNNaker like machines.
+			Because of the author's familiarity with the tool, extending the router
+			model should be straight-forward.
+	
+	
+	\section{Small-World Network Experiments}
+		
+		With the extended and proven simulator developed, the next stage of my
+		research will be to use it to model the behaviour of small-world style
+		networks with more realistic traffic and wiring constraints.
+		
+		The work done in \S\ref{sec:small-world-super-computers} measured average
+		shortest-path length in the networks examined. This measure corresponds to
+		the average path length for uniform-random traffic in a real network with
+		the same topology. In brain simulation systems such as spinnaker, much of
+		the traffic is local and so uniform-random traffic is not representative.
+	
+	
+	\section{Topology Comparison}
+		
+		Look at a whole load of popular topologies and possibly look at having two
+		distinct topologies. Saying this, will this end like the I/O space in x86?
+	
+	\section{Place and Routeability}
+		
+		Given more complex architecture and the massive NP-complete task of place
+		and route, what can be done? Work will look at possible schemes and
+		architectures which help with that.
 	
 	\section{Effects of Multicast}
 		
 		Multicast networks are unusual in many respects and complicate things
 		somewhat. The model should be further extended to cope with multicast
 		traffic and further work carried out in this aim.
+	
+	\section{Interconnect Technology Evaluation}
 		
-		How long will this take?
+		Can't use Silistix any more, HSS is nice but should we be using it on-chip?
 	
 	\section{`SpiNNaker 2' Architecture}
 		

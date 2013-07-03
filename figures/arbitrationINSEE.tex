@@ -1,0 +1,31 @@
+\begin{tikzpicture}[thick]
+	
+	\node (arbitrator)
+		[draw,minimum height=6cm]
+		{
+			\tikz[minimum height=0cm]
+				\node[rotate=90]{RR};
+		};
+	
+	\newcommand{\inputline}[2]{
+		\draw [<-]
+		      ($(arbitrator.north west) !#1! (arbitrator.south west)$) -- ++(-0.5,0)
+		      node [left] {#2}
+		      ;
+	}
+	\inputline{0.1}{N}
+	\inputline{0.2}{S}
+	\inputline{0.3}{E}
+	\inputline{0.4}{W}
+	\inputline{0.5}{NW}
+	\inputline{0.6}{SE}
+	\inputline{0.7}{P1}
+	\inputline{0.8}{\ldots}
+	\inputline{0.9}{P18}
+	
+	\draw [->]
+	      ($(arbitrator.north east) !0.5! (arbitrator.south east)$) -- ++(0.5,0)
+	      node [right] {Router}
+	      ;
+	
+\end{tikzpicture}
