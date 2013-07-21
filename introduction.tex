@@ -4,24 +4,38 @@
 	%into what other folk have done and what I'm hoping to do.
 	
 	Modern computer systems represent some of the most complex devices ever
-	constructed by man. Indeed, current computer technologies have enabled
-	everything from global, instantaneous communications via the internet to
-	faster and more effective cancer treatments\cite{nassif}. Despite this, the
-	brain still outperforms conventional digital computers at many tasks.
+	constructed. Indeed, current computer technologies have enabled everything
+	from global, instantaneous communications via the internet to faster and more
+	effective cancer treatments\cite{nassif}. Despite this, the brain still
+	outperforms conventional digital computers at many tasks.
 	
 	Considerable effort has been made by researchers to understand how the brain
 	works. The small-scale operation of individual neurons in the brain is now
 	relatively well understood but the manner of their interactions is still not
-	clear. Current efforts to understand the brain model it as an unconventional
+	clear. Current efforts to understand the brain attempt to model it as a
 	biological computer. Such biological computers differ greatly from digital
-	computers and so simulating their behaviour can be challenging.
+	computers and so simulating their behaviour using existing technology is
+	challenging.
 	
-	The SpiNNaker project is developing a specialised parallel super computer
-	aimed at simulating extremely large neural models in real time. The system is
-	made up over one million low-powered ARM processors connected by a specially
-	designed interconnection network. My research hopes to improve the performance
-	of the interconnection of SpiNNaker and more generally to other architectures
-	as well.
+	Recent neural models such as the Spaun brain simulator \cite{eliasmith12}
+	exhibit a remarkable range of cognitive abilities such as memory, problem
+	solving and pattern recognition. As well as realistic functional behaviour,
+	they also respond to failures, such as neuron death, just as real brains do
+	exhibiting a gradual decline in functionality. As a result of this, such
+	models offer a lot of potential for studying the properties of the brain in a
+	highly controlled, observable manner.
+	
+	Unfortunately, neural models are extremely computationally expensive and run
+	very slowly. Spaun, for example, takes around two and a half hours to simulate
+	one second of neural activity. In order to make such models usable, ways of
+	executing them faster, possibly in real time are clearly required.
+	
+	The SpiNNaker project is developing a specialised, massively parallel super
+	computer aimed at flexibly simulating extremely large neural models in real
+	time. The system is made up over one million low-powered ARM processors
+	connected by a specially designed interconnection network. My research hopes
+	to improve the design of interconnection networks, such as SpiNNaker's, for
+	use in simulating modern neural models.
 	
 	\section{Parallel Computing}
 		
@@ -57,7 +71,7 @@
 			Generally lots of broadcast global messaging, sometimes with low
 			reliability requirements.
 		
-		\subsection{Fluid Dynamics}
+		\subsection{Computational Fluid Dynamics (CFD)}
 			
 			Such algorithms such as heat propagation in a material. Lots of
 			computation and very local, neighbour-to-neighbour communication.
@@ -79,6 +93,7 @@
 			digital circuits where each individual component connects to only a few
 			or even one other component, neurons tend to be connected to hundreds or
 			thousands of other neurons.
+			
 			
 			Simulations of the brain therefore present a computational challenge as
 			large amounts of communication must take place between all the neurons

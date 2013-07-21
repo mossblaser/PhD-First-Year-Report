@@ -1,13 +1,16 @@
 \documentclass[a4paper,12pt,titlepage]{report}
 
 \usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{fullpage}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{tikz3d}
 \usepackage{ifthen}
+\usepackage[outline]{contour}
 
 % TikZ libraries
 \usetikzlibrary{ hexagon
@@ -16,6 +19,12 @@
                , positioning
                , decorations.pathreplacing
                , decorations.markings
+               , arrows
+               , positioning
+               , automata
+               , shadows
+               , fit
+               , shapes
                }
 
 % Cache TikZ figures
@@ -27,6 +36,9 @@
 	colorlinks=false,
 	pdfborder={0 0 0},
 }
+
+% When adding a border around some text, this is how thick it should be.
+\contourlength{1.5pt}
 
 \title{Improving the Interconnection Network of a Brain Simulator}
 \author{Jonathan Heathcote}
@@ -54,9 +66,7 @@
 	\end{abstract}
 	
 	\tableofcontents
-	
 	\listoffigures
-	
 	\listoftables
 	
 	\input{introduction}

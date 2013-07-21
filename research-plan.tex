@@ -32,8 +32,8 @@
 		this work, researchers have built an FPGA accelerated model of SpiNNaker's
 		interconnection network. The work hopes to verify the accuracy of the model
 		against both a traditional software model and also the final silicon
-		implementation. The results of this work are intended for publication in the
-		Journal of TODO by the end of September 2013.
+		implementation. The results of this work are intended for a Journal
+		publication aiming for submission around the end of September 2013.
 		
 		My participation in this project will be to develop the software simulation
 		to model and evaluate the network implemented in SpiNNaker. Once built, this
@@ -140,28 +140,109 @@
 		the average path length for uniform-random traffic in a real network with
 		the same topology. In brain simulation systems such as spinnaker, much of
 		the traffic is local and so uniform-random traffic is not representative.
+		This work will test the performance of small-world networks with more
+		realistic traffic.
+		
+		The other shortcoming found during the preliminary study was that when
+		physical wiring was restricted in length (as in real systems), the logical
+		distance covered by links in different parts of the system becomes uneven.
+		Since the folding and rack/cabinet placement which takes place in real
+		machines such as SpiNNaker is much more intricate than the simple torus
+		studied, these effects may become insignificant.
+		
+		This work is intended to take around one further month including ample time
+		for writing up and further experimentation with wiring schemes if required.
 	
 	
 	\section{Topology Comparison}
 		
-		Look at a whole load of popular topologies and possibly look at having two
-		distinct topologies. Saying this, will this end like the I/O space in x86?
-	
-	\section{Place and Routeability}
+		% Look at a whole load of popular topologies and possibly look at having
+		% two/more networks.
 		
-		Given more complex architecture and the massive NP-complete task of place
-		and route, what can be done? Work will look at possible schemes and
-		architectures which help with that.
+		With the small-world network testing complete, the simulator should now be
+		mature enough to begin further experiments with alternative, potentially
+		more structured topologies. This will be done to empirically test
+		alternative topologies for use in SNN simulation.
+		
+		This work will follow on from the experiments carried out by
+		\cite{vainbrand11} which was limited to widely used, more generic network
+		topologies with alternatives which may be better suited to the problem. For
+		example, topologies such as express cubes \cite{dally91} offer improved
+		performance for a limited amount of non-local traffic while preserving the
+		local performance of mesh and torus networks.
+	
+	\section{Placement and Routing}
+		
+		Given the scale of the SpiNNaker machine and the networks it simulates, the
+		NP-complete task of allocating processing tasks in each node in the system
+		(placement) and routing messages between them (routing) is an important
+		consideration. Current architectures, such as SpiNNaker, use table based
+		routing where a lookup table is used to decide where to route messages
+		arriving at each node in the system. Such systems offer a lot of flexibility
+		in the routing schemes that can be implemented but also may introduce
+		constraints on the complexity of routes through the system when the routing
+		tables are restricted in size.
+		
+		The use of alternative topologies will require alternative routing schemes
+		to be specified. In the above comparative work on possible topologies
+		simple, na\"ive routing algorithms will be used. These simple to implement
+		algorithms often result in non-optimal behaviour, especially with regard to
+		load balancing\cite{dally04}. Given that systems such as SpiNNaker use
+		packet-dropping flow control, where congested routes can cause packets to be
+		dropped, the effects of load imbalance may cause localised areas of high
+		packet losses which may significantly affect simulations.
+		\cite{greenfield10}.
+		
+		In this phase of work alternative routing algorithms which attempt to handle
+		routing table depth and congestion control will be studied. The former
+		problem is similar in style to the problem faced by chip and printed circuit
+		design automation tools. The latter side is covered largely by more
+		conventional interconnect/network routing algorithms. Combining and
+		evaluating these two approaches will be where much of this time is spent.
 	
 	\section{Effects of Multicast}
 		
-		Multicast networks are unusual in many respects and complicate things
-		somewhat. The model should be further extended to cope with multicast
-		traffic and further work carried out in this aim.
+		Following on from work on basic routing, the challenge of performing routing
+		for multicast traffic must be considered. Multicast routing must route a
+		message from a single source to multiple destinations, in the case of
+		spiking neural networks, potentially thousands of destinations.
+		
+		Current approaches to multicast routing again are split between chip and
+		circuit design and interconnect/network routing. Chip designs often
+		constrain the paths in various ways, for example to ensure that latency to
+		each destination is similar. This parallels the need to try and control
+		branching to minimise routing table resource. Network designs, however, are
+		often designed to reduce the amount of bandwidth consumed by branching as
+		late as possible. Once again, work must be done to combine and compare these
+		two approaches.
 	
 	\section{Interconnect Technology Evaluation}
 		
-		Can't use Silistix any more, HSS is nice but should we be using it on-chip?
+		% Can't use Silistix any more, HSS is nice but should we be using it
+		% on-chip?
+		
+		Given a suitable topology, a further question is that of the actual
+		implementation of the interconnect. Historically small-scale systems have
+		used synchronous signals to communicate between various parts of the system.
+		As systems have scaled, this is no longer feasible as clock distribution
+		grows ever more difficult. Instead GALS architectures have become prominent
+		where individual, synchronous components communicate via an asynchronous
+		medium.
+		
+		The SpiNNaker chip uses an asynchronous NoC based on CHAIN
+		\cite{plana07,bainbridge02} using IP from (the now defunct) Silistix Ltd.
+		This interconnect is able to handle arbitration between the many incoming
+		signals from on board processors and external connections to other chips.
+		Since this technology is no-longer available, alternatives must be sought.
+		
+		SpiNNaker chips are interconnected using parallel, delay insensitive
+		interconnects. These links, while adequate for the system's current scale,
+		may not be trivially sped up. More suitable external interconnects will
+		likely be based on high speed serial as described in
+		\S\ref{sec:high-speed-serial}.
+		
+		Work must be done to evaluate what technologies will be best suited for us
+		in a future system.
 	
 	\section{`SpiNNaker 2' Architecture}
 		

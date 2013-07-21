@@ -241,6 +241,9 @@
 		
 		\begin{description}
 			
+			% TODO: Explain this one since I moved the spinnaker machine description
+			% elsewhere
+			
 			\item[Wire Cost] The choice of cabling used has a direct impact on the
 			financial cost of the wiring. Higher quality materials or increased
 			numbers of wires can substantially drive up the cost of the cable and
@@ -264,81 +267,11 @@
 		meets the above requirements. Finally, the section concludes with a
 		description of the tool and the future work which remains.
 		
-		\subsection{SpiNNaker Boards}
+		\subsection{Reducing Wiring Length}
 			
-			% SpiNNaker has three dimensions of wiring connected in a torus. This has
-			% long wires. A torus intuitively has long wires along the way which causes
-			% a bit of a headache. You can slice it to make it rectangular, you can fold
-			% it to make the wires short (must fold 4x2) and divvy up into cabinets..
+			\label{sec:folding-toroids}
 			
-			% TODO SpiNNaker topology back reference
-			
-			The SpiNNaker topology, as described in \S\ref{sec:todo}, consists of a
-			regular 2D grid of 18-core chips arranged in a toroid with
-			nearest-neighbour links travelling North, North-East and East. The
-			complete system will host 57,600 chips which are split up into 1,200
-			circuit boards of 48 chips each (Figure \ref{fig:spinn4labelled}). These
-			boards are equipped with a number of high-speed links, six of which are
-			used to connect them to their neighbours, the others are reserved for
-			other I/O.
-			
-			\begin{figure}
-				\center
-				\input{figures/spinn4labelled}
-				\caption{48-chip SpiNNaker Circuit Board}
-				\label{fig:spinn4labelled}
-			\end{figure}
-			
-			The chips on each circuit board are logically laid out as shown in Figure
-			\ref{fig:chipsOnBoard}. Touching edges represent a chip-to-chip connection
-			and the outer connections are connected to chips on neighbouring boards.
-			In order to reduce the number of wires required, the board-to-board
-			connections are carried via six high-speed links (labelled in the figure)
-			each carrying 8 chip-to-chip connections. The six directions correspond to
-			the six high-speed link connectors on the board used for board-to-board
-			links.
-			
-			By concentrating several connections onto one high-speed link the number
-			of wires is cut from 128 to 4. This substantially reduces the cost of the
-			cables and connectors involved, satisfying the `wire cost' concern.
-		
-		\subsection{Connecting Boards Together}
-			
-			\label{ref:connectingBoardsTogether}
-			
-			\begin{figure}
-				\center
-				\input{figures/chipsOnBoard}
-				\caption{Logical arrangement of chips on a circuit board}
-				\label{fig:chipsOnBoard}
-			\end{figure}
-			
-			In order to construct a toroid, at least three boards  must be combined as
-			shown in Figure \ref{fig:threeboard} (known as a threeboard).  Figure
-			\ref{fig:threeboardSliced} shows how the threeboard arrangement can be
-			turned into a sheet which in turn can be turned into a toroid by connecting
-			the opposing sides.
-			
-			\begin{figure}
-				\begin{subfigure}[b]{0.45\textwidth}
-					\center
-					\input{figures/threeboard}
-					\caption{Threeboard}
-					\label{fig:threeboard}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.45\textwidth}
-					\center
-					\input{figures/threeboardSliced}
-					\caption{Sliced Into A Sheet}
-					\label{fig:threeboardSliced}
-				\end{subfigure}
-				
-				\caption[A `threeboard']{A `threeboard', the minimal configuration of boards yielding a
-				toroid}
-			\end{figure}
-			
-			Arbitrarily large systems can be created by repeating the threeboard
-			pattern as shown in Figure \ref{fig:boardsLogical}. In the figure,
+			In Figure \ref{fig:boardsLogical},
 			touching boards are connected and the lines represent wires which complete
 			the toroid by connecting opposing edges. It is clear that while the
 			majority of wires are very short (they connect two boards which are
@@ -354,8 +287,6 @@
 				{\color{green}North-East/South-West} and {\color{blue}East/West}}
 				\label{fig:boardsLogical}
 			\end{figure}
-			
-			\label{sec:folding-toroids}
 			
 			To remove long wires from a toroid network, the network can be folded
 			\cite{dally04}. An example of this process is shown for a simple

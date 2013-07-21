@@ -2,75 +2,765 @@
 	\label{chap:background}
 	
 	Talk about things that have been done by others in the field and try and point
-	out any holes and where the pain points are.
+	out any holes and where the pain points are. In particular, what are the
+	current "big boys" doing in top500, how do neural simulators specialise this?
+	What is SpiNNaker doing?
 	
-	\section{Top 500}
+	\section{Simulating Brains}
 		
-		Discuss the design of of various Top-500 machines or famous super computers.
-	
-	\section{Neural Simulators}
+		% Background on brain simulation techniques.
 		
-		Discuss various neural-simulation based approaches, e.g. neuromorphic
-		computers, Blue Brain, BrainScaleS, FPGA based things, speak to Franchesco.
+		Efforts to simulate the brain ultimately focus on building an approximate
+		model of the brain's behaviour. Most current brain models attempt to capture
+		the way that neurons in the brain behave and connect and communicate with
+		each other. Typically, the network is expressed as a graph of processing
+		elements which take inputs from other neurons and perform some simple
+		computation to produce an output. This type of model is known as an
+		artificial neural network (ANN).
 		
-		\subsection{Types}
+		\subsection{Generations of ANN}
 			
-			Spiking neural networks. More precise definition of the type of traffic.
+			The development of ANNs can be divided up into three coarse generations,
+			each increasing their level of biological realism.
+			
+			The first generation of ANNs, such as the McCulloch-Pitts threshold neuron
+			\cite{mcculloch43}, consisted of testing if a simple, linear function of
+			the neuron's inputs was above a threshold and outputting either a `high'
+			or `low' value. The function used in each neuron along with the pattern of
+			connectivity in the network define the behaviour of the network as a
+			whole.
+			
+			It was realised that communication between neurons was not level-based but
+			instead appeared to be based on the rate at which electrical `spikes' are
+			fired by neurons to their neighbours. The second generation of ANNs seek
+			to model this by representing the `firing rate' as their output as a
+			continuous value \cite{maass97}. Once again, the network's behaviour is
+			defined by the functions applied by each neuron and their connectivity.
+			
+			The third generation of ANNs extends this idea further by realising that
+			the firing rate is not the only significant factor but also the timing of
+			the arrival of spikes \cite{maass01}. Typically these spiking neural
+			networks (SNNs) work on the principle of `leaky integrate and fire'. Here
+			each spike either positively or negatively contributes to the amount of
+			`charge' stored in the neuron (that is, the charge is integrated over
+			time). Once the amount of charge reaches a certain threshold the neuron
+			`fires' (causing a spike to be transmitted) and the amount of charge in
+			the neuron returns to zero. Charge in the neuron constantly `leaks' away
+			such that if the neuron doesn't receive any spikes its charge will
+			eventually return to 0. This process is demonstrated in Figure
+			\ref{fig:snn-example}
+			
+			\begin{figure}
+				\center
+				\input{|"python figures/snn-example.py"}
+				\caption{Example behaviour of a simple leaky-intergrate-and-fire neuron}
+				\label{fig:snn-example}
+			\end{figure}
+		
+		\subsection{Computational Challenges}
+			
+			Simulating ANNs, and in particular SNNs, presents a number of
+			computational challenges.
+			
+			The first issue is that real, biological neural networks can contain
+			billions of neurons. An adult human, for example, has around 85 billion
+			neurons \cite{herculano09}. As a result, the size of biological-scale
+			networks can be extremely large requiring vast amounts of conventional
+			computational resource to model. This is conventionally achieved using
+			large, parallel computers.
+			
+			The second issue is that each neuron in the simulation may be connected to
+			thousands of others. As a result of this, huge amounts of one-to-many
+			communication must take place between the processing nodes simulating such
+			networks. Conventional electronic circuits, and consequently conventional
+			computing systems, tend to instead feature one-to-one and one-to-few
+			connections as the amount of power needed to send a signal to many places
+			at once can be large.
+			
+			Luckily most communication which occurs in the brain is highly local which
+			means that spikes don't usually need to be transmitted very far. This
+			means that in parallel architectures where nodes are connected via many
+			independent links, sending a spike between two different neurons is
+			unlikely to use the same network resources and thus the links required
+			don't need to be very fast.
+			
+			Neurons also tend to fire at a relatively slow rate compared to electronic
+			components with firing rates being measured in terms of Hertz while modern
+			electronics operate at multiple Gigahertz. As a result time-division
+			multiplexing can be used to use a single processing node or communication
+			channel for many different neurons and spikes respectively.
+	
+	
+	\section{Super Computers}
+		
+		\begin{table}
+			\center
+			\begin{tabular}{r l r r r l l l}
+				\toprule
+				Rank & Name    & Pflops& Cores  & Nodes  & Topology & Interconnect          & Sources \\
+				\midrule                          
+				1 & Tianhe-2   & 33.86 & 3,120,000 & 16,000 & Fat-Tree & Electrical \& Optical & \cite{dongarra13} \\
+				2 & Titan      & 17.59 & 560,640   & 18,688 & 3D Torus & Electrical            & \cite{bland12} \\
+				3 & Sequoia    & 17.17 & 1,572,864 & 98,304 & 5D Torus & Electrical \& Optical & \cite{prickett10} \\
+				4 & K Computer & 10.51 & 705,024   & 68,544 & 6D Torus & Electrical            & \cite{fujitsu11,yokokawa11} \\
+				5 & Mira       &  8.59 & 786,432   & 49,152 & 5D Torus & Electrical \& Optical & \cite{prickett10} \\
+				\bottomrule
+			\end{tabular}
+			
+			\caption{Top Five `Top500' Super Computers, June 2013 \cite{meuer13}}
+			\label{tab:top500}
+		\end{table}
+		
+		The Top500 list \cite{meuer13} aims to biannually enumerate the 500 fastest
+		super computers ranked by their performance on the LINPACK
+		\cite{dongarraLINPAC} benchmark. The list offers an insight into the current
+		state-of-the-art for high-performance computing. Table \ref{tab:top500}
+		shows the top five machines in the Top500 list released in June 2013 along
+		with basic details of the type of interconnection involved. In this section
+		an overview is given of the architecture of these large scale machines.
+		
+		The LINPACK benchmark performs computations to ``analyze and solve linear
+		equations and linear least-squares probles'' \cite{dongarra84} in order to
+		produce a computational load representative of certain computational tasks.
+		In particular it is essentially a CPU-bound problem which attempts to
+		measure the peak CPU performance achievable\footnote{Where CPU Performance
+		is measured in Petaflops: how many quadrillion ($10^{15}$) floating point
+		operations can be performed per second.} but without any significant
+		indication of the performance of the network which connects the system
+		together \cite{dongarra07}.
+		
+		Since simulation of SNNs requires a large amount of communication combined
+		with relatively small amounts of computation, this benchmark is not
+		representative of the workload of such a task. Despite the shortcomings of
+		the LINPACK benchmark there is unsurprisingly a high degree of correlation
+		between CPU power and interconnect performance in the best Top500 machines.
+		The Graph500 list is a more recent, complementary ranking which uses
+		benchmarks based on graph problems \cite{murphy10}. Such problems rely on
+		having efficient point-to-point communication between different parts of the
+		system where each part of the graph resides. With the exception of Titan
+		which was not measured, the top five Top500 computers also sit within in the
+		top six places of Graph500 \cite{murphy13}. As a result, due to its maturity
+		and wider scope, the Top500 list is discussed here as it is roughly
+		comparable.
+		
+		\subsection{Anatomy of a Super-Computer}
+			
+			% Networks usually have a macro topology on the nodes and some local
+			% topology within a node connecting many cores together.
+			% Cabinets and racks
+			
+			Large computer systems are typically built by combining a large number of
+			`processing elements' in such a way that they are able to efficiently
+			communicate and work together. These processing elements come in many
+			forms though the two most prevalent in the top five are:
+			
+			\begin{description}
+				
+				\item[General Purpose Processor] A conventional processor `core' as
+				found in desktop and mobile computer CPUs. These flexible devices have
+				historically represented the vast majority of the Top500's computing
+				power.
+				
+				\item[Graphics Processing Unit (GPU)] A specialised processor which is
+				able to efficiently perform the same operation across a large number of
+				data elements simultaneously. The Titan super computer notably makes
+				extensive use of GPUs \cite{bland12}.
+				
+			\end{description}
+			
+			A number of these individual cores are then combined together to create a
+			single `node' in the system. Typically the cores within a node are able to
+			communicate relatively cheaply while messages to remote nodes must
+			traverse a slower system-wide interconnection network.
+			
+			Tianhe-2 makes use of Intel Ivy Bridge processors along side Intel Xeon
+			Phi accelerators. The Ivy Bridge chips contain 16 general purpose
+			processor cores on a single chip while the Xeon Phi contains a further
+			57\footnote{The Intel Xeon Phi chip normally features 61 cores. Tianhe-2's
+			Xeon Phis were taken from early production runs where manufacturing errors
+			resulted in some cores being non-functional and disabled.} (somewhat
+			smaller) general purpose cores \cite{dongarra13}.
+			
+			TODO: Why does this section exist?
+		
+		\subsection{Topology}
+			
+			% Many cores lumped together under a single node. General topologies listed
+			% in table. Inside, this depends. Xeon-Phi is a ring, GPUs are SIMD array
+			% processors, some are just muti-core chips.
+			
+			Super computers are typically made up of a large number computing nodes
+			which are connected together by some form of interconnection network.
+			Typically the topology of these networks is such that local communication
+			between neighbouring nodes is extremely quick and doesn't compete with
+			distant nodes for communication links. The top five machines in the
+			Top500 list use either `fat tree' or `torus' topologies which are
+			described below.
+			
+			\subsubsection{Fat Tree}
+			
+				In a basic fat tree topology, nodes are connected to switches which in
+				turn are connected to further levels of switches (Figure
+				\ref{fig:fat-tree-concept}). Links higher in the switch hierarchy are
+				connected via links of increasing bandwidth which avoids the bandwidth
+				bottle-neck around the root node. In order for a node to communicate, it
+				sends its message to its parent switch which forwards the packet through
+				the tree to its destination.
+				
+				In practice, such as in large machines like `Tianhe-2', it is not
+				possible to build a switch with the required bandwidth to build a fat
+				tree. In addition, the root node acts as a single point of failure for
+				the whole system. As a result, folded Clos networks are often used
+				instead and have become synonymous with the fat tree topology. As shown
+				in Figure \ref{fig:fat-tree-closs}, here traffic is split between the
+				two top-level switches reducing the bandwidth requirement for each. In
+				addition, if a top-level switch fails messages can simply be routed
+				using the other switch.
+				
+				Fat trees give small maximum hop-counts ($O(\log{N})$ with respect to
+				the number of nodes in the system) to send a message from one node to
+				any other and also also allows near-by nodes to communicate in a very
+				small number of hops. Unfortunately, such topologies are dependent on
+				high-radix switches which can connect many nodes simultaneously.
+				Tianhe-2, for example, has thirteen 576-port switches based on a custom
+				router chip. The cost of such high-radix switches is typically that of
+				increased latency. In the case of Tianhe-2, the latency of a message
+				broadcast to all nodes in the system is around 9$\mu$s or about 19,800
+				CPU\footnote{Intel Ivy Bridge CPUs running at 2.2GHz}
+				cycles\cite{dongarra13}.
+				
+				In order to allow multiple simultaneous computation tasks to run, fat
+				trees can be trivially partitioned by allocating whole sub-trees to a
+				given task.
+				
+				\begin{figure}
+					\begin{subfigure}[t]{\textwidth}
+						\center
+						\input{figures/fat-tree-concept}
+						\caption{Basic Fat Tree
+						links.}
+						\label{fig:fat-tree-concept}
+					\end{subfigure}
+					
+					\vspace{1em}
+					
+					\begin{subfigure}[t]{\textwidth}
+						\center
+						\input{figures/fat-tree-closs}
+						\caption{Folded Clos Network}
+						\label{fig:fat-tree-closs}
+					\end{subfigure}
+					
+					\caption[Fat Tree Topologies]{Fat Tree Topologies. Thicker lines
+					represent higher bandwidth.}
+					\label{fig:fat-tree}
+				\end{figure}
+			
+			\subsubsection{Torus}
+			
+				The topology which features in all but one of the top-five, however, is
+				the torus topology (also known as a $k$-ary $n$-cube). In this topology,
+				nodes are arranged in a $n$-dimensional mesh. Nodes at the extreme edges
+				of the mesh are connected together to form a torus.
+				
+				In the 2D case this can be visualised as follows. Starting with a
+				regular 2D mesh (Figure \ref{fig:torus-flat}), the top- and bottom-most
+				nodes being connected together to form a tube (Figure
+				\ref{fig:torus-pipe}).  Then the left- and right-most nodes are
+				connected together forming a torus (Figure \ref{fig:torus-3D}). Though
+				hard to visualise, this process generalises to toruses of higher
+				dimensions.
+				
+				Each node is able to communicate directly with its immediate neighbours
+				in each dimension, that is above, below, left and right in this example.
+				More distant nodes are able to communicate by forwarding messages via
+				intermediate nodes.
+				
+				Because nodes in a torus only communicate directly with their
+				neighbours, the routers required in each node may be of a low radix
+				compared to the ones in the fat tree's switches. For an $n$-dimensional
+				torus each node requires a $n+1$ router for systems containing $k^n$
+				nodes where $k$ is the length of each dimension.
+				
+				Compared with a fat tree, however, a greater number of hops is required
+				in the worst case where two nodes are distant. In a torus with $k$ nodes
+				in each of $n$ dimensions the worst case path length is $\frac{kn}{2}$
+				\cite{dally04}. As a result, though individual hops are less expensive,
+				the time taken to broadcast a message to all nodes in a large Blue Gene/Q
+				supercomputer such as Sequoia is 17.19$\mu$s compared to 9$\mu$s for the
+				same operation in Tianhe-2 \cite{morozov12}.
+				
+				Higher dimensional toruses are also easily partitioned into a number of
+				lower-dimensional toruses (with 1, 2 and 3 dimensions in the K Computer)
+				or meshes to allow machines to be shared between many independent
+				computing tasks \cite{yokokawa11,chen11}.
+				
+				\begin{figure}
+					\begin{subfigure}[t]{\textwidth}
+						\center
+						\input{figures/torus-flat}
+						\caption{Mesh (Grey lines show wrap-around connections added in a torus)}
+						\label{fig:torus-flat}
+					\end{subfigure}
+					
+					\vspace{1em}
+					
+					\begin{subfigure}[t]{\textwidth}
+						\center
+						\input{figures/torus-pipe}
+						\caption{Rolled into a Tube}
+						\label{fig:torus-pipe}
+					\end{subfigure}
+					
+					\vspace{1em}
+					
+					\begin{subfigure}[t]{\textwidth}
+						\center
+						\input{figures/torus-3D}
+						\caption{Bent into a Torus}
+						\label{fig:torus-3D}
+					\end{subfigure}
+					
+					\caption{Transforming a Mesh into a Torus}
+					\label{fig:forming-a-torus}
+				\end{figure}
+		
+		\subsection{Interconnect}
+			
+			%Many now using optical to transmit between cabinets. Electrical still
+			%rules the waters for inter-card stuff.
+			
+			The physical links responsible for connecting machines together is another
+			important factor in the performance achievable by a given interconnection
+			system. The current state-of-the-art techniques fall into two categories:
+			electrical (`high-speed serial') and, increasingly, optical transmission.
+			
+			Electrical transmission technologies are generally much cheaper than
+			optical, especially for short distances and lower bandwidth. As a result
+			connections between physically neighbouring nodes are almost universally
+			connected via such links. In systems such as Blue Gene/Q and Tianhe-2
+			optical links are used to connect between different cabinets in the system
+			\cite{dongarra13,prickett10}. These optical links are able to carry the
+			equivalent of many electrical signals over longer distances at the expense
+			of more complex hardware requirements for transmitters and receivers.
+			
+			As is described in greater detail later in
+			\S\ref{sec:wiring-up-large-spinnaker-machines} the topology of a network
+			can greatly influence the difficulty of physically connecting nodes
+			arranged in cabinets. Cabinets essentially map the physical nodes into an
+			approximately 2D sheet. As a result, for torus networks of more than two
+			dimensions, links which are physically short in higher dimensions can
+			result in long wires between distant cabinets. For hierarchical networks
+			such as fat trees, long wires can result from the need to connect together
+			desperate parts of a system at the higher levels of the hierarchy.
+			
+			TODO: What am I trying to say here?
+			
+			% At a very high level, these two systems operate in a similar fashion.
+			% Messages are broken down into individual bits by a transmitter and then
+			% sent one bit at a time across a pair of wires or a glass fibre for
+			% high-speed serial and optical transmission respectively. At the receiver
+			% the bits are reassembled into a complete message.
+	
+	\section{Hardware Neural Simulators}
+		
+		% Discuss various neural-simulation based approaches, e.g. neuromorphic
+		% computers, Blue Brain, BrainScaleS, FPGA based things, speak to Franchesco.
+		
+		Current super computers are heavily focused on computation-heavy tasks as is
+		apparent from the use of of hundreds of thousands of high-end processor
+		cores in the Top500's top five machines. Projects such as the Blue Brain
+		project \cite{markram06} attempt to make use of such computationally
+		powerful machines in the simulation of relatively small ANNs of tens of
+		thousands of especially realistically neurons.
+		
+		ANN models which use less realistic models of neuron behaviour in order to
+		allow the simulation of larger networks, however, change the balance between
+		computation and communication. These large networks require relatively
+		little computation for each neuron but instead require vast amounts of
+		communication between connected neurons. As a result, conventional super
+		computer are a poor fit and alternative architectures have been developed
+		for neural simulation.
+		
+		There are three distinct approaches being taken to designing hardware for
+		neural simulation. One is to use analog electronic components for the
+		entire system, another is to mix analog and digital components and a final
+		approach is to use traditional digital components. These three approaches
+		and their merits are described below.
+		
+		\subsection{Analog}
+		
+			Though analog computing has long been out of favour for general purpose
+			computing, it has been suggested for the purpose of neural simulation as
+			it is ultimately designed to match an analog system: the brain. Neural
+			computing is highly fault-tolerant and is not based on the assumption
+			that values will be calculated or communicated precisely. Modern digital
+			computers, by contrast, have rigid requirements for the precision of
+			values used in such systems and so dedicate vast amounts of hardware to
+			guaranteeing such precision.
+			
+			A wide range of techniques for implementing the required functions in
+			analog circuitry have been proposed
+			\cite{graf86,holler89,agranat90,azghadi13}.  The analog circuits for
+			computing functions required in neural simulations are often very simple
+			and require less power than the equivalent calculations running on a
+			general purpose processor \cite{misra10}. Even though the lack of
+			precision yielded by analog circuits is not a problem for neural
+			simulation, the lack of consistency is. The same analog circuit may have
+			widely different characteristics in one part of the chip compared to
+			another due to variations in the silicon wafer. In addition circuits
+			must tolerate changes in temperature and voltage, a task which is
+			substantially more challenging for analog circuits compared to their
+			digital counterparts.
+		
+		\subsection{Mixed Mode}
+			
+			So-called `mixed mode' systems have been designed such as
+			\cite{heittmann02} which combines analog computational components with
+			digital memory to combine the efficient computation of analog computing
+			with dense storage of digital memory. In \cite{murray91} another mixed
+			mode system is given which again features analog computation of neuron
+			behaviour but uses digital signals to distribute spike transmission
+			allowing easier routing.
+		
+		\subsection{Digital}
+			
+			The biggest drawback of the currently proposed analog and mixed mode
+			systems is that, while efficient, they are very inflexible compared to
+			digital approaches which tend to be constructed from general purpose
+			computing resources.
+			
+			TODO: Cite some stuff here
+	
 	
 	\section{SpiNNaker}
 		
 		% The architecture focused on by my research.
 		
-		The SpiNNaker project is developing a super computer designed for running
-		real-time simulations of large networks of SNNs.
+		The SpiNNaker project is developing a super computer architecture designed
+		for running real-time simulations of large networks of SNNs. In particular,
+		its designed to be `universal' in the sense that it makes few assumptions
+		about the function of individual neurons \cite{furber06}. Since many
+		possible neuron models exist and new ones are being produced constantly,
+		this built-in flexibility escapes the fixed assumptions made by many neural
+		network simulators\cite{furber07}.
 		
-		\subsection{Real Time Simulation}
-			
-			Alternative method is having matched delays for interconnect.
-			
-			Real time constraints. Simulations run as time-stepped divisions. Messages
-			are assumed to arrive at their destinations instantly because they should
-			all arrive by the deadline. Can perfectly match deterministic software
-			models (though time stepping isn't so nice if it is very coarse).
+		To achieve this flexibility SpiNNaker combines over one million
+		energy-efficient, general purpose mobile phone grade CPUs with a custom
+		interconnect network designed to tackle the communication bound problem of
+		simulating large networks of simple neurons. The machine will be eventually
+		be scaled up to support networks of around one billion ($10^9$) spiking
+		neurons in real-time.
+		
+		Due to the machine's flexibility and novel interconnect it presents many
+		opportunities for experimentation and so has been the focus of much of the
+		preliminary work done so far. The rest of this section describes SpiNNaker
+		highlighting areas relevant to the preliminary work and which are unique to
+		the system.
 		
 		\subsection{Architecture}
 			
-			Due to the neural networks we're using, this is the sort of topology that
-			was made. Good for sending short messages to many targets at once. Bad at
-			system stuff though, also currently very much 2D unlike the brain. Have a
-			hexagonal toroid (picture) which is nice and regular but a pain to wire up.
+			% Due to the neural networks we're using, this is the sort of topology that
+			% was made. Good for sending short messages to many targets at once. Bad at
+			% system stuff though, also currently very much 2D unlike the brain. Have a
+			% hexagonal toroid (picture) which is nice and regular but a pain to wire up.
+			
+			SpiNNaker is made up of a 2D toroid\footnote{A toroid, in this context, is
+			the generalisation of a torus where nodes are connected to more than four
+			neighbours.} of chips where each chip connects to its six neighbouring
+			chips as shown in Figure \ref{fig:spinnaker-chips}. The system can be
+			flexibly extended by simply adding more chips to this arrangement. The
+			size of the network is only limited by the size of address fields used by
+			the routers (32 bits).
+			
+			Each SpiNNaker chip contains 18 low-power ARM processor cores connected
+			together via a network on chip (NoC) as shown in Figure
+			\ref{fig:spinnaker-chip}. Each core has a small amount of private memory
+			and has access to a larger, chip-wide memory (not shown). Finally a router
+			is responsible for sending and receiving messages from the six
+			neighbouring chips as well as forwarding messages not destined for the
+			chip.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{0.49\textwidth}
+					\center
+					\input{figures/spinnaker-chip}
+					\caption{SpiNNaker chip\\\color{white}.}
+					\label{fig:spinnaker-chip}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.49\textwidth}
+					\center
+					\input{figures/spinnaker-chips}
+					\caption{Connections (lines) between chips (dots) with wrap-around
+					connections not shown}
+					\label{fig:spinnaker-chips}
+				\end{subfigure}
+				
+				\caption{Overview of the SpiNNaker architecture}
+				\label{fig:spinnaker-architecture}
+			\end{figure}
 		
 		\subsection{Routing}
 			
-			Routing is done by table based router. Entries for each turn or fork in a
-			packet path. Limited number of entries. Source address based routing (TLA
-			to be requested). All routing (currently) static and offline.
+			% Routing is done by table based router. Entries for each turn or fork in a
+			% packet path. Limited number of entries. Source address based routing (TLA
+			% to be requested). All routing (currently) static and offline.
+			
+			The on-chip router is table based meaning that routing decisions are taken
+			based on pre-determined values loaded into a memory before simulations
+			begin. The router operates on individual packets of data which are either
+			40 or 72 bits in length. These packets are very short compared to the type
+			of interconnection network commonly used in super computers. Such networks
+			are typically designed to transfer larger blocks of data, possibly many
+			kilobytes long, from node to node. SpiNNaker however deals with SNNs where
+			only spikes need to be transmitted requiring little or no associated data.
+			The system supports four different kinds of packet:
+			
+			\begin{description}
+				
+				\item[Point-to-Point (P2P)] These packets are addressed to an individual
+				chip and will be passed to the core arbitrarily selected to be the `chip
+				monitor'. Packets are routed using a routing table.
+				
+				\item[Multicast (MC)] Sent by a single core and delivered to a
+				predetermined set of cores in the system. Packets are routed according
+				to their source address and do not explicitly specify the destinations
+				of the packet. Packets are routed using a routing table.
+				
+				\item[Fixed Route (FR)] Automatically routed to a predefined central
+				point in the system. Used, for example, to collect diagnostic
+				information back to the host machine. By not requiring an address a
+				larger payload can be attached.
+				
+				\item[Nearest Neighbour (NN)] Routed to the immediate neighbours of a
+				chip without the need for a routing table. On system start up routing
+				tables have not been initialised and so NN packets are used to initially
+				load the tables.
+				
+			\end{description}
 			
 			\subsubsection{Routing Scheme}
 				
-				Current routing is very naive dimension order routing. Also highly
-				static and doesn't respond to network utilisation. The internet is
-				dynamic, maybe this should be too?
+				% Current routing is very naive dimension order routing. Also highly
+				% static and doesn't respond to network utilisation. The internet is
+				% dynamic, maybe this should be too?
+				
+				Table based routing allows a wide array of possible routing schemes to
+				be implemented conditional to two key constraints. First, the route
+				taken by a packet with a particular source/destination address will
+				always take the same path through the system. This is known as
+				deterministic oblivious routing as the scheme is unaware of the system's
+				state and cannot react to load imbalance though schemes exist which can
+				improve load balance in the general case \cite{singh02}\footnote{Though
+				the algorithm presented is not deterministic (it uses non-deterministic
+				randomised choices) it can be approximated when the number of routes
+				required is sufficiently large (as in the case of multicast routing).}.
+				
+				\begin{figure}
+					\center
+					\input{figures/dimension-order-routing}
+					\caption{Dimension order routing in SpiNNaker showing a path from node
+					$S$ to node $T$.}
+					\label{fig:dimension-order-routing}
+				\end{figure}
+				
+				Current versions of the routing software uses simple dimension order
+				routing. Here, the three axes along which packets can travel are
+				considered to be three `dimensions'\footnote{The three dimensions in
+				SpiNNaker's toroid are not orthogonal as would be the case in a
+				conventional torus network which is the cause of some of the slightly
+				unintuitive properties of the topology.}. Packets travel along each
+				dimension in turn until they can get no closer at which point they move
+				onto the next dimension as shown in Figure
+				\ref{fig:dimension-order-routing}. Such paths are easily computed as
+				shown in \cite{nocetti02} and are minimal in length.
 			
 			\subsubsection{Multicast}
 				
-				Not much stuff on this at the moment. I am so shit I've not read
-				anything about it anyway so that needs to change.
+				% Not much stuff on this at the moment. I am so shit I've not read
+				% anything about it anyway so that needs to change.
+				
+				Multicast packets allow SpiNNaker to efficiently handle the distribution
+				of spikes from heavily connected nodes in the system without requiring a
+				unique packet to be sent from the source to every destination. Instead a
+				single packet is transmitted which is able to `fork' in order to reach
+				multiple processors later in its journey.
+				
+				Unlike P2P packets, for which the route for every possible chip address
+				(16 bits) is stored in a table, MC packets are routed based on a 32 bit
+				key which uniquely identifies the neuron which fired. Exhaustively
+				storing the route for every possible 32-bit key is not possible since 24
+				bits are required for each entry\footnote{One bit for each of the 18
+				cores and 6 external links specifying if the packet should be routed to
+				that output} thus requiring a 12 gigabyte routing table.
+				
+				Instead of an exhaustive table, one with 1,024 entries is used. The
+				router looks up the 32-bit key of MC packets and, if a matching entry
+				exists, uses that entry to decide where to route the packet. If no entry
+				exists in the table, the packet is forwarded to the link physically
+				opposite to which it entered. As a result, the routing table only
+				requires an entry when the packet changes direction or is to be
+				delivered to a core.
+				
+				Since the route for messages with a given key won't pass through or
+				change direction at most routers in the system they don't need to
+				include an entry in their routing table for it. As a result this small
+				size of routing table should be adequate.
+				
+				\begin{figure}
+					\begin{subfigure}[b]{0.24\textwidth}
+						\center
+						\input{figures/multicast-routing-a}
+						\caption{}
+						\label{fig:multicast-routing-a}
+					\end{subfigure}
+					\begin{subfigure}[b]{0.24\textwidth}
+						\center
+						\input{figures/multicast-routing-b}
+						\caption{}
+						\label{fig:multicast-routing-b}
+					\end{subfigure}
+					\begin{subfigure}[b]{0.24\textwidth}
+						\center
+						\input{figures/multicast-routing-c}
+						\caption{}
+						\label{fig:multicast-routing-c}
+					\end{subfigure}
+					\begin{subfigure}[b]{0.24\textwidth}
+						\center
+						\input{figures/multicast-routing-d}
+						\caption{}
+						\label{fig:multicast-routing-d}
+					\end{subfigure}
+					\caption{Possible multicast routings from $S$ to $T_1$ and $T_2$}
+					\label{fig:multicast-routing}
+				\end{figure}
+				
+				In multicast routing, the choice of where a route should fork can have a
+				great impact on both system load, packet latency and routing table entry
+				usage. Figure \ref{fig:multicast-routing} shows several examples of
+				valid multicast routings which fork at different points, each with
+				differing trade-offs. Figures (b) - (d) are all optimal in the total
+				number of `hops' required while (a), (c) and (d) are optimal in the
+				number of routing entries required.
+				
+				As well as guaranteeing no routing table requires more than 1,024
+				entries the routing scheme chosen must attempt to ensure an even
+				load-balance by avoiding over-using certain links. Various heuristic
+				approaches based on extensions to Lee's algorithm have been proposed for
+				future versions of the routing software\cite{davidson13}.
+			
+			\subsubsection{Emergency Routing}
+				
+				If a packet's intended route is blocked, for example due to a bad link,
+				`emergency routing' via an adjacent chip can optionally be attempted as
+				shown in Figure \ref{fig:emergency-routing}. This novel approach allows
+				the system to automatically recover from certain link failures without
+				immediate manual intervention.
+				
+				\begin{figure}
+					\center
+					\input{figures/emergency-routing}
+					\caption{Emergency route from $S$ to $T$ when the normal route is
+					unavailable.}
+					\label{fig:emergency-routing}
+				\end{figure}
 			
 		
 		\subsection{Hardware Abstractions}
 			
-			SpiNNaker is made up of 18 core chips on 48-chip boards in 12 card racks
-			in 5-rack cabinets in a 10 cabinet system. Woah.
-		
-		\subsection{Spin-Link}
+			% SpiNNaker is made up of 18 core chips on 48-chip boards in 12 card racks
+			% in 5-rack cabinets in a 10 cabinet system. Woah.
 			
-			Boards are connected together via high speed serial links. 8 links per
-			board. First gen had two spare connections, new one has ring and one
-			spare. What can the spares be used for?
+			The largest SpiNNaker system will contain 1,036,800 cores in 57,600 chips.
+			These chips are split up into 1,200 circuit boards of 48 chips each as
+			shown in Figure \ref{fig:spinn4labelled}.
+			
+			\begin{figure}
+				\center
+				\input{figures/spinn4labelled}
+				\caption{48-chip SpiNNaker Circuit Board}
+				\label{fig:spinn4labelled}
+			\end{figure}
+			
+			Each board is equipped with a number of high-speed links, six of which are
+			used to connect the board's chips them to their neighbours on other
+			boards. The other six links are reserved for connecting other I/O such as
+			sensors, such as the silicon retina, and robotic platforms
+			\cite{davies10}. An Ethernet connection is also present to provide a
+			simple, low-bandwidth link to an external host system.
+			
+			\begin{figure}
+				\center
+				\includegraphics[width=0.5\textwidth]{figures/spiNNaker103.jpg}
+				\caption{A partially populated rack of SpiNNaker boards}
+				\label{fig:spiNNaker103}
+			\end{figure}
+			
+			Twenty-four boards are then placed in racks such as in Figure
+			\ref{fig:spiNNaker103} which are in turn placed, five-high, into ten
+			cabinets. Further details of this arrangement are given later in
+			\S\ref{sec:wiring-up-large-spinnaker-machines} where preliminary work on
+			wiring schemes for the machine is described.
+		
+		\subsection{Connecting Boards Together}
+			
+			% Describe what the edge links have.  Boards are connected together via high
+			% speed serial links. 8 links per board. First gen had two spare
+			% connections, new one has ring and one spare. What can the spares be used
+			% for?
+			
+			% TODO: Reword
+			The chips on each circuit board are logically laid out as shown in Figure
+			\ref{fig:chipsOnBoard}. Touching edges represent a chip-to-chip connection
+			which uses a delay insensitive, parallel `2-of-7' communications scheme
+			similar to that used in the on-chip network requiring 16 wires per link.
+			If this technology was used to connect boards together 768 wires would be
+			required.  This would be prohibitively expensive requiring expensive,
+			highly specialised cables and connectors. Instead, an alternative
+			technology, known as high-speed serial, is used which replaces the 768
+			wires with only 24 which can be carried by commodity cables. This
+			technology allows eight chip-to-chip connections to share a single cable
+			grouped as shown in the figure.
+			
+			\begin{figure}
+				\center
+				\input{figures/chipsOnBoard}
+				\caption{Logical arrangement of chips on a circuit board}
+				\label{fig:chipsOnBoard}
+			\end{figure}
+			
+			In order to construct a toroid, at least three boards must be combined as
+			shown in Figure \ref{fig:threeboard} (an arrangement known as a
+			threeboard).  Figure \ref{fig:threeboardSliced} shows how the threeboard
+			arrangement can be turned into a sheet which in turn can be turned into a
+			toroid as shown earlier in Figure \ref{fig:forming-a-torus}.
+			
+			\begin{figure}
+				\begin{subfigure}[b]{0.45\textwidth}
+					\center
+					\input{figures/threeboard}
+					\caption{Threeboard}
+					\label{fig:threeboard}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.45\textwidth}
+					\center
+					\input{figures/threeboardSliced}
+					\caption{Sliced Into A Sheet}
+					\label{fig:threeboardSliced}
+				\end{subfigure}
+				
+				\caption[A `threeboard']{A `threeboard', the minimal configuration of
+				boards yielding a toroid}
+			\end{figure}
+			
+			Arbitrarily large systems can be produced by repeating the threeboard
+			pattern to create larger toroids.
 	
-	
-	\section{High Speed Serial}
+	\section{High-Speed Serial}
+		
+		\label{sec:high-speed-serial}
 		
 		Always on, power hungry. Better to have few of these running fast rather
 		than many running slow? Where are these used. What do they replace.
