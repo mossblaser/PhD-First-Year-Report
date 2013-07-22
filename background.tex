@@ -762,5 +762,158 @@
 		
 		\label{sec:high-speed-serial}
 		
-		Always on, power hungry. Better to have few of these running fast rather
-		than many running slow? Where are these used. What do they replace.
+		% Always on, power hungry. Better to have few of these running fast rather
+		% than many running slow? Where are these used. What do they replace.
+		
+		High-speed serial is the general name for a technology which allows very
+		high-bandwidth links to be constructed using very few electrical wires.
+		These links are the basis of many widely used technologies ranging from
+		S-ATA, used for attaching consumer-grade hard disks to computers
+		\cite{sataio}, to the InfiniBand interconnect designed for super computers
+		\cite{infinibandta}.
+		
+		Compared to older technologies such as simple parallel buses, high-speed
+		serial links require more complex hardware to implement and so tend to be
+		reserved for chip-to-chip or board-to-board connections. Indeed, they are
+		the basis of many current Top500 super computer interconnects as well as
+		SpiNNaker's board-to-board links. This section outlines the basics of the
+		technology and the reasons for its increased complexity.
+		
+		\subsection{From Parallel to Serial}
+			
+			Traditionally, signals between components in a system have been carried by
+			a set of parallel wires. Each wire carried a single bit allowing multiple
+			bits to be transmitted at once. Figure \ref{fig:parallel-example-no-skew}
+			shows eight parallel signals being used to transmit a message. The
+			electrical signal being sent down each wire is sampled at the tick of a
+			clock (the vertical lines in the figure) and the eight bits are
+			interpreted as an ASCII character.
+			
+			In practice each of the wires carrying the parallel signal will have
+			slightly differing electrical properties due to imperfections during
+			manufacturing. These differences result in the signals taking different
+			amounts of time to travel along the wires, an effect known as skew. For a
+			long time the skew remained insignificant compared to the time between
+			samples being taken of the parallel signal. As clock speeds increased,
+			however, skew started to become significant enough to cause some of the
+			parallel signals to arrive so far apart that some would not be sampled by
+			the receiver resulting in transmission errors such as in Figure
+			\ref{fig:parallel-example-skew}.
+			
+			\begin{figure}
+				\begin{subfigure}[b]{0.49\textwidth}
+					\center
+					\input{|"python figures/parallel_comms.py 'Hello, World!' 1.0 1.3 0"}
+					\caption{No Skew}
+					\label{fig:parallel-example-no-skew}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.49\textwidth}
+					\center
+					\input{|"python figures/parallel_comms.py 'Hello, World!' 1.0 1.3 0.7"}
+					\caption{With Skew}
+					\label{fig:parallel-example-skew}
+				\end{subfigure}
+				
+				\caption{Parallel signalling}
+				\label{fig:parallel-example}
+			\end{figure}
+			
+			Unfortunately, since wiring technology has been unable to improve fast
+			enough to keep skew acceptably small for all but the shortest connections
+			parallel signalling has been replaced with high-speed serial signalling.
+			Here, bits are sent one after another as shown in Figure
+			\ref{fig:serial-example}. Because there is only one signal the problem of
+			skew is eliminated.
+			
+			\begin{figure}
+				\center
+				\begin{tikzpicture}
+					\input{|"python figures/serial_comms.py '' 'Hello, World!' 1 0 0 0 0 0.4 0.2"}
+				\end{tikzpicture}
+				
+				\caption{Serial signalling}
+				\label{fig:serial-example}
+			\end{figure}
+		
+		
+		\subsection{Clock Recovery}
+			
+			In systems using parallel links it is often possible for the two devices
+			to share a common clock in order for the receiver to be able to determine
+			the correct time to sample the incoming signal. In high-speed serial
+			systems the possible skew between the data signals and an associated clock
+			signal would be unacceptable. As a result, the receiver must determine the
+			exact clock frequency and phase by observing the incoming data stream.
+			
+			A phase locked loop (PLL) is a device which is able to synthesize the
+			original clock signal given a stream of data which changes sufficiently
+			often \cite{athavale05}. In order to be effective, the incoming data
+			stream must transition between 0 and 1 sufficiently frequently for the PLL
+			to be able to `lock on'. For example it is not possible to infer the clock
+			from long string of 0s while a rapidly changing.
+			
+			Unfortunately real data can legally contain such long strings of the same
+			value. Figure \ref{fig:8b10b-example} shows a string which contains some
+			ASCII characters followed by a sequence of zeros which could cause a PLL
+			to lose its lock on the clock used to transmit the signal. To work around
+			this, the raw data is encoded using 8b/10b coding
+			\cite{widmer83}\footnote{8b/10b is slowly being replaced by alternatives
+			such as 64b/66b which have less overhead but offer essentially the same
+			advantages.}. The raw data is encoded in blocks of 8 bits into 10 bit
+			symbols as shown in the figure. This encoding adds an additional 20\% of
+			overhead but grantees that no long sequences of 0 or 1 will be present in
+			the output.
+			
+			\begin{figure}
+				\center
+				\begin{tikzpicture}
+					\input{|"python figures/serial_comms.py 'Raw' 'Zero*****' 1 0 0 0 0 0.4 0.2"}
+					\begin{scope}[yshift=-1.5cm]
+						\input{|"python figures/serial_comms.py '8b/10b' 'Zero*****' 1 0 0 0 1 0.4 0.2"}
+					\end{scope}
+				\end{tikzpicture}
+				
+				\caption{8b/10b encoding example}
+				\label{fig:8b10b-example}
+			\end{figure}
+		
+		
+		\subsection{Electrical Considerations}
+			
+			Typically, data is transmitted down a wire by varying the voltage applied
+			to it by the transmitter, for example to 5 volts to indicate a binary `1'
+			or 0 volts to indicate a binary `0'. Unfortunately, the voltage assumed to
+			be 0 volts by two connected systems may not be exactly equal in practice
+			(a phenomenon known as voltage imbalance). Directly connecting these
+			imbalanced systems would cause a current to unintentionally flow between
+			them which wastes energy and may damage the system. To resolve this the
+			two systems may be connected via a capacitor which means that while
+			changes in voltage will propagate between the two systems, the actual
+			voltage will not.
+			
+			With the introduction of a capacitor into the link a new problem emerges.
+			If, over time, more `1's are transmitted than `0's the capacitor can
+			become charged incorrectly causing the receiver to detect a `0'. The
+			8b/10b code, described previously, also has the property that the number
+			of `1's and `0's remains equal over time which eliminates this effect.
+			This is known as maintaining DC balance. This can be seen in Figure
+			\ref{8b10b-example} where the symbol for \texttt{0x00}, labelled
+			\texttt{D.00.0}, alternates between two values to maintain the balance of
+			`0's and `1's transmitted.
+			
+			Electrical wires are also subject to external noise which can cause the
+			value of a bit to be misread. To alleviate this, the signal is transmitted
+			twice with one wire carrying the signal and the other its negation. If
+			these wires are kept physically close they are likely to experience
+			exactly the same pattern of noise as shown in Figure
+			\ref{fig:differential-encoding}. The receiver takes the difference of the
+			two signals which causes the noise, which is equal in both, to be
+			cancelled out leaving the original data intact.
+			
+			\begin{figure}
+				\center
+				\input{figures/differential-encoding}
+				
+				\caption{Differential encoding to eliminate noise}
+				\label{fig:differential-encoding}
+			\end{figure}

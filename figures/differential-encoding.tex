@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+	\input{|"python figures/serial_comms.py 'Noise' 'Hello, World!' 0 0.2 1 0 0 0.38 0.2"}
+	
+	\begin{scope}[yshift=-1.0cm]
+		\input{|"python figures/serial_comms.py 'Signal+' 'Hello, World!' 0 0.2 0 0 0 0.38 0.2"}
+	\end{scope}
+	
+	\begin{scope}[yshift=-2.0cm]
+		\input{|"python figures/serial_comms.py 'Signal-' 'Hello, World!' 0 0.2 0 1 0 0.38 0.2"}
+	\end{scope}
+	
+	\begin{scope}[yshift=-3.0cm]
+		\input{|"python figures/serial_comms.py 'Difference' 'Hello, World!' 1 0.0 0 0 0 0.38 0.2"}
+	\end{scope}
+	
+\end{tikzpicture}
+

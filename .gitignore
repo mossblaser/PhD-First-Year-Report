@@ -11,3 +11,4 @@ report.out
 report.toc
 report.pdf
 report.bib
+*.pyc
