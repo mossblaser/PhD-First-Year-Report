@@ -430,7 +430,30 @@
 			digital approaches which tend to be constructed from general purpose
 			computing resources.
 			
-			TODO: Cite some stuff here
+			The Blue Brain project, mentioned above, is also interested in simulating
+			less detailed neural models. Even so, the size of such simulations is
+			still limited to around 100 million neurons \cite{markram06} as the
+			simulation becomes increasingly communication-bound.
+			
+			Others have approached this problem by developing custom, digital on-chip
+			neural simulators \cite{prange93,jahnke96,schoenauer99,mehrtash03}. While
+			successful in allowing relatively large numbers of neurons to be
+			simulated, around 1 million in the case of \cite{mehrtash03}, these
+			approaches are fundamentally restricted to only the models the designers
+			originally intended. This lack of flexibility along with the increasing
+			costs of designing custom silicon has pushed research away from this
+			approach.
+			
+			FPGAs (field programmable gate arrays) are, essentially, chips which can
+			be electrically programmed with custom logic circuits. They are now widely
+			used in place of custom chips for performance-sensitive but highly
+			specialised tasks as well as prototyping and development of conventional
+			chips. Work using FPGAs to simulate neural models such as
+			\cite{hellmich05} have allowed around half a million neurons with
+			realistic numbers of connections between them to be simulated. Despite
+			being considerably cheaper than completely custom hardware, FPGA
+			development is still much slower than developing for general purpose CPUs
+			and so still yields relatively inflexible systems.
 	
 	
 	\section{SpiNNaker}
