@@ -181,7 +181,7 @@
 			resulted in some cores being non-functional and disabled.} (somewhat
 			smaller) general purpose cores \cite{dongarra13}.
 			
-			TODO: Why does this section exist?
+			% TODO: Why does this section exist?
 		
 		\subsection{Topology}
 			
@@ -354,7 +354,7 @@
 			such as fat trees, long wires can result from the need to connect together
 			desperate parts of a system at the higher levels of the hierarchy.
 			
-			TODO: What am I trying to say here?
+			% TODO: What am I trying to say here?
 			
 			% At a very high level, these two systems operate in a similar fashion.
 			% Messages are broken down into individual bits by a transmitter and then
@@ -504,6 +504,9 @@
 			neighbouring chips as well as forwarding messages not destined for the
 			chip.
 			
+			% TODO: Fix this figure as the CPUs don't really go through the NoC to the
+			% router for normal use...
+			
 			\begin{figure}
 				\center
 				\begin{subfigure}[b]{0.49\textwidth}
@@ -583,8 +586,8 @@
 				\begin{figure}
 					\center
 					\input{figures/dimension-order-routing}
-					\caption{Dimension order routing in SpiNNaker showing a path from node
-					$S$ to node $T$.}
+					\caption[Dimension order routing in SpiNNaker]{Dimension order routing
+					in SpiNNaker showing a path from node $S$ to node $T$.}
 					\label{fig:dimension-order-routing}
 				\end{figure}
 				
@@ -937,6 +940,6 @@
 				\center
 				\input{figures/differential-encoding}
 				
-				\caption{Differential encoding to eliminate noise}
+				\caption{Eliminating noise using differential encoding}
 				\label{fig:differential-encoding}
 			\end{figure}

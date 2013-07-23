@@ -25,8 +25,6 @@
 		%
 		% How long will this take?
 		
-		% TODO: What journal?
-		
 		As part of the ongoing SpiNNaker project a study is being carried out to
 		compare how network simulations compare with the real hardware. As part of
 		this work, researchers have built an FPGA accelerated model of SpiNNaker's
@@ -105,6 +103,8 @@
 			% from other work (namely the interconnect experiments to follow).
 		
 		\subsection{Simulator Improvement Plan}
+			
+			\label{sec:simulator-improvement-plan}
 			
 			Given the limitations of INSEE mentioned in the previous section, two
 			possible approaches must be considered. Either INSEE must be modified to
@@ -246,26 +246,65 @@
 	
 	\section{`SpiNNaker 2' Architecture}
 		
-		It is likely that a new version of SpiNNaker will be designed with some
-		funding coming in soon. Based on the research into the interconnect here,
-		would an alternative topology be appropriate?
+		% It is likely that a new version of SpiNNaker will be designed with some
+		% funding coming in soon. Based on the research into the interconnect here,
+		% would an alternative topology be appropriate?
 		
-		\subsection{Types of Transmission}
-			
-			Switching away from Silistix (they went bye-bye!), alternative
-			technologies, e.g. high-speed serial, might be used to link chips
-			together. Such technologies may have very different cost structures and
-			call for new network topologies. Given we currently have concentrated
-			multiplexed links, why not have the same for stuff lower down?
+		Based on the preceding work and on further developments within in the
+		SpiNNaker project, a new architecture for neural network simulation will be
+		proposed. In particular the architecture is intended to be a successor to
+		the SpiNNaker platform aimed at a similar communication-bound model.
 		
-		\subsection{Multiple Networks}
+		\subsection{Scaling}
 			
-			SpiNNaker's interconnect is obviously heavily targeted at neural
-			simulation but at the expense of other activities. For example, set-up and
-			management are a bit of a pain. Also, other algorithms don't suit it so
-			well. It is possible SpiNNaker will benefit from having a second network
-			for these purposes?
+			Due to the advance of Moore's law, several times more chip area will be
+			available for this next generation architecture compared to the previous
+			revision. It is assumed that it will be possible to fit a larger number of
+			cores into a single chip along with larger memories both for the on board
+			processors.
 			
-			What about time-division-multiplexing two different protocols onto one
-			high speed serial link?
-
+			The preceding work will be used to decide on the type of topology and
+			routing systems to be used. It is expected that access to larger routing
+			table resource as well as more area for routing logic will be available.
+		
+		\subsection{Interconnection Network}
+			
+			One of the known limitations of SpiNNaker's interconnection network is
+			that it has been optimised largely for the style of traffic required while
+			simulations are in progress, in particular it deals very well with small,
+			multicast packets whose delivery does not need to be guaranteed, as with
+			biological spikes.
+			
+			Other important tasks, however, are not handled as well such as
+			initialisation and result collection. These tasks require reliable
+			communication, typically with a relatively larger data payload. This is
+			currently facilitated by the SpiNNaker Datagram Protocol (SDP)
+			\cite{temple11} which allows unreliable point-to-point transmission of up
+			to 64KB of data. While this offers the ability to easily load
+			configurations to SpiNNaker chips, collecting data becomes more difficult.
+			With the larger, multi-board systems currently in testing, contention for
+			the links surrounding a central node during data-collection become
+			saturated resulting in a large number of packets being dropped.
+		
+		\subsection{Link Technology}
+			
+			% Switching away from Silistix (they went bye-bye!), alternative
+			% technologies, e.g. high-speed serial, might be used to link chips
+			% together. Such technologies may have very different cost structures and
+			% call for new network topologies. Given we currently have concentrated
+			% multiplexed links, why not have the same for stuff lower down?
+			
+			The underlying Silistix technology used by SpiNNaker's links is not
+			available for new systems and must be replaced. Based on research into
+			link technologies a decision must be made for the new system. This choice
+			will strongly influence the design of the network.
+		
+		
+		\subsection{Evaluation}
+			
+			The proposed topology will be evaluated by simulation building on the
+			simulators developed earlier in the project. It is hoped that more
+			information on the actual usage and traffic patterns encountered by the
+			current SpiNNaker hardware will be available to drive this simulation and
+			to present a point of comparison.
+		
