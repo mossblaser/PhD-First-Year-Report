@@ -1,0 +1,33 @@
+\begin{tikzpicture}[font=\small,thick,minimum width=1.5cm,minimum height=0.8cm,node distance=0.5cm]
+	
+	\node (cpu 1)
+	      [draw,rectangle]
+	      {CPU};
+	
+	\node (cpu 2)
+	      [draw,rectangle,right=of cpu 1]
+	      {CPU};
+	
+	\node (l1 cache 1)
+	      [draw,rectangle, below=of cpu 1]
+	      {Cache};
+	
+	\node (l1 cache 2)
+	      [draw,rectangle, below=of cpu 2]
+	      {Cache};
+	
+	\node (l2 cache)
+	      [minimum width=3.5cm,draw,rectangle, below=of $(l1 cache 1.south)!0.5!(l1 cache 2.south)$]
+	      {Cache};
+	
+	\node (memory)
+	      [minimum width=3.5cm,draw,rectangle, below=of l2 cache]
+	      {Memory};
+	
+	\draw (memory) to (l2 cache);
+	\draw (l1 cache 1.south) -- ++(0,-0.5cm);
+	\draw (l1 cache 2.south) -- ++(0,-0.5cm);
+	\draw (cpu 1) to (l1 cache 1);
+	\draw (cpu 2) to (l1 cache 2);
+	
+\end{tikzpicture}

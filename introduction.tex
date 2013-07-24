@@ -21,9 +21,9 @@
 	exhibit a remarkable range of cognitive abilities such as memory, problem
 	solving and pattern recognition. As well as realistic functional behaviour,
 	they also respond to failures, such as neuron death, just as real brains do
-	exhibiting a gradual decline in functionality. As a result of this, such
-	models offer a lot of potential for studying the properties of the brain in a
-	highly controlled, observable manner.
+	exhibiting a gradual decline in functionality. The existence of realistic
+	models means studying the properties of the brain in a highly controlled,
+	observable manner as in a simulator is becoming a possibility.
 	
 	Unfortunately, neural models are extremely computationally expensive and run
 	very slowly. Spaun, for example, takes around two and a half hours to simulate
@@ -40,18 +40,95 @@
 	\section{Parallel Computing}
 		
 		The race to drive up the speed of individual processor cores ground to a
-		halt in the mid 2000s leaving designers pushed to find a use for the vast
-		number of transistors made available by Moore's law. In the years that
-		followed we've seen multi-core processors appearing in everything from
-		mobile phones to large super computers.
+		halt in the mid 2000s leaving designers to use the vast number of
+		transistors made available by Moore's law to find their performance gains.
+		In the years that followed multi-core processors have appeared in everything
+		from microcontrollers to large super computers. Despite this widespread
+		availability they represent an acute challenge to software developers to
+		exploit.
 		
+		% Better entitled "Locality"?
 		\subsection{Programming}
 			
-			Hard to program parallel systems - deadlocks, locality becomes an issue --
-			things can be a long way away. Cache tries to hide this but fails to
-			scale. Other approaches might work (e.g. spinnaker has slow step with
-			communication happening before the next step, i.e. synchronous model).
+			% Hard to program parallel systems - deadlocks, locality becomes an issue -
+			% things can be a long way away. Cache tries to hide this but fails to
+			% scale. Other approaches might work (e.g. spinnaker has slow step with
+			% communication happening before the next step, i.e. synchronous model).
+			
+			\begin{figure}
+				\begin{subfigure}[t]{0.19\textwidth}
+					\center
+					\input{figures/memory-model-c}
+					\caption{Basic}
+					\label{fig:memory-model-c}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.19\textwidth}
+					\center
+					\input{figures/memory-model-cache}
+					\caption{Cached}
+					\label{fig:memory-model-cache}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.29\textwidth}
+					\center
+					\input{figures/memory-model-shared-memory}
+					\caption{Shared}
+					\label{fig:memory-model-shared-memory}
+				\end{subfigure}
+				\begin{subfigure}[t]{0.29\textwidth}
+					\center
+					\input{figures/memory-model-distributed-memory}
+					\caption{Distributed}
+					\label{fig:memory-model-distributed-memory}
+				\end{subfigure}
+				
+				\caption{Memory Models}
+				\label{fig:memory-model}
+			\end{figure}
 		
+			
+			Mainstream programming languages, such as C, work on a simplified model of
+			a computer where there is a single memory which is uniform in access cost
+			and a single processor, capable of sequentially executing instructions
+			which access this memory (Figure \ref{fig:memory-model-c}).
+			
+			The first assumption, the uniform accessibility of memory, has been false
+			for some time. As processor performance increased, memories have grown
+			proportionally in size but not speed \cite{wilkes01}. As a result, CPU
+			designers introduced caches between the memory and CPU implemented with
+			smaller but faster memory technologies (Figure
+			\ref{fig:memory-model-cache}). Modern machines may include several levels
+			of caching, three in the case of typical workstations. As a result,
+			programmers now had to manually keep track of what parts of memory were
+			(likely to be) `local' to the processor (in the cache) and what was
+			`remote' (not in the cache) in order to achieve good performance.
+			
+			In multi-processor systems the second assumption no longer holds. These
+			machines can be divided into two broad categories: shared memory and
+			distributed memory architectures.
+			
+			Shared memory architectures feature multiple cores which have a single
+			shared, global memory accessed via a hierarchy of shared and private
+			caches (Figure \ref{fig:memory-model-shared-memory}). This model is used
+			by libraries such as OpenMP\cite{openmp} which extends C with the ability
+			to use multiple processors simultaneously to process (distinct parts of) a
+			shared dataset. Shared memory architectures require intricate mechanisms
+			for ensuring that the private caches in the system remain coherent. These
+			mechanisms incur performance, power and space overheads and are difficult
+			to scale to large numbers of processors.
+			
+			Distributed memory architectures finally break the idea of a global memory
+			by attaching a private memory to each processor or group of processors
+			(Figure \ref{fig:memory-model-distributed-memory}). In order to access
+			data stored in a `remote' memory, a processor must explicitly request it
+			from that processor over some communication medium. Standards such as MPI
+			(Message Passing Interface) provide interfaces for this type of
+			programming. Distributed memory architectures are much more scalable as
+			the lack cache coherency hardware means the amount of power and space
+			required per processor scales linearly. Unfortunately, it moves the burden
+			of deciding the location of data in the system to the programmer.
+			
+			% TODO Sum up talking about locality becoming an explicit problem
+			
 		\subsection{Architecture}
 			
 			Lots of computers must be connected together. Current styles are largely
@@ -64,17 +141,15 @@
 		different patterns of communication between the different parts of the
 		program influencing the type of interconnect topology they suit.
 		
-		\subsection{TODO: More Examples}
-		
-		\subsection{Gossiping Algorithms}
+		\subsection{Traditional `Scientific Computing'}
 			
-			Generally lots of broadcast global messaging, sometimes with low
-			reliability requirements.
+			Computational Fluid Dynamics (CFD).  Such algorithms such as heat
+			propagation in a material. Lots of computation and very local,
+			neighbour-to-neighbour communication.
 		
-		\subsection{Computational Fluid Dynamics (CFD)}
+		\subsection{Data Mining}
 			
-			Such algorithms such as heat propagation in a material. Lots of
-			computation and very local, neighbour-to-neighbour communication.
+			Lots of stuff on the web. Facehole, Googlebook.
 		
 		\subsection{Brain Simulation}
 			
@@ -94,14 +169,13 @@
 			or even one other component, neurons tend to be connected to hundreds or
 			thousands of other neurons.
 			
-			
 			Simulations of the brain therefore present a computational challenge as
 			large amounts of communication must take place between all the neurons
 			in the simulated system. Various architectures have been designed to
 			solve this task and a selection are presented in Chapter
 			\ref{chap:background}.
 			
-			TODO: What is going on in brain simulators?
+			% TODO: What is going on in brain simulators?
 	
 	\section{Architecture}
 		
