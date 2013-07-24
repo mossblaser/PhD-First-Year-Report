@@ -22,5 +22,6 @@ The following (possibly less-standard) LaTeX libraries are required:
 
 * TikZ
 * Tikz3D (Part of Tex-SX http://bazaar.launchpad.net/~tex-sx/tex-sx/development/files)
+* lstautogobble (From: http://tex.stackexchange.com/a/21613)
 
 In addition, Python 2 is required to generate some of the figures.
