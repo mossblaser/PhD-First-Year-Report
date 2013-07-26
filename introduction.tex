@@ -1,7 +1,29 @@
 \chapter{Introduction}
 	
-	%Some high-level motivation and context to sort of set the scene before going
-	%into what other folk have done and what I'm hoping to do.
+	% %Some high-level motivation and context to sort of set the scene before going
+	% %into what other folk have done and what I'm hoping to do.
+	% 
+	% Modern computer systems represent some of the most complex devices ever
+	% constructed. Indeed, current computer technologies have enabled everything
+	% from global, instantaneous communications via the internet to faster and more
+	% effective cancer treatments\cite{nassif}. Despite this, the brain still
+	% outperforms conventional digital computers at many tasks.
+	% 
+	% Considerable effort has been made by researchers to understand how the brain
+	% works. The small-scale operation of individual neurons in the brain is now
+	% relatively well understood but the manner of their interactions is still not
+	% clear. Current efforts to understand the brain attempt to model it as a
+	% biological computer. Such biological computers differ greatly from digital
+	% computers and so simulating their behaviour using existing technology is
+	% challenging.
+	% 
+	% Recent neural models such as the Spaun brain simulator \cite{eliasmith12}
+	% exhibit a remarkable range of cognitive abilities such as memory, problem
+	% solving and pattern recognition. As well as realistic functional behaviour,
+	% they also respond to failures, such as neuron death, just as real brains do
+	% exhibiting a gradual decline in functionality. The existence of realistic
+	% models means studying the properties of the brain in a highly controlled,
+	% observable manner as in a simulator is becoming a possibility.
 	
 	Modern computer systems represent some of the most complex devices ever
 	constructed. Indeed, current computer technologies have enabled everything
@@ -12,185 +34,110 @@
 	Considerable effort has been made by researchers to understand how the brain
 	works. The small-scale operation of individual neurons in the brain is now
 	relatively well understood but the manner of their interactions is still not
-	clear. Current efforts to understand the brain attempt to model it as a
-	biological computer. Such biological computers differ greatly from digital
-	computers and so simulating their behaviour using existing technology is
-	challenging.
-	
-	Recent neural models such as the Spaun brain simulator \cite{eliasmith12}
-	exhibit a remarkable range of cognitive abilities such as memory, problem
-	solving and pattern recognition. As well as realistic functional behaviour,
-	they also respond to failures, such as neuron death, just as real brains do
-	exhibiting a gradual decline in functionality. The existence of realistic
-	models means studying the properties of the brain in a highly controlled,
-	observable manner as in a simulator is becoming a possibility.
-	
-	Unfortunately, neural models are extremely computationally expensive and run
-	very slowly. Spaun, for example, takes around two and a half hours to simulate
-	one second of neural activity. In order to make such models usable, ways of
-	executing them faster, possibly in real time are clearly required.
-	
-	The SpiNNaker project is developing a specialised, massively parallel super
-	computer aimed at flexibly simulating extremely large neural models in real
-	time. The system is made up over one million low-powered ARM processors
-	connected by a specially designed interconnection network. My research hopes
-	to improve the design of interconnection networks, such as SpiNNaker's, for
-	use in simulating modern neural models.
-	
-	\section{Parallel Computing}
-		
-		The race to drive up the speed of individual processor cores ground to a
-		halt in the mid 2000s leaving designers to use the vast number of
-		transistors made available by Moore's law to find their performance gains.
-		In the years that followed multi-core processors have appeared in everything
-		from microcontrollers to large super computers. Despite this widespread
-		availability they represent an acute challenge to software developers to
-		exploit.
-		
-		% Better entitled "Locality"?
-		\subsection{Programming}
-			
-			% Hard to program parallel systems - deadlocks, locality becomes an issue -
-			% things can be a long way away. Cache tries to hide this but fails to
-			% scale. Other approaches might work (e.g. spinnaker has slow step with
-			% communication happening before the next step, i.e. synchronous model).
-			
-			\begin{figure}
-				\begin{subfigure}[t]{0.19\textwidth}
-					\center
-					\input{figures/memory-model-c}
-					\caption{Basic}
-					\label{fig:memory-model-c}
-				\end{subfigure}
-				\begin{subfigure}[t]{0.19\textwidth}
-					\center
-					\input{figures/memory-model-cache}
-					\caption{Cached}
-					\label{fig:memory-model-cache}
-				\end{subfigure}
-				\begin{subfigure}[t]{0.29\textwidth}
-					\center
-					\input{figures/memory-model-shared-memory}
-					\caption{Shared}
-					\label{fig:memory-model-shared-memory}
-				\end{subfigure}
-				\begin{subfigure}[t]{0.29\textwidth}
-					\center
-					\input{figures/memory-model-distributed-memory}
-					\caption{Distributed}
-					\label{fig:memory-model-distributed-memory}
-				\end{subfigure}
-				
-				\caption{Memory Models}
-				\label{fig:memory-model}
-			\end{figure}
-		
-			
-			Mainstream programming languages, such as C, work on a simplified model of
-			a computer where there is a single memory which is uniform in access cost
-			and a single processor, capable of sequentially executing instructions
-			which access this memory (Figure \ref{fig:memory-model-c}).
-			
-			The first assumption, the uniform accessibility of memory, has been false
-			for some time. As processor performance increased, memories have grown
-			proportionally in size but not speed \cite{wilkes01}. As a result, CPU
-			designers introduced caches between the memory and CPU implemented with
-			smaller but faster memory technologies (Figure
-			\ref{fig:memory-model-cache}). Modern machines may include several levels
-			of caching, three in the case of typical workstations. As a result,
-			programmers now had to manually keep track of what parts of memory were
-			(likely to be) `local' to the processor (in the cache) and what was
-			`remote' (not in the cache) in order to achieve good performance.
-			
-			In multi-processor systems the second assumption no longer holds. These
-			machines can be divided into two broad categories: shared memory and
-			distributed memory architectures.
-			
-			Shared memory architectures feature multiple cores which have a single
-			shared, global memory accessed via a hierarchy of shared and private
-			caches (Figure \ref{fig:memory-model-shared-memory}). This model is used
-			by libraries such as OpenMP\cite{openmp} which extends C with the ability
-			to use multiple processors simultaneously to process (distinct parts of) a
-			shared dataset. Shared memory architectures require intricate mechanisms
-			for ensuring that the private caches in the system remain coherent. These
-			mechanisms incur performance, power and space overheads and are difficult
-			to scale to large numbers of processors.
-			
-			Distributed memory architectures finally break the idea of a global memory
-			by attaching a private memory to each processor or group of processors
-			(Figure \ref{fig:memory-model-distributed-memory}). In order to access
-			data stored in a `remote' memory, a processor must explicitly request it
-			from that processor over some communication medium. Standards such as MPI
-			(Message Passing Interface) provide interfaces for this type of
-			programming. Distributed memory architectures are much more scalable as
-			the lack cache coherency hardware means the amount of power and space
-			required per processor scales linearly. Unfortunately, it moves the burden
-			of deciding the location of data in the system to the programmer.
-			
-			% TODO Sum up talking about locality becoming an explicit problem
-			
-		\subsection{Architecture}
-			
-			Lots of computers must be connected together. Current styles are largely
-			regular. Each offers its own advantages to different tasks. More in
-			background chapter.
-	
-	\section{Computational Problems}
-		
-		Computers are faced with a wide range of problems all of which require
-		different patterns of communication between the different parts of the
-		program influencing the type of interconnect topology they suit.
-		
-		\subsection{Traditional `Scientific Computing'}
-			
-			Computational Fluid Dynamics (CFD).  Such algorithms such as heat
-			propagation in a material. Lots of computation and very local,
-			neighbour-to-neighbour communication.
-		
-		\subsection{Data Mining}
-			
-			Lots of stuff on the web. Facehole, Googlebook.
-		
-		\subsection{Brain Simulation}
-			
-			% TODO: Cite overview of computational neuroscience?
-			
-			The brain is an extremely powerful computer about which little is
-			understood. The field of computational neuroscience hopes to bring
-			understanding of the computational abilities and mechanisms of the
-			brain.
-			
-			One approach to this problem is to try and produce simulations of models
-			of the brain in order to understand and study their behaviour. These
-			approaches often take the form of simulated populations of neurons, one
-			of the basic building-blocks of the brain. Such models typically consist
-			of a set of neurons, each connected to many other neurons.  Unlike
-			digital circuits where each individual component connects to only a few
-			or even one other component, neurons tend to be connected to hundreds or
-			thousands of other neurons.
-			
-			Simulations of the brain therefore present a computational challenge as
-			large amounts of communication must take place between all the neurons
-			in the simulated system. Various architectures have been designed to
-			solve this task and a selection are presented in Chapter
-			\ref{chap:background}.
-			
-			% TODO: What is going on in brain simulators?
-	
-	\section{Architecture}
-		
-		Two major considerations when designing an architecture are the topology and
-		way in which packets will be routed around the system.
-		
-		\subsection{Topology}
-			
-			Again?
-		
-		\subsection{Routing}
-			
-			Again?
-		
-		\subsection{Multicast}
-			
-			Quite simple, really.
+	clear. By modelling the behaviour of networks of neurons it is possible to
+	gain a better understanding of their collective behaviour. Such models are
+	challenging to fit into modern computer architectures since the vast
+	parallelism available to individual neurons in a brain is in sharp contrast
+	with the computing resources available today.
 
+	In this introduction I hope to elaborate on the role that modelling has on
+	understanding the brain and on the work being done to build machines to fulfil
+	this task. I also outline the specific aspect of these machines on which my
+	work will focus, the interconnection network, and its importance in achieving
+	the wider goal.
+	
+	\section{Why Model The Brain?}
+	
+		
+		%% TODO REWORD BELOW
+		
+		Cutting-edge neural models, such as Spaun \cite{eliasmith12}, are able to
+		demonstrate a remarkable range of cognitive abilities such as memory,
+		problem solving and pattern recognition. Notably, Spaun exhibits very
+		similar behaviour to humans in terms of the way its memory degrades over
+		time. It also suffers the same gradual reduction in function as random
+		neurons die off. This level of realism means that experiments which would
+		not be possible may become feasible using the Spaun model.
+		
+		In addition to Spaun, many other neural models have emerged. In distinct
+		contrast to Spaun, researchers on the Blue Brain project \cite{markram06}
+		have focused on developing high-accuracy simulations of much smaller
+		collections of neurons. Such models are highly biologically plausible but
+		do not result in the complex, high-level behaviour shown by simulators such
+		as Spaun.
+		
+		Unfortunately these models present a great challenge to modern computer
+		systems. The Spaun simulator takes around two and a half hours of compute
+		time to simulate one second of neural activity on a high-end workstation
+		computer. The Blue Brain project requires a commercial super-computer to
+		reach simulation speeds still around an order of magnitude slower than
+		biological real-time. The basic mechanism of these neural simulators, and
+		their computational challenges is described in further detail in
+		\S\ref{sec:simulating-brains}.
+	
+	\section{Conventional Approaches}
+	
+		% Why not use a big ass-computer? Well big computers are good for computation
+		% but neural stuff is all about communication. Not so great. As mentioned
+		% there is another way 
+		
+		Conventional super computers are designed to provide immense computational
+		power performing quadrillions ($10^{15}$) of calculations to be performed
+		per second. Despite these extremely impressive feats of computation, these
+		machines often feature substantially less impressive interconnection
+		networks tying them together. This balance of computation and communication
+		is contrary to the brain whose neurons represent relatively little
+		computational power but are extraordinarily well connected.
+		
+		The Blue Brain project is notable in its use of conventional super
+		computers. Though they are severely limited in the size of their models,
+		only around 100,000 neurons compared with almost 100 billion in the human
+		brain, they are able to precisely simulate the detailed biological and
+		chemical processes occurring within each neuron.
+		
+		\S\ref{sec:super-computers} goes into greater detail on current super
+		computer architectures and their strengths and weaknesses.
+	
+	\section{Why Interconnect Matters}
+		
+		My research focuses on the challenge of developing architectures designed
+		for the simulation of large-scale networks, such as Spaun, which are heavily
+		communication bound.
+		
+		The SpiNNaker project \cite{furber06} has developed a novel computer
+		architecture which emphasises communication over computation based on a
+		network of over one million small, low-power processors. The purpose built
+		interconnection network is designed to handle neural simulations of up to
+		one billion neurons running in biological real-time. A detailed introduction
+		to the SpiNNaker architecture is given in \S\ref{sec:spinnaker}.
+		
+		SpiNNaker's interconnection network is designed to allow efficient
+		communication of signals produced by the simulated neurons which typically
+		only need to travel short distances in the system. As the system scales, new
+		types of interconnection network have been introduced in order to keep the
+		wiring in the system practical. \S\ref{sec:high-speed-serial} describes the
+		technology used to simplify the system's wiring. Preliminary work, described
+		in \S\ref{sec:interconnect-modelling}, has been conducted to asses the
+		impact of these changes for neural network simulation. It shows the impact
+		changes in the system's interconnect can have on the time taken by neural
+		signals to move through the system.
+		
+		The topic of practical issues when designing interconnect issues is studied
+		in \S\ref{sec:wiring-up-large-spinnaker-machines} where the task of wiring
+		up large SpiNNaker systems consisting of 1,200 of connected circuit boards
+		is tackled. This is followed up by the development of an unconventional
+		semi-random interconnection network which takes into account these wiring
+		considerations in \S\ref{sec:small-world-super-computers}. This design of
+		network has the potential to improve the performance of SpiNNaker's
+		architecture with a minimal cost in increased cabling requirements.
+	
+		% SpiNNaker is a neural simulator emphasising communication over computation
+		% by using lots of low-powered cores. It hopes to do real-time simulation. It
+		% uses a very straight-forward mesh interconnect which suffers very long
+		% latencies for non-local traffic. Alternative topologies can overcome this.
+	
+		My work hopes to develop a new architecture with a focus on the
+		interconnection network, a key aspect of a machine targeted at communication
+		bound problems such as neural simulation. Section \S\ref{sec:research-plan}
+		outlines the plan of research I intend to take to reach this goal following
+		on from my preliminary studies.
