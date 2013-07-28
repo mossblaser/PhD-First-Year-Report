@@ -49,13 +49,13 @@
 			`fires' (causing a spike to be transmitted) and the amount of charge in
 			the neuron returns to zero. Charge in the neuron constantly `leaks' away
 			such that if the neuron doesn't receive any spikes its charge will
-			eventually return to 0. This process is demonstrated in Figure
+			eventually return to 0. This process is demonstrated in figure
 			\ref{fig:snn-example}
 			
 			\begin{figure}
 				\center
 				\input{|"python figures/snn-example.py"}
-				\caption{Example behaviour of a simple leaky-intergrate-and-fire neuron}
+				\caption{Simple leaky-intergrate-and-fire neuron example.}
 				\label{fig:snn-example}
 			\end{figure}
 		
@@ -111,7 +111,7 @@
 				\bottomrule
 			\end{tabular}
 			
-			\caption{Top Five `Top500' Super Computers, June 2013 \cite{meuer13}}
+			\caption{Top Five `Top500' Super Computers, June 2013 \cite{meuer13}.}
 			\label{tab:top500}
 		\end{table}
 		
@@ -204,7 +204,7 @@
 			\subsubsection{Fat Tree}
 			
 				In a basic fat tree topology, nodes are connected to switches which in
-				turn are connected to further levels of switches (Figure
+				turn are connected to further levels of switches (figure
 				\ref{fig:fat-tree-concept}). Links higher in the switch hierarchy are
 				connected via links of increasing bandwidth which avoids the bandwidth
 				bottle-neck around the root node. In order for a node to communicate, it
@@ -216,7 +216,7 @@
 				tree. In addition, the root node acts as a single point of failure for
 				the whole system. As a result, folded Clos networks are often used
 				instead and have become synonymous with the fat tree topology. As shown
-				in Figure \ref{fig:fat-tree-closs}, here traffic is split between the
+				in figure \ref{fig:fat-tree-closs}, here traffic is split between the
 				two top-level switches reducing the bandwidth requirement for each. In
 				addition, if a top-level switch fails messages can simply be routed
 				using the other switch.
@@ -241,8 +241,7 @@
 					\begin{subfigure}[t]{\textwidth}
 						\center
 						\input{figures/fat-tree-concept}
-						\caption{Basic Fat Tree
-						links.}
+						\caption{Basic fat tree links.}
 						\label{fig:fat-tree-concept}
 					\end{subfigure}
 					
@@ -251,11 +250,11 @@
 					\begin{subfigure}[t]{\textwidth}
 						\center
 						\input{figures/fat-tree-closs}
-						\caption{Folded Clos Network}
+						\caption{Folded Clos network.}
 						\label{fig:fat-tree-closs}
 					\end{subfigure}
 					
-					\caption[Fat Tree Topologies]{Fat Tree Topologies. Thicker lines
+					\caption[Fat tree topologies.]{Fat tree topologies. Thicker lines
 					represent higher bandwidth.}
 					\label{fig:fat-tree}
 				\end{figure}
@@ -268,10 +267,10 @@
 				of the mesh are connected together to form a torus.
 				
 				In the 2D case this can be visualised as follows. Starting with a
-				regular 2D mesh (Figure \ref{fig:torus-flat}), the top- and bottom-most
-				nodes being connected together to form a tube (Figure
+				regular 2D mesh (figure \ref{fig:torus-flat}), the top- and bottom-most
+				nodes being connected together to form a tube (figure
 				\ref{fig:torus-pipe}).  Then the left- and right-most nodes are
-				connected together forming a torus (Figure \ref{fig:torus-3D}). Though
+				connected together forming a torus (figure \ref{fig:torus-3D}). Though
 				hard to visualise, this process generalises to toruses of higher
 				dimensions.
 				
@@ -303,7 +302,8 @@
 					\begin{subfigure}[t]{\textwidth}
 						\center
 						\input{figures/torus-flat}
-						\caption{Mesh (Grey lines show wrap-around connections added in a torus)}
+						\caption{Mesh (Grey lines show wrap-around connections added in a
+						torus)}
 						\label{fig:torus-flat}
 					\end{subfigure}
 					
@@ -312,7 +312,7 @@
 					\begin{subfigure}[t]{\textwidth}
 						\center
 						\input{figures/torus-pipe}
-						\caption{Rolled into a Tube}
+						\caption{Rolled into a tube}
 						\label{fig:torus-pipe}
 					\end{subfigure}
 					
@@ -321,11 +321,11 @@
 					\begin{subfigure}[t]{\textwidth}
 						\center
 						\input{figures/torus-3D}
-						\caption{Bent into a Torus}
+						\caption{Bent into a torus}
 						\label{fig:torus-3D}
 					\end{subfigure}
 					
-					\caption{Transforming a Mesh into a Torus}
+					\caption{Transformation of a mesh into a torus.}
 					\label{fig:forming-a-torus}
 				\end{figure}
 		
@@ -497,13 +497,13 @@
 			SpiNNaker is made up of a 2D toroid\footnote{A toroid, in this context, is
 			the generalisation of a torus where nodes are connected to more than four
 			neighbours.} of chips where each chip connects to its six neighbouring
-			chips as shown in Figure \ref{fig:spinnaker-chips}. The system can be
+			chips as shown in figure \ref{fig:spinnaker-chips}. The system can be
 			flexibly extended by simply adding more chips to this arrangement. The
 			size of the network is only limited by the size of address fields used by
 			the routers (32 bits).
 			
 			Each SpiNNaker chip contains 18 low-power ARM processor cores connected
-			together via a network on chip (NoC) as shown in Figure
+			together via a network on chip (NoC) as shown in figure
 			\ref{fig:spinnaker-chip}. Each core has a small amount of private memory
 			and has access to a larger, chip-wide memory (not shown). Finally a router
 			is responsible for sending and receiving messages from the six
@@ -529,7 +529,7 @@
 					\label{fig:spinnaker-chips}
 				\end{subfigure}
 				
-				\caption{Overview of the SpiNNaker architecture}
+				\caption{Overview of the SpiNNaker architecture.}
 				\label{fig:spinnaker-architecture}
 			\end{figure}
 		
@@ -592,7 +592,7 @@
 				\begin{figure}
 					\center
 					\input{figures/dimension-order-routing}
-					\caption[Dimension order routing in SpiNNaker]{Dimension order routing
+					\caption[Dimension order routing in SpiNNaker.]{Dimension order routing
 					in SpiNNaker showing a path from node $S$ to node $T$.}
 					\label{fig:dimension-order-routing}
 				\end{figure}
@@ -604,7 +604,7 @@
 				conventional torus network which is the cause of some of the slightly
 				unintuitive properties of the topology.}. Packets travel along each
 				dimension in turn until they can get no closer at which point they move
-				onto the next dimension as shown in Figure
+				onto the next dimension as shown in figure
 				\ref{fig:dimension-order-routing}. Such paths are easily computed as
 				shown in \cite{nocetti02} and are minimal in length.
 			
@@ -665,7 +665,8 @@
 						\caption{}
 						\label{fig:multicast-routing-d}
 					\end{subfigure}
-					\caption{Possible multicast routings from $S$ to $T_1$ and $T_2$}
+					\caption[Multicast routing examples.]{Multicast routing examples from
+					$S$ to $T_1$ and $T_2$.}
 					\label{fig:multicast-routing}
 				\end{figure}
 				
@@ -687,15 +688,15 @@
 				
 				If a packet's intended route is blocked, for example due to a bad link,
 				`emergency routing' via an adjacent chip can optionally be attempted as
-				shown in Figure \ref{fig:emergency-routing}. This novel approach allows
+				shown in figure \ref{fig:emergency-routing}. This novel approach allows
 				the system to automatically recover from certain link failures without
 				immediate manual intervention.
 				
 				\begin{figure}
 					\center
 					\input{figures/emergency-routing}
-					\caption{Emergency route from $S$ to $T$ when the normal route is
-					unavailable.}
+					\caption[Emergency routing example.]{Emergency route from $S$ to $T$
+					when the normal route is unavailable.}
 					\label{fig:emergency-routing}
 				\end{figure}
 			
@@ -707,12 +708,12 @@
 			
 			The largest SpiNNaker system will contain 1,036,800 cores in 57,600 chips.
 			These chips are split up into 1,200 circuit boards of 48 chips each as
-			shown in Figure \ref{fig:spinn4labelled}.
+			shown in figure \ref{fig:spinn4labelled}.
 			
 			\begin{figure}
 				\center
 				\input{figures/spinn4labelled}
-				\caption{48-chip SpiNNaker Circuit Board}
+				\caption{48-chip SpiNNaker circuit board.}
 				\label{fig:spinn4labelled}
 			\end{figure}
 			
@@ -726,11 +727,11 @@
 			\begin{figure}
 				\center
 				\includegraphics[width=0.5\textwidth]{figures/spiNNaker103.jpg}
-				\caption{A partially populated rack of SpiNNaker boards}
+				\caption{Partially populated rack of SpiNNaker boards.}
 				\label{fig:spiNNaker103}
 			\end{figure}
 			
-			Twenty-four boards are then placed in racks such as in Figure
+			Twenty-four boards are then placed in racks such as in figure
 			\ref{fig:spiNNaker103} which are in turn placed, five-high, into ten
 			cabinets. Further details of this arrangement are given later in
 			\S\ref{sec:wiring-up-large-spinnaker-machines} where preliminary work on
@@ -744,7 +745,7 @@
 			% for?
 			
 			% TODO: Reword
-			The chips on each circuit board are logically laid out as shown in Figure
+			The chips on each circuit board are logically laid out as shown in figure
 			\ref{fig:chipsOnBoard}. Touching edges represent a chip-to-chip connection
 			which uses a delay insensitive, parallel `2-of-7' communications scheme
 			similar to that used in the on-chip network requiring 16 wires per link.
@@ -759,15 +760,15 @@
 			\begin{figure}
 				\center
 				\input{figures/chipsOnBoard}
-				\caption{Logical arrangement of chips on a circuit board}
+				\caption{Logical arrangement of chips on a circuit board.}
 				\label{fig:chipsOnBoard}
 			\end{figure}
 			
 			In order to construct a toroid, at least three boards must be combined as
-			shown in Figure \ref{fig:threeboard} (an arrangement known as a
+			shown in figure \ref{fig:threeboard} (an arrangement known as a
 			threeboard).  Figure \ref{fig:threeboardSliced} shows how the threeboard
 			arrangement can be turned into a sheet which in turn can be turned into a
-			toroid as shown earlier in Figure \ref{fig:forming-a-torus}.
+			toroid as shown earlier in figure \ref{fig:forming-a-torus}.
 			
 			\begin{figure}
 				\begin{subfigure}[b]{0.45\textwidth}
@@ -779,12 +780,12 @@
 				\begin{subfigure}[b]{0.45\textwidth}
 					\center
 					\input{figures/threeboardSliced}
-					\caption{Sliced Into A Sheet}
+					\caption{Sliced into a sheet}
 					\label{fig:threeboardSliced}
 				\end{subfigure}
 				
-				\caption[A `threeboard']{A `threeboard', the minimal configuration of
-				boards yielding a toroid}
+				\caption[A `threeboard'.]{A `threeboard', the minimal configuration of
+				boards yielding a toroid.}
 			\end{figure}
 			
 			Arbitrarily large systems can be produced by repeating the threeboard
@@ -829,31 +830,31 @@
 			samples being taken of the parallel signal. As clock speeds increased,
 			however, skew started to become significant enough to cause some of the
 			parallel signals to arrive so far apart that some would not be sampled by
-			the receiver resulting in transmission errors such as in Figure
+			the receiver resulting in transmission errors such as in figure
 			\ref{fig:parallel-example-skew}.
 			
 			\begin{figure}
 				\begin{subfigure}[b]{0.49\textwidth}
 					\center
 					\input{|"python figures/parallel_comms.py 'Hello, World!' 1.0 1.3 0"}
-					\caption{No Skew}
+					\caption{No skew}
 					\label{fig:parallel-example-no-skew}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.49\textwidth}
 					\center
 					\input{|"python figures/parallel_comms.py 'Hello, World!' 1.0 1.3 0.7"}
-					\caption{With Skew}
+					\caption{With skew}
 					\label{fig:parallel-example-skew}
 				\end{subfigure}
 				
-				\caption{Parallel signalling}
+				\caption{Parallel signalling example.}
 				\label{fig:parallel-example}
 			\end{figure}
 			
 			Unfortunately, since wiring technology has been unable to improve fast
 			enough to keep skew acceptably small for all but the shortest connections
 			parallel signalling has been replaced with high-speed serial signalling.
-			Here, bits are sent one after another as shown in Figure
+			Here, bits are sent one after another as shown in figure
 			\ref{fig:serial-example}. Because there is only one signal the problem of
 			skew is eliminated.
 			
@@ -863,7 +864,7 @@
 					\input{|"python figures/serial_comms.py '' 'Hello, World!' 1 0 0 0 0 0.4 0.2"}
 				\end{tikzpicture}
 				
-				\caption{Serial signalling}
+				\caption{Serial signalling example.}
 				\label{fig:serial-example}
 			\end{figure}
 		
@@ -905,7 +906,7 @@
 					\end{scope}
 				\end{tikzpicture}
 				
-				\caption{8b/10b encoding example}
+				\caption{8b/10b encoding example.}
 				\label{fig:8b10b-example}
 			\end{figure}
 		
@@ -928,7 +929,7 @@
 			become charged incorrectly causing the receiver to detect a `0'. The
 			8b/10b code, described previously, also has the property that the number
 			of `1's and `0's remains equal over time which eliminates this effect.
-			This is known as maintaining DC balance. This can be seen in Figure
+			This is known as maintaining DC balance. This can be seen in figure
 			\ref{8b10b-example} where the symbol for \texttt{0x00}, labelled
 			\texttt{D.00.0}, alternates between two values to maintain the balance of
 			`0's and `1's transmitted.
@@ -937,7 +938,7 @@
 			value of a bit to be misread. To alleviate this, the signal is transmitted
 			twice with one wire carrying the signal and the other its negation. If
 			these wires are kept physically close they are likely to experience
-			exactly the same pattern of noise as shown in Figure
+			exactly the same pattern of noise as shown in figure
 			\ref{fig:differential-encoding}. The receiver takes the difference of the
 			two signals which causes the noise, which is equal in both, to be
 			cancelled out leaving the original data intact.
@@ -946,6 +947,6 @@
 				\center
 				\input{figures/differential-encoding}
 				
-				\caption{Eliminating noise using differential encoding}
+				\caption{Eliminating noise using differential coding.}
 				\label{fig:differential-encoding}
 			\end{figure}

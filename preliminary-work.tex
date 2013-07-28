@@ -67,8 +67,8 @@
 		\begin{figure}
 			\center
 			\input{figures/boardToBoardSchematic}
-			\caption[Schematic of the high-speed serial board-to-board
-			link.]{Simplified schematic of the processing stages encountered by a
+			\caption[SpiNNaker high-speed serial board-to-board
+			link schematic.]{Simplified schematic of the processing stages encountered by a
 			packet crossing between boards connected via a high-speed serial link.}
 			\label{fig:boardToBoardSchematic}
 		\end{figure}
@@ -119,19 +119,20 @@
 					\begin{subfigure}[t]{0.45\textwidth}
 						\centering
 						\includegraphics[width=\textwidth]{figures/min-time-for-hops}
-						\caption{Minimum latencies}
+						\caption{Minimum latencies.}
 						\label{fig:min-time-for-hops}
 					\end{subfigure}
 					\begin{subfigure}[t]{0.45\textwidth}
 						\centering
 						\includegraphics[width=\textwidth]{figures/median-time-for-hops-with-errbars}
 						\caption{Median latencies, error bars $=
-						0.1\times\textrm{Inter-Quartile Range}$}
+						0.1\times\textrm{Inter-Quartile Range}$.}
 						\label{fig:median-time-for-hops-with-errbars}
 					\end{subfigure}
 					
 					
-					\caption{Packet latencies when using various types of board-to-board links}
+					\caption{Packet latencies for various types of board-to-board
+					links.}
 					\label{fig:time-for-hops}
 				\end{figure}
 				
@@ -174,7 +175,7 @@
 					\centering
 					\includegraphics[width=0.7\textwidth]{figures/packet-latency-unloaded.pdf}
 					
-					\caption[Heat-map of average packet latency]{Heat-map of average
+					\caption[Heat-map of average packet latency.]{Heat-map of average
 					packet latency to each chip from the central chip. Note: a skewed
 					perspective is used.}
 					
@@ -192,7 +193,7 @@
 					\includegraphics[width=0.7\textwidth]{figures/packet-latency-closeup-exaggerated.pdf}
 					
 					\caption[Latency to a subset of chips with exaggerated board-to-board
-					latency]{Latency to each chip from the central chip (24,24) to a
+					latency.]{Latency to each chip from the central chip (24,24) to a
 					section of a $48\times{}48$ system. The serial latency in this system
 					has been exaggerated to aid visibility but the effect is still present
 					with realistic latencies.}
@@ -268,7 +269,7 @@
 			
 			\label{sec:folding-toroids}
 			
-			In Figure \ref{fig:boardsLogical},
+			In figure \ref{fig:boardsLogical},
 			touching boards are connected and the lines represent wires which complete
 			the toroid by connecting opposing edges. It is clear that while the
 			majority of wires are very short (they connect two boards which are
@@ -281,19 +282,19 @@
 				SpiNNaker system.]{Logical arrangement of boards in a $4\times4$
 				threeboard SpiNNaker system. Touching boards are connected. Coloured
 				lines represent long connections travelling {\color{red}North/South},
-				{\color{green}North-East/South-West} and {\color{blue}East/West}}
+				{\color{green}North-East/South-West} and {\color{blue}East/West}.}
 				\label{fig:boardsLogical}
 			\end{figure}
 			
 			To remove long wires from a toroid network, the network can be folded
 			\cite{dally04}. An example of this process is shown for a simple
-			ring-network (a 1-dimensional toroid) in Figure \ref{fig:folding}.
+			ring-network (a 1-dimensional toroid) in figure \ref{fig:folding}.
 			
 			\begin{figure}
 				\begin{subfigure}[b]{\textwidth}
 					\center
 					\input{figures/ringLong}
-					\caption{A Ring Network}
+					\caption{A ring network}
 					\label{fig:ringLong}
 				\end{subfigure}
 				
@@ -302,7 +303,7 @@
 				\begin{subfigure}[b]{\textwidth}
 					\center
 					\input{figures/ringFolded}
-					\caption{Folded In Half}
+					\caption{Folded in half}
 					\label{fig:ringFolded}
 				\end{subfigure}
 				
@@ -315,12 +316,12 @@
 					\label{fig:ringInterleaved}
 				\end{subfigure}
 				
-				\caption[Folding a ring network to reduce the maximum wire length]{The
-				process of folding a ring network to reduce the maximum wire length}
+				\caption[Folding a ring network.]{The process of folding a ring network
+				to reduce the maximum wire length.}
 				\label{fig:folding}
 			\end{figure}
 			
-			This process is generalised to SpiNNaker's boards as shown in Figure
+			This process is generalised to SpiNNaker's boards as shown in figure
 			\ref{fig:boardsFolded}.
 			
 			\begin{figure}
@@ -353,18 +354,18 @@
 					\label{fig:boardsFoldedInterleaved}
 				\end{subfigure}
 				
-				\caption[Folding SpiNNaker]{The process of folding SpiNNaker. Coloured
+				\caption[Folding SpiNNaker.]{The process of folding SpiNNaker. Coloured
 				lines represent wires travelling {\color{red}North/South},
-				{\color{green}North-East/South-West} and {\color{blue}East/West}}
+				{\color{green}North-East/South-West} and {\color{blue}East/West}.}
 				\label{fig:boardsFolded}
 			\end{figure}
 			
-			The first step (Figure \ref{fig:boardsFoldedShift}) transforms the
+			The first step (figure \ref{fig:boardsFoldedShift}) transforms the
 			rhombus-like arrangement of boards into a rectangle which is more easily
 			folded.
 			
 			In the next step, the design is folded into four parts on the X-axis and
-			into two on the Y-axis (Figure \ref{fig:boardsFoldedSpaced}). It is
+			into two on the Y-axis (figure \ref{fig:boardsFoldedSpaced}). It is
 			necessary to fold the X-axis into four as the long, diagonal wires don't
 			cross the entire system on the X-axis and instead reach half way. Folding
 			in two would not bring these points any closer\footnote{For example, the
@@ -385,12 +386,11 @@
 			\begin{figure}
 				\center
 				\includegraphics[width=\textwidth]{figures/spinnaker106}
-				\caption[The largest SpiNNaker machine mapped into cabinets and
-				racks]{The largest SpiNNaker machine with 1,200 boards ($20\times20$
-				threeboards) and 1,036,800 cores mapped into 10 cabinets of 5 racks
-				each.  Coloured lines represent wires connecting
-				{\color{red}North/South}, {\color{green}North-East/South-West} and
-				{\color{blue}East/West} links}
+				\caption[SpiNNaker machine mapped into cabinets and racks.]{The largest
+				SpiNNaker machine with 1,200 boards ($20\times20$ threeboards) and
+				1,036,800 cores mapped into 10 cabinets of 5 racks each.  Coloured lines
+				represent wires connecting {\color{red}North/South},
+				{\color{green}North-East/South-West} and {\color{blue}East/West} links.}
 				\label{fig:spinnaker106}
 			\end{figure}
 			
@@ -409,14 +409,14 @@
 			some regularity remains.
 			
 			For example, it is easy to see that wires making connections for a
-			particular direction (shown by the different colours in Figure
+			particular direction (shown by the different colours in figure
 			\ref{fig:spinnaker106} show a moderate degree of regularity. In addition,
 			the wiring for the North/South direction (shown in red) remains entirely
 			within a cabinet.
 			
 			By splitting up the wiring tasks by the logical direction (and thus by the
 			connector on the board) it is clear that a large amount of regularity
-			exists in each group of wires (see the different colours in Figure
+			exists in each group of wires (see the different colours in figure
 			\ref{fig:spinnaker106}). If the task is further split depending on whether
 			the wires stay with in a rack or cabinet, batches of identical racks and
 			cabinets can be wired up independently before being linked together later.
@@ -445,7 +445,7 @@
 			and racks.}.
 			
 			The wiring guide generator produces illustrated\footnote{Many of the
-			figures in this section were adapted from wiring guides generated by
+			Figures in this section were adapted from wiring guides generated by
 			SpiNNer.} documents using \LaTeX{} which describe the wiring for
 			arbitrarily sized machines. Metrics such as the distribution of wire
 			lengths are included along with instructions for wiring the system up. At
@@ -504,12 +504,12 @@
 			Watts and Strogatz have proposed an algorithm for randomly constructing
 			networks with small-world properties\cite{watts98}. The algorithm begins
 			by creating a ring network with each node connecting to a fixed number of
-			its consecutive neighbours (Figure \ref{fig:ringNetworkB0}). In the next
+			its consecutive neighbours (figure \ref{fig:ringNetworkB0}). In the next
 			step, with a probability of $\beta$, each edge may be replaced by a random
 			connection. For $0 < \beta < 1$, the networks produced exhibit varying
-			degrees of the small-world properties (Figure \ref{fig:ringNetworkB02}).
+			degrees of the small-world properties (figure \ref{fig:ringNetworkB02}).
 			Finally, in the extreme case where $\beta=1$, the network devolves into a
-			random network (Figure \ref{fig:ringNetworkB1}).
+			random network (figure \ref{fig:ringNetworkB1}).
 			
 			\begin{figure}
 				\center
@@ -532,15 +532,15 @@
 					\label{fig:ringNetworkB1}
 				\end{subfigure}
 				
-				\caption{Watts-Strogatz networks shown with a range of rewiring
+				\caption{Watts-Strogatz networks with a range of rewiring
 				probabilities.}
 				\label{fig:ringNetwork}
 			\end{figure}
 			
 			This algorithm is readily extended to torus topologies. In this work, a
-			$k$-ary 2-cube was used as the initial network such as in Figure
+			$k$-ary 2-cube was used as the initial network such as in figure
 			\ref{fig:torusNetworkB0}. Random permutations are added to the network
-			resulting in a network such as Figure \ref{fig:torusNetworkB01}.
+			resulting in a network such as figure \ref{fig:torusNetworkB01}.
 			
 			\begin{figure}
 				\center
@@ -557,7 +557,7 @@
 					\label{fig:torusNetworkB01}
 				\end{subfigure}
 				
-				\caption{Extension of the Watts-Strogatz model to a 6-ary 2-cube torus}
+				\caption{Extension of the Watts-Strogatz model to a 6-ary 2-cube.}
 				\label{fig:torusNetwork}
 			\end{figure}
 			
@@ -584,24 +584,24 @@
 			\begin{figure}
 				\center
 				\includegraphics[width=0.7\textwidth]{figures/smallWorldTorus}
-				\caption[Average shortest-path length for folded 40-ary 2-cube]{Average
+				\caption[Average shortest-path length for folded 40-ary 2-cube.]{Average
 				shortest-path length for folded 40-ary 2-cube (mean of 10 runs, error
-				bars show 1 standard deviation)}
+				bars show 1 standard deviation).}
 				\label{fig:smallWorldTorus}
 			\end{figure}
 			
 			Unfortunately, random wiring can be problematic for real-world systems.
 			As discussed in \S\ref{sec:wiring-up-large-spinnaker-machines}, long wires
 			are problematic for many interconnection topologies and adding random
-			wiring can cause many such links to be created. For example, in Figure
+			wiring can cause many such links to be created. For example, in figure
 			\ref{fig:torusNetworkB01} a long wire from the top right node stretches
 			almost to the bottom left node.
 			
 			To work around this problem, we first fold the network
 			(\S\ref{sec:folding-toroids}) to eliminate the long wires which connect up
-			the torus (Figure \ref{fig:torusNetworkFB0}). Next, rewiring is carried
+			the torus (figure \ref{fig:torusNetworkFB0}). Next, rewiring is carried
 			out but with a limit on the maximum wire length which can be created
-			(Figure \ref{fig:torusNetworkFB01}).  This rewiring constrains the maximum
+			(figure \ref{fig:torusNetworkFB01}).  This rewiring constrains the maximum
 			wire to be 3 units long (where a unit is the spacing between each node in
 			a given dimension). Even with this limitation on wire length, the maximum
 			path length still drops, this time to 2.73 (from 3 in the unwired
@@ -622,14 +622,14 @@
 					\label{fig:torusNetworkFB01}
 				\end{subfigure}
 				
-				\caption{Rewiring a folded torus with constrained maximum wire-length}
+				\caption{Rewiring a folded torus with constrained maximum wire-length.}
 				\label{fig:torusNetworkF}
 			\end{figure}
 			
 			To test the effects of limiting wire lengths when re-wiring, a parameter
 			sweep was carried out for a 40-ary 2-cube. The test was carried out after
 			folding once and twice in each dimension with a control where the network
-			was not folded. The results are given in Figure
+			was not folded. The results are given in figure
 			\ref{fig:smallWorldLimitedWiring}.
 			
 			\begin{figure}
@@ -678,9 +678,9 @@
 				\center
 				\input{figures/ringNetworkLimitedWires}
 				\caption[Possible random links in a singly-folded ring network with
-				short wires]{Possible random links in a singly-folded ring network with
+				short wires.]{Possible random links in a singly-folded ring network with
 				random wires limited to a length of 1 unit after laying out as in Figure
-				\ref{fig:ringInterleaved}}
+				\ref{fig:ringInterleaved}.}
 				\label{fig:ringNetworkLimitedWires}
 			\end{figure}
 			
