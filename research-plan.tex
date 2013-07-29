@@ -3,9 +3,10 @@
 	\label{sec:research-plan}
 	
 	In this chapter an outline of the work to be carried out is presented. Due to
-	the embryonic stage of the research, later work is presented with less detail.
-	Figure \ref{fig:plan-gantt} shows a Gantt chart containing the key stages of
-	the project which are outlined in chronological order in the sections below.
+	the early stage of the research, planned later work is presented with less
+	detail.  Figure \ref{fig:plan-gantt} shows a Gantt chart identifying the key
+	stages of the project which are outlined in chronological order in the
+	sections below.
 	
 	\begin{figure}[b!]
 		\center
@@ -44,7 +45,7 @@
 		
 		\subsection{Software Simulator Limitations}
 		
-			The prototype software model is built on the INSEE simulator
+			A prototype software model has been built using the INSEE simulator
 			\cite{navaridas11insee} which is designed to simulate a wide variety of
 			networks. Unfortunately, INSEE's router model is different from that found
 			in SpiNNaker and the FPGA model. The differences in their behaviour are
@@ -52,11 +53,12 @@
 			
 			% TODO: elaborate
 			
-			SpiNNaker makes use of store-and-forward routing where a message must be
-			fully received before it can be routed to the next point in its path. By
-			contrast, INSEE is designed to support cut-through routing where once the
-			first part of a message has been received it may immediately begin the
-			routing process.
+			One of the major limitations of INSEE is that it is only able to model
+			point-to-point traffic and will require extending to support multicast
+			traffic which are at the heart of SpiNNaker's anticipated usage for neural
+			network simulation. However, since this limitation is also shared by the
+			FPGA implementation, only point-to-point traffic is considered by this
+			work in all three systems.
 			
 			The other key difference between INSEE and the actual SpiNNaker
 			architecture is the way packets from incoming links are arbitrated. Figure
@@ -89,15 +91,15 @@
 				\label{fig:arbitration}
 			\end{figure}
 			
-			This difference here extends beyond the order in which contesting requests
-			will be serviced. In INSEE, each input has a buffer associated with it
-			from which the router will extract messages and forward them to the input
-			buffer of the next node, one per simulated cycle. In the SpiNNaker design,
-			messages are buffered at each level of the tree and eventually placed in a
-			pipeline within the router (equivalent to further buffering) and an output
-			buffer. The interaction of all these buffers is not modelled by INSEE and
-			thus the results produced are less well matched with the actual SpiNNaker
-			system.
+			The differences caused by this extends beyond the order in which
+			contesting requests will be serviced. In INSEE, each input has a buffer
+			associated with it from which the router will extract messages and forward
+			them to the input buffer of the next node, one per simulated cycle. In the
+			SpiNNaker design, messages are buffered at each level of the tree and
+			eventually placed in a pipeline within the router (equivalent to further
+			buffering) and an output buffer. The interaction of all these buffers is
+			not modelled by INSEE and thus the results produced will be less well
+			matched with the actual SpiNNaker system.
 			
 			% Part of the aim of the work is to produce a comparison between this
 			% software model, an FPGA model and a prototype system. Successful
@@ -133,8 +135,8 @@
 	
 	\section{Small-World Network Experiments}
 		
-		With the extended and proven simulator developed, the next stage of my
-		research will be to use it to model the behaviour of small-world style
+		Given the availability of an extensible and proven simulator, the next stage
+		of my research will be to use it to model the behaviour of small-world style
 		networks with more realistic traffic and wiring constraints.
 		
 		The work done in \S\ref{sec:small-world-super-computers} measured average
@@ -149,7 +151,7 @@
 		physical wiring was restricted in length (as in real systems), the logical
 		distance covered by links in different parts of the system becomes uneven.
 		Since the folding and rack/cabinet placement which takes place in real
-		machines such as SpiNNaker is much more intricate than the simple torus
+		machines such as SpiNNaker is much more intricate than the simple ring
 		studied, these effects may become insignificant.
 		
 		This work is intended to take around one further month including ample time
@@ -183,7 +185,7 @@
 		arriving at each node in the system. Such systems offer a lot of flexibility
 		in the routing schemes that can be implemented but also may introduce
 		constraints on the complexity of routes through the system when the routing
-		tables are restricted in size.
+		tables are limited in size.
 		
 		The use of alternative topologies will require alternative routing schemes
 		to be specified. In the above comparative work on possible topologies
@@ -198,9 +200,9 @@
 		In this phase of work alternative routing algorithms which attempt to handle
 		routing table depth and congestion control will be studied. The former
 		problem is similar in style to the problem faced by chip and printed circuit
-		design automation tools. The latter side is covered largely by more
-		conventional interconnect/network routing algorithms. Combining and
-		evaluating these two approaches will be where much of this time is spent.
+		design automation tools. The latter is largely covered by conventional
+		interconnect/network routing algorithms. Combining and evaluating these two
+		approaches will be where much of this time is spent.
 	
 	\section{Effects of Multicast}
 		
@@ -210,10 +212,11 @@
 		spiking neural networks, potentially thousands of destinations.
 		
 		Current approaches to multicast routing again are split between chip and
-		circuit design and interconnect/network routing. Chip designs often
+		circuit design and interconnect/network routing. Chip routers often
 		constrain the paths in various ways, for example to ensure that latency to
-		each destination is similar. This parallels the need to try and control
-		branching to minimise routing table resource. Network designs, however, are
+		each destination is similar. This type of constraint is similar in style to
+		those in SpiNNaker-like systems for example, the need to try and control
+		branching to minimise routing table resource. Network routers, however, are
 		often designed to reduce the amount of bandwidth consumed by branching as
 		late as possible. Once again, work must be done to combine and compare these
 		two approaches.
@@ -227,9 +230,9 @@
 		implementation of the interconnect. Historically small-scale systems have
 		used synchronous signals to communicate between various parts of the system.
 		As systems have scaled, this is no longer feasible as clock distribution
-		grows ever more difficult. Instead GALS architectures have become prominent
-		where individual, synchronous components communicate via an asynchronous
-		medium.
+		grows ever more difficult. Instead architectures have become prominent where
+		individual, locally-synchronous components communicate via a
+		locally-synchronous interconnect.
 		
 		The SpiNNaker chip uses an asynchronous NoC based on CHAIN
 		\cite{plana07,bainbridge02} using IP from (the now defunct) Silistix Ltd.
@@ -243,10 +246,7 @@
 		likely be based on high speed serial as described in
 		\S\ref{sec:high-speed-serial}.
 		
-		Work must be done to evaluate what technologies will be best suited for us
-		in a future system.
-	
-	\section{`SpiNNaker 2' Architecture}
+		\section{`SpiNNaker 2' Architecture}
 		
 		% It is likely that a new version of SpiNNaker will be designed with some
 		% funding coming in soon. Based on the research into the interconnect here,
@@ -282,9 +282,9 @@
 			communication, typically with a relatively larger data payload. This is
 			currently facilitated by the SpiNNaker Datagram Protocol (SDP)
 			\cite{temple11} which allows unreliable point-to-point transmission of up
-			to 64KB of data. While this offers the ability to easily load
+			to 64KB of data. Though this offers the ability to easily load
 			configurations to SpiNNaker chips, collecting data becomes more difficult.
-			With the larger, multi-board systems currently in testing, contention for
+			With larger, multi-board systems currently in testing, contention for
 			the links surrounding a central node during data-collection become
 			saturated resulting in a large number of packets being dropped.
 		
@@ -306,7 +306,7 @@
 			
 			The proposed topology will be evaluated by simulation building on the
 			simulators developed earlier in the project. It is hoped that more
-			information on the actual usage and traffic patterns encountered by the
+			information about the actual usage and traffic patterns encountered by the
 			current SpiNNaker hardware will be available to drive this simulation and
 			to present a point of comparison.
 		
