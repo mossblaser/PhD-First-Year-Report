@@ -7,7 +7,7 @@ neuron, the charge intergrated in it and the spikes it produces.
 
 import random
 
-random.seed(7)
+random.seed(10)
 
 WIDTH = 8
 HEIGHT = 1.4
