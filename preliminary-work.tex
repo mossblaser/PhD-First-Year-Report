@@ -4,19 +4,20 @@
 	% built some useful tools (wiring) and to test the principle of adding
 	% connections (small world).
 	
-	Preliminary work conducted so far aims to explore some of the practical issues
-	faced when designing interconnection networks. The work focuses on the
-	SpiNNaker architecture whose advanced state of development makes it a good
-	target for realistic experimentation.
+	The preliminary work conducted so far aims to explore some of the practical
+	issues faced when designing interconnection networks. The work focuses on the
+	SpiNNaker architecture whose advanced state of development makes it an
+	appropriate target for realistic experimentation.
 	
-	The first section describes an experiment to determine the way in which the
-	digital communication technologies on which an interconnection network is
-	built can affect its performance. One of the implications of choosing a
-	particular technology is that it may place constraints on the way the system
-	must be physically wired up. The second section proposes a practical wiring
-	scheme for large SpiNNaker machines. The chapter concludes with an experiment
-	to extend a SpiNNaker-like architecture to reduce average path length in the
-	network while respecting the wiring restrictions.
+	The first section describes an experiment to conducted determine the way in
+	which the choice of technologies on which an interconnection network is built
+	can affect its performance. As well as performance considerations, this choice
+	also has implications for the practicalities of constructing real systems. The
+	second section describes work which studies the practical issues faced when
+	wiring up SpiNNaker's chosen interconnect. The chapter concludes with an
+	experiment to test a simple extension to the SpiNNaker interconnect. The
+	proposed topology uses semi-random links to improve its performance while
+	still accounting for the practical issues involved in assembly.
 	
 	% Rly?
 	%\section{PCI-Express and High-Speed Serial}
@@ -44,7 +45,7 @@
 		
 		An important factor in designing interconnection networks is the
 		technologies used to implement the links in the network. These choices
-		influence the network's performance as they control the costs involved in
+		influence the network's performance as they determine the costs involved in
 		sending a message across a link. This in turn can, for example, affect the
 		way packets need to be routed to make optimal use of the system's resources.
 		
@@ -55,7 +56,7 @@
 		onto a small number of high-speed serial links in order to reduce the cost
 		of wiring.
 		
-		Though the board-to-board connections are logically transparent, they will
+		Though the board-to-board connections are logically transparent, they
 		inevitably result in some additional latency at the board boundaries. Figure
 		\ref{fig:boardToBoardSchematic} shows a high-level schematic of the
 		board-to-board links. At both ends of the link, additional processing and
@@ -74,15 +75,16 @@
 		\end{figure}
 		
 		The real-time nature of SpiNNaker's simulations means that the latency of
-		packets in the system can be very important. If a packet takes too long to
-		be delivered this counts as a failure of the system. Indeed, packets
-		travelling across the entire system may have to pass through a number of
-		these links potentially incurring a high latency penalty.
+		packets in the system can be critical to the simulation's correctness. If a
+		packet takes too long to be delivered this counts as a failure of the
+		system. Indeed, packets travelling across the entire system may have to pass
+		through a number of these links potentially incurring a high latency
+		penalty.
 		
-		The because latency between pairs of chips is no longer uniform, this
-		violates an assumptions made by current routing schemes. The cost of this
-		mistaken assumption is not known and one of the aims of this work was to
-		measure its impact.
+		Because latency between pairs of chips is no longer uniform, this violates
+		the assumptions made by the routing schemes currently in use. The cost of
+		this mistaken assumption is not known and one of the aims of this work was
+		to measure its impact.
 		
 		\subsection{Simulation}
 			
@@ -103,12 +105,12 @@
 			
 			\subsubsection{Packet Latency}
 			
-				To test the effect of links on general packet latency, the network was
+				To test the effect of board-to-board links on general packet latency, the network was
 				simulated with each chip generating a packet each CPU cycle with a
 				probability of 1\% to uniform-random destinations. The latency added by
 				the serial links can be seen in figure \ref{fig:min-time-for-hops} where
 				the minimum packet latency is shown against the number of links (hops)
-				used by the packet. The system is also shown using only chip-to-chip
+				used by a packet. The system is also shown as if using only chip-to-chip
 				links, with realistic high-speed serial links and with high-speed serial
 				links with exaggerated latencies (for illustrative purposes) as
 				board-to-board links.
@@ -137,10 +139,10 @@
 				\end{figure}
 				
 				Steps can be seen every time the number of hops passes a multiple of 8,
-				the number of consecutive chips in any single dimension on a board, after
-				which a serial link is crossed causing increased latency. This step
-				change can be clearly seen in the exaggerated links but is also visible in
-				realistic links.
+				the number of consecutive chips in any single dimension on a board,
+				after which a board-to-board link is crossed causing increased latency.
+				This step change can be clearly seen in the exaggerated links but is
+				also visible in realistic links.
 				
 				An extra step appears at 28 hops, the cause of which is not currently
 				known by the author.
@@ -158,11 +160,9 @@
 			\subsubsection{Na\"ive Routing Effects}
 				
 				The routing scheme used by current SpiNNaker simulations is based on
-				dimension order routing. Here, packets traverse links in each dimension
-				in turn in order to arrive at their destinations.  This scheme assumes
-				that all `hops' take the same amount of time in order to generate routes
-				with minimal-latency. This assumption breaks down in heterogeneous
-				systems.
+				dimension order routing. This scheme assumes that all `hops' take the
+				same amount of time in order to generate routes with minimal-latency.
+				This assumption breaks down in heterogeneous systems.
 				
 				Figure \ref{fig:packet-latency-unloaded} shows how the latencies vary
 				across an idle system from a single point. It can be seen that where board
@@ -182,11 +182,12 @@
 					\label{fig:packet-latency-unloaded}
 				\end{figure}
 				
-				A step in latency is also visible within individual boards as can be seen
-				in figure \ref{fig:packet-latency-closeup-exaggerated}. Here there are
-				clear edges where the dimension order routing traverses the dimensions in
-				an order which incurs an extra board crossing. This effect is visible as a
-				step-change in latency along the diagonals of the upper-right boards.
+				A step in latency is also visible within individual boards as can be
+				seen in figure \ref{fig:packet-latency-closeup-exaggerated}. Here there
+				are clear edges where dimension order routing traverses the dimensions
+				in an order which incurs an extra board crossing. This effect is visible
+				as a step-change in latency along the diagonals of the upper-right
+				boards.
 		
 				\begin{figure}
 					\center
@@ -212,10 +213,9 @@
 			
 			% XXX: Do gossiping algorithms care about latency?
 			
-			For other applications which are more latency sensitive such as gossiping
-			algorithms or finer-grained neural simulations, the increase in latency
-			due to poor routing choices and the board-to-board links may still be
-			problematic.
+			For other more latency sensitve applications such as finer-grained neural
+			simulations, the increase in latency due to poor routing choices may still
+			be problematic.
 			
 			It is worth noting that the simulations carried out were limited in size,
 			duration and traffic complexity by the performance of the simulator. An
@@ -234,9 +234,9 @@
 		% Computers usually placed in racks. Tool can be used to study wiring
 		% constraints of new links.
 		
-		One of the practical constraints on the topologies which super-computers are
-		able to exploit is the use of wires to connect parts of the system together.
-		Chief amongst these concerns are the following:
+		One of the practical constraints on the topologies is the use of wires to
+		connect parts of the system together.  Chief amongst these concerns are the
+		following:
 		
 		\begin{description}
 			
@@ -248,32 +248,34 @@
 			connectors required.
 			
 			\item[Wire Length] Long wires have higher capacitances than short ones
-			which limits the rate at which data can be transmitted.
+			limiting the rate at which data can be transmitted.
 			
 			\item[Wiring Complexity] Ultimately the system will need to be assembled
-			(presumably) by hand and so keeping wiring patterns simple is important to
-			reduce the number of wiring mistakes.
+			(usually) by hand so keeping wiring patterns simple is important to
+			prevent wiring mistakes.
 			
 		\end{description}
 		
 		The SpiNNaker interconnect topology was studied to confirm the existence of
-		a practical wiring scheme for the machine which satisfies all of the above
-		properties. The principles of the machine's construction suggested by
-		Davidson \cite{davidsonWiring} and Furber \cite{furber13email} were used as
-		the basis for a tool used to model and experiment with possible
-		configurations. This section explains the mapping developed and how it
-		meets the above requirements. Finally, the section concludes with a
-		description of the tool and the future work which remains.
+		a practical wiring scheme which satisfies all of the above properties. The
+		principles of the machine's construction suggested by Davidson
+		\cite{davidsonWiring} and Furber \cite{furber13email} were used as the basis
+		for a tool used to model and experiment with possible configurations. This
+		section explains the mapping developed and how it meets the above
+		requirements. Finally, the section concludes with a description of the tool
+		and the future work which remains.
 		
 		\subsection{Reducing Wiring Length}
 			
 			\label{sec:folding-toroids}
 			
-			In figure \ref{fig:boardsLogical},
-			touching boards are connected and the lines represent wires which complete
-			the toroid by connecting opposing edges. It is clear that while the
-			majority of wires are very short (they connect two boards which are
-			side-by-side), some wires cross the entire system's length.
+			In figure \ref{fig:boardsLogical}, touching boards are connected and the
+			lines represent wires which complete the toroid by connecting opposing
+			edges. While the majority of wires are very short (they connect two boards
+			which are side-by-side), some wires must cross the entire system's length.
+			To remove long wires from a toroid network, the network can be folded
+			\cite{dally04}. An example of this process is shown for a simple
+			ring-network (a 1-dimensional toroid) in figure \ref{fig:folding}.
 			
 			\begin{figure}
 				\center
@@ -285,10 +287,6 @@
 				{\color{green}North-East/South-West} and {\color{blue}East/West}.}
 				\label{fig:boardsLogical}
 			\end{figure}
-			
-			To remove long wires from a toroid network, the network can be folded
-			\cite{dally04}. An example of this process is shown for a simple
-			ring-network (a 1-dimensional toroid) in figure \ref{fig:folding}.
 			
 			\begin{figure}
 				\begin{subfigure}[b]{\textwidth}
@@ -321,15 +319,12 @@
 				\label{fig:folding}
 			\end{figure}
 			
-			This process is generalised to SpiNNaker's boards as shown in figure
-			\ref{fig:boardsFolded}.
-			
 			\begin{figure}
 				\center
 				\begin{subfigure}[b]{\textwidth}
 					\center
 					\input{|"python figures/boardsFoldedShift.py"}
-					\caption{Shift left boards to the right to form a rectangle.}
+					\caption{Shift boards on the left to the right to form a rectangle.}
 					\label{fig:boardsFoldedShift}
 				\end{subfigure}
 				
@@ -338,8 +333,8 @@
 				\begin{subfigure}[b]{\textwidth}
 					\center
 					\input{|"python figures/boardsFoldedSpaced.py"}
-					\caption{Fold along the gaps in this figure. Wires omitted for
-					clarity.}
+					\caption{Fold along the gaps in this figure. (Wires omitted for
+					clarity.)}
 					\label{fig:boardsFoldedSpaced}
 				\end{subfigure}
 				
@@ -348,9 +343,9 @@
 				\begin{subfigure}[b]{\textwidth}
 					\center
 					\input{|"python figures/boardsFoldedInterleaved.py"}
-					\caption{The (more complex) wiring after folding. Redrawn with squares
-					as hexagons don't visually fit together after folding and
-					interleaving.}
+					\caption{The (more complex) wiring after folding. (Shown here with
+					squares as hexagons don't visually fit together after folding and
+					interleaving.)}
 					\label{fig:boardsFoldedInterleaved}
 				\end{subfigure}
 				
@@ -360,9 +355,10 @@
 				\label{fig:boardsFolded}
 			\end{figure}
 			
-			The first step (figure \ref{fig:boardsFoldedShift}) transforms the
-			rhombus-like arrangement of boards into a rectangle which is more easily
-			folded.
+			This process is generalised to SpiNNaker's boards as shown in figure
+			\ref{fig:boardsFolded}. The first step (figure
+			\ref{fig:boardsFoldedShift}) transforms the rhombus-like arrangement of
+			boards into a rectangle which is more easily folded.
 			
 			In the next step, the design is folded into four parts on the X-axis and
 			into two on the Y-axis (figure \ref{fig:boardsFoldedSpaced}). It is
@@ -373,7 +369,10 @@
 			folding in two would now have to cross from one end of the system to the
 			other -- an even longer distance than it had to before.} while folding
 			into four brings them next to each other. As a result, the maximum wire
-			length is reduced.
+			length is reduced which can be seen in figure
+			\ref{fig:boardsFoldedInterleaved}. While the wiring in this image appears
+			more complex, if only on direction (colour) is considered at once, a
+			certain amount of regularity can be seen.
 			
 			\label{sec:mapping-spinnaker-to-cabinets}
 			
@@ -381,7 +380,8 @@
 			physical positions. The largest SpiNNaker system will be installed into a
 			series of cabinets, each containing a number of racks (shelves) into which
 			the boards are slotted and wired up. Figure \ref{fig:spinnaker106} shows a
-			possible rack placement scheme for the largest planned SpiNNaker system.
+			possible rack placement scheme for the largest planned SpiNNaker system of
+			$20\times20$ threeboards.
 			
 			\begin{figure}
 				\center
@@ -396,27 +396,22 @@
 			
 			Even though the system is physically several meters long, the longest wire
 			will only be around one meter in length which is within the tolerances of
-			the high-speed link technology. This placement scheme, therefore, meets the
-			wire-length requirement.
+			the high-speed link technology. This placement scheme, therefore, meets
+			the wire-length requirement, and due to the use of high-speed serial links
+			using commodity cables as described earlier, the wire-cost requirement.
 			
 		\subsection{Wiring Complexity}
 			
-			The final concern for the wiring is that it should not be too complex to
-			be completed by hand. The large-scale SpiNNaker machine will contain 3,600
+			The final concern is that it should not be too complex to
+			be installed by hand. The large-scale SpiNNaker machine will contain 3,600
 			wires and so it is clearly not practical to have to look up each
 			individual connection before wiring it up. Though it is clear that the
 			folded arrangement is substantially less regular than the original layout,
 			some regularity remains.
 			
-			For example, it is easy to see that wires making connections for a
-			particular direction (shown by the different colours in figure
-			\ref{fig:spinnaker106} show a moderate degree of regularity. In addition,
-			the wiring for the North/South direction (shown in red) remains entirely
-			within a cabinet.
-			
 			By splitting up the wiring tasks by the logical direction (and thus by the
 			connector on the board) it is clear that a large amount of regularity
-			exists in each group of wires (see the different colours in figure
+			exists in each group of wires (consider each colour separately in figure
 			\ref{fig:spinnaker106}). If the task is further split depending on whether
 			the wires stay with in a rack or cabinet, batches of identical racks and
 			cabinets can be wired up independently before being linked together later.
@@ -424,34 +419,32 @@
 			entirely within a cabinet meaning all North/South wiring can be completed
 			independently for each cabinet.
 			
-			Based on the above partitioning scheme, the connections for all 3,600
-			wires can be described using only 53 instructions. This satisfies the
-			final constraint on wiring complexity.
+			Based on the above observations, the connections for all 3,600 wires can
+			be described using only 53 instructions rather than 3,200. This satisfies the final
+			constraint on wiring complexity.
 		
 		\subsection{`SpiNNer' Wiring Guide Generator}
 			
-			As part of this work SpiNNaker, a wiring modelling library and wiring
-			guide generator, was produced to assist in the construction of SpiNNaker
-			systems consisting of multiple boards. These tools helped avoid the error
-			prone process of manually visualising the various transformations.
+			As part of this work SpiNNer, a wiring modelling library and wiring guide
+			generator, was produced to assist in the construction of SpiNNaker systems
+			built from multiple boards. These tools help avoid the error prone process
+			of manually visualising the various transformations required during the
+			mapping of boards to racks.
 			
 			The modelling library allows transformations, such as folding, to be
 			easily applied to a network of boards. From the transformed network,
 			various measurements such as the maximum physical wire length can then be
 			directly determined. Using this library the largest SpiNNaker machine can
-			be described in 10 lines of code\footnote{This number includes only the
-			`functional' lines of code does not include `boilerplate' code for
-			importing libraries nor definitions of the physical dimensions of cabinets
-			and racks.}.
+			be described in 10 lines of code.
 			
-			The wiring guide generator produces illustrated\footnote{Many of the
-			Figures in this section were adapted from wiring guides generated by
-			SpiNNer.} documents using \LaTeX{} which describe the wiring for
-			arbitrarily sized machines. Metrics such as the distribution of wire
-			lengths are included along with instructions for wiring the system up. At
-			the time of writing, the largest prototype system constructed, a single
-			threeboard, has been successfully wired up in a manner consistent with the
-			generated wiring guide.
+			The wiring guide generator produces illustrated documents using \LaTeX{}
+			which describe the wiring for arbitrarily sized machines\footnote{Many of
+			the Figures in this section were adapted from wiring guides generated by
+			SpiNNer.}. Metrics such as the distribution of wire lengths are included
+			along with instructions for wiring the system up. At the time of writing,
+			the largest prototype system constructed, a single threeboard, has been
+			successfully assembled in a manner consistent with the generated wiring
+			guide.
 		
 		\subsection{Further Work}
 			
@@ -463,7 +456,7 @@
 			experimental form and must eventually be integrated into the wiring guide
 			generator.
 			
-			In addition, further work may be carried out to propose alternative wiring
+			In addition, further work may be carried out to test alternative wiring
 			schemes. The current scheme, a huge number of wires cross between
 			different cabinets. As a result a significant amount of the wiring cannot
 			be done in isolated batches. An alternative scheme may be able to reduce
@@ -487,9 +480,9 @@
 		This type of network is often found in nature, perhaps most famously in
 		social networks. This property was first observed in 1929 by Hungarian
 		author Frigyes Karinthy\cite{karinthy29} and has become popularly known as
-		the theory of `six degrees of separation'. This theory states that any two
-		people, chosen at random, there is a chain of 6 acquaintances which connects
-		them.
+		the theory of `six degrees of separation'. This theory states that for any
+		two people, chosen at random, there is a chain of 6 acquaintances which
+		connects them.
 		
 		This property of maintaining low maximum shortest-path length while still
 		remaining locally well connected is desirable property for certain
@@ -538,8 +531,9 @@
 			\end{figure}
 			
 			This algorithm is readily extended to torus topologies. In this work, a
-			$k$-ary 2-cube was used as the initial network such as in figure
-			\ref{fig:torusNetworkB0}. Random permutations are added to the network
+			$k$-ary 2-cube (a two dimensional torus $k$ nodes long in each dimension)
+			was used as the initial network as in figure \ref{fig:torusNetworkB0}.
+			Random permutations are introduced as in the Watts-Strogatz model
 			resulting in a network such as figure \ref{fig:torusNetworkB01}.
 			
 			\begin{figure}
@@ -561,14 +555,14 @@
 				\label{fig:torusNetwork}
 			\end{figure}
 			
-			The a 6-ary 2-cube has an average shortest path length of $\frac{nk}{4}$.
+			A $k$-ary $n$-cube has an average shortest path length of $\frac{nk}{4}$.
 			This is because a packet travels (on average, under uniform random
 			traffic) $\frac{1}{4}$ of the way around each of the $n$, $k$-node-long
 			dimensions. In this case, that means the average path length is $\frac{2
 			\times 6}{4} = 3$.
 			
 			By contrast, for the rewired version shown, the average shortest path is
-			now reduced to 2.77 hops. As in Watts-Strogatz' networks, the average path
+			now reduced to 2.77 hops. As in Watts-Strogatz networks, the average path
 			length has been brought down while much of the local connectivity remains.
 		
 		
@@ -577,9 +571,10 @@
 			Experiments using a simple graph model were carried out to determine the
 			effects of rewiring on shortest-path length. Figure
 			\ref{fig:smallWorldTorus} shows that the shortest-path length drops
-			rapidly but returns quickly diminish. As a result, it can be concluded
-			that the amount of rewiring required to produce a significant impact on
-			the shortest-path length.
+			rapidly but, as more links are rewired, returns quickly diminish. As a
+			result, it can be concluded that the amount of rewiring required to
+			produce a significant impact on the shortest-path length can be very
+			small.
 			
 			\begin{figure}
 				\center
@@ -592,20 +587,21 @@
 			
 			Unfortunately, random wiring can be problematic for real-world systems.
 			As discussed in \S\ref{sec:wiring-up-large-spinnaker-machines}, long wires
-			are problematic for many interconnection topologies and adding random
+			must be avoided for many interconnection technologies and adding random
 			wiring can cause many such links to be created. For example, in figure
 			\ref{fig:torusNetworkB01} a long wire from the top right node stretches
 			almost to the bottom left node.
 			
-			To work around this problem, we first fold the network
-			(\S\ref{sec:folding-toroids}) to eliminate the long wires which connect up
-			the torus (figure \ref{fig:torusNetworkFB0}). Next, rewiring is carried
-			out but with a limit on the maximum wire length which can be created
-			(figure \ref{fig:torusNetworkFB01}).  This rewiring constrains the maximum
-			wire to be 3 units long (where a unit is the spacing between each node in
-			a given dimension). Even with this limitation on wire length, the maximum
-			path length still drops, this time to 2.73 (from 3 in the unwired
-			network), but now there are no long wires.
+			To work around this problem, we first fold the network (as discussed
+			previously in \S\ref{sec:folding-toroids}) to eliminate the long
+			wrap-around wires which connect up the torus (figure
+			\ref{fig:torusNetworkFB0}). Next, rewiring is carried out but with a limit
+			on the maximum wire length which can be created (figure
+			\ref{fig:torusNetworkFB01}).  This rewiring constrains the maximum wire to
+			be 3 units long (where a unit is the spacing between each node in a given
+			dimension). Even with this limitation on wire length, the maximum path
+			length still drops, this time to 2.73 (from 3 in the unwired network), but
+			now there are no long wires.
 			
 			\begin{figure}
 				\center
@@ -628,8 +624,8 @@
 			
 			To test the effects of limiting wire lengths when re-wiring, a parameter
 			sweep was carried out for a 40-ary 2-cube. The test was carried out after
-			folding once and twice in each dimension with a control where the network
-			was not folded. The results are given in figure
+			folding once and twice in each dimension and finally when the
+			network was not folded. The results are given in figure
 			\ref{fig:smallWorldLimitedWiring}.
 			
 			\begin{figure}
@@ -639,11 +635,11 @@
 				\label{fig:smallWorldLimitedWiring}
 			\end{figure}
 			
-			It is clear that when wire lengths are most limited the average
+			It is clear that when wire lengths are most limited, the average
 			shortest-path length improves when the network has been folded. This
-			result is intuitive because after folding, neighbouring boards are
-			no-longer topologically adjacent but instead may be at opposite ends of
-			the system. As a result, limiting wire lengths essentially `prefers' the
+			result is intuitive because after folding, physically neighbouring boards
+			are no-longer logically adjacent but instead is at opposite ends of the
+			system. As a result, limiting wire lengths essentially `prefers' the
 			creation of longer links which are most likely to pull the average wire
 			length down.
 			
@@ -694,7 +690,8 @@
 			cabinets and racks as in \S\ref{sec:mapping-spinnaker-to-cabinets}. This
 			mapping may further alter the way length-limited random links can cause
 			non-uniform average shortest-path lengths. This work could be extended to
-			include this final mapping into more realistic physical placements.
+			include this final mapping into more realistic physical placements by
+			building on the SpiNNer wiring modelling library introduced previously.
 	
 	%\section{Place and Route}
 	%	

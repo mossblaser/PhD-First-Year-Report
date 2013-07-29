@@ -39,5 +39,6 @@ for b, coords in boards:
 
 # Output the TikZ code for the diagram
 print r"\begin{tikzpicture}[thick,scale=0.9]"
+print r"\clip (-0.7,-0.7) rectangle ++(8.4,6.4);"
 print d.get_tikz()
 print r"\end{tikzpicture}"
