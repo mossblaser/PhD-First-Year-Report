@@ -30,10 +30,10 @@
 		
 		As part of the ongoing SpiNNaker project a study is being carried out to
 		compare how network simulations compare with the real hardware. As part of
-		this work, researchers have built an FPGA accelerated model of SpiNNaker's
+		this work, researchers have built an FPGA-accelerated model of SpiNNaker's
 		interconnection network. The work hopes to verify the accuracy of the model
-		against both a traditional software model and also the final silicon
-		implementation. The results of this work are intended for a Journal
+		against both a traditional software model and the final silicon
+		implementation. The results of this work are intended for a journal
 		publication aiming for submission around the end of September 2013.
 		
 		My participation in this project will be to develop the software simulation
@@ -55,16 +55,16 @@
 			
 			One of the major limitations of INSEE is that it is only able to model
 			point-to-point traffic and will require extending to support multicast
-			traffic which are at the heart of SpiNNaker's anticipated usage for neural
+			traffic which is at the heart of SpiNNaker's anticipated usage for neural
 			network simulation. However, since this limitation is also shared by the
 			FPGA implementation, only point-to-point traffic is considered by this
 			work in all three systems.
 			
-			The other key difference between INSEE and the actual SpiNNaker
-			architecture is the way packets from incoming links are arbitrated. Figure
+			The other key difference between INSEE and the SpiNNaker architecture is
+			the way packets from incoming links are arbitrated. Figure
 			\ref{fig:arbitration} shows the arbitration schemes for INSEE and
 			SpiNNaker. INSEE uses a simple round-robin arbitration scheme while
-			SpiNNaker (and the FPGA model) use a tree of arbitrators\footnote{The
+			SpiNNaker (and the FPGA model) use a tree of arbiters\footnote{The
 			bandwidth available at each level of the arbitration tree scales with the
 			maximum input bandwidth for each level.}.
 			
@@ -86,20 +86,20 @@
 				
 				\caption[Incoming packet arbitration schemes in INSEE and
 				SpiNNaker.]{Incoming packet arbitration schemes in INSEE and SpiNNaker.
-				Boxes marked `RR' are round-robin arbitrators, P1-P18 are connections to
+				Boxes marked `RR' are round-robin arbiters, P1-P18 are connections to
 				local processor cores.}
 				\label{fig:arbitration}
 			\end{figure}
 			
-			The differences caused by this extends beyond the order in which
-			contesting requests will be serviced. In INSEE, each input has a buffer
-			associated with it from which the router will extract messages and forward
-			them to the input buffer of the next node, one per simulated cycle. In the
+			The differences caused by this extend beyond the order in which contesting
+			requests will be serviced. In INSEE, each input has a buffer associated
+			with it from which the router will extract messages and forward them to
+			the input buffer of the next node, one per simulated cycle. In the
 			SpiNNaker design, messages are buffered at each level of the tree and
 			eventually placed in a pipeline within the router (equivalent to further
-			buffering) and an output buffer. The interaction of all these buffers is
-			not modelled by INSEE and thus the results produced will be less well
-			matched with the actual SpiNNaker system.
+			buffering) and an output buffer. The interaction of these buffers is not
+			modelled by INSEE and thus the results produced will be less well matched
+			with the actual SpiNNaker system.
 			
 			% Part of the aim of the work is to produce a comparison between this
 			% software model, an FPGA model and a prototype system. Successful
@@ -120,10 +120,10 @@
 			research.
 			
 			Since INSEE is an established tool which has been used in similar work it
-			is potentially a strong choice. In order to determine its suitability for
-			this work and my own research a small amount of time will be initially
-			spent analysing its design. If it is found to be suitable development of
-			an extended version will commence.
+			is potentially a strong choice. To determine its suitability for this work
+			and my own research a small time will be initially spent analysing its
+			design. If it is found to be suitable development of an extended version
+			will commence.
 			
 			A possible alternative to INSEE is the simulator developed during the
 			preliminary interconnect study in \S\ref{sec:interconnect-modelling}.
@@ -142,17 +142,18 @@
 		The work done in \S\ref{sec:small-world-super-computers} measured average
 		shortest-path length in the networks examined. This measure corresponds to
 		the average path length for uniform-random traffic in a real network with
-		the same topology. In brain simulation systems such as spinnaker, much of
-		the traffic is local and so uniform-random traffic is not representative.
-		This work will test the performance of small-world networks with more
-		realistic traffic.
+		the same topology. In brain simulation systems such as SpiNNaker, much of
+		the traffic is expected to be local and so uniform-random traffic is not
+		representative.  This work will test the performance of small-world networks
+		with more realistic traffic.
 		
 		The other shortcoming found during the preliminary study was that when
 		physical wiring was restricted in length (as in real systems), the logical
 		distance covered by links in different parts of the system becomes uneven.
 		Since the folding and rack/cabinet placement which takes place in real
 		machines such as SpiNNaker is much more intricate than the simple ring
-		studied, these effects may become insignificant.
+		studied, these effects may become insignificant making wire-length limiting
+		schemes profitable.
 		
 		This work is intended to take around one further month including ample time
 		for writing up and further experimentation with wiring schemes if required.
@@ -168,12 +169,12 @@
 		more structured topologies. This will be done to empirically test
 		alternative topologies for use in SNN simulation.
 		
-		This work will follow on from the experiments carried out by
-		\cite{vainbrand11} which was limited to widely used, more generic network
-		topologies with alternatives which may be better suited to the problem. For
-		example, topologies such as express cubes \cite{dally91} offer improved
-		performance for a limited amount of non-local traffic while preserving the
-		local performance of mesh and torus networks.
+		This work will follow on from the experiments carried out by Vainbrand and
+		Ginosar which was limited to widely used, more generic network topologies
+		with alternatives which may be better suited to the problem
+		\cite{vainbrand11}. For example, topologies such as express cubes
+		\cite{dally91} offer improved performance for a limited amount of non-local
+		traffic while preserving the local performance of mesh and torus networks.
 	
 	\section{Placement and Routing}
 		
@@ -183,7 +184,7 @@
 		consideration. Current architectures, such as SpiNNaker, use table based
 		routing where a lookup table is used to decide where to route messages
 		arriving at each node in the system. Such systems offer a lot of flexibility
-		in the routing schemes that can be implemented but also may introduce
+		in the routing schemes that can be implemented but may also introduce
 		constraints on the complexity of routes through the system when the routing
 		tables are limited in size.
 		
@@ -191,7 +192,7 @@
 		to be specified. In the above comparative work on possible topologies
 		simple, na\"ive routing algorithms will be used. These simple to implement
 		algorithms often result in non-optimal behaviour, especially with regard to
-		load balancing\cite{dally04}. Given that systems such as SpiNNaker use
+		load balancing \cite{dally04}. Given that systems such as SpiNNaker use
 		packet-dropping flow control, where congested routes can cause packets to be
 		dropped, the effects of load imbalance may cause localised areas of high
 		packet losses which may significantly affect simulations.
@@ -217,9 +218,9 @@
 		each destination is similar. This type of constraint is similar in style to
 		those in SpiNNaker-like systems for example, the need to try and control
 		branching to minimise routing table resource. Network routers, however, are
-		often designed to reduce the amount of bandwidth consumed by branching as
-		late as possible. Once again, work must be done to combine and compare these
-		two approaches.
+		often designed to reduce the bandwidth consumed by forking multipath routes
+		as late as possible reducing the total number of links used. Once again,
+		work must be done to combine and compare these two approaches.
 	
 	\section{Interconnect Technology Evaluation}
 		
@@ -234,7 +235,7 @@
 		individual, locally-synchronous components communicate via a
 		locally-synchronous interconnect.
 		
-		The SpiNNaker chip uses an asynchronous NoC based on CHAIN
+		Internally, the SpiNNaker chip uses an asynchronous NoC based on CHAIN
 		\cite{plana07,bainbridge02} using IP from (the now defunct) Silistix Ltd.
 		This interconnect is able to handle arbitration between the many incoming
 		signals from on board processors and external connections to other chips.
@@ -242,7 +243,7 @@
 		
 		SpiNNaker chips are interconnected using parallel, delay insensitive
 		interconnects. These links, while adequate for the system's current scale,
-		may not be trivially sped up. More suitable external interconnects will
+		may not be trivially speeded up. More suitable external interconnects will
 		likely be based on high speed serial as described in
 		\S\ref{sec:high-speed-serial}.
 		
@@ -259,11 +260,11 @@
 		
 		\subsection{Scaling}
 			
-			Due to the advance of Moore's law, several times more chip area will be
-			available for this next generation architecture compared to the previous
-			revision. It is assumed that it will be possible to fit a larger number of
-			cores into a single chip along with larger memories both for the on board
-			processors.
+			Due to the advance of Moore's law, several times more logical capacity
+			will be available for this next generation architecture compared to the
+			previous revision. It is assumed that it will be possible to fit a larger
+			number of cores into a single chip along with larger memories both for the
+			on board processors and routers.
 			
 			The preceding work will be used to decide on the type of topology and
 			routing systems to be used. It is expected that access to larger routing
@@ -281,12 +282,12 @@
 			initialisation and result collection. These tasks require reliable
 			communication, typically with a relatively larger data payload. This is
 			currently facilitated by the SpiNNaker Datagram Protocol (SDP)
-			\cite{temple11} which allows unreliable point-to-point transmission of up
-			to 64KB of data. Though this offers the ability to easily load
-			configurations to SpiNNaker chips, collecting data becomes more difficult.
-			With larger, multi-board systems currently in testing, contention for
-			the links surrounding a central node during data-collection become
-			saturated resulting in a large number of packets being dropped.
+			\cite{temple11} which allows non-guaranteed point-to-point transmission of
+			up to 64KB of data. Though this offers the ability to load configurations
+			to SpiNNaker chips, collecting data becomes more difficult.  With larger,
+			multi-board systems currently in testing, contention for the links
+			surrounding a central node during data-collection become saturated
+			resulting in a large number of packets being dropped.
 		
 		\subsection{Link Technology}
 			

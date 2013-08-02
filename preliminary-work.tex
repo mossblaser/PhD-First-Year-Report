@@ -9,14 +9,14 @@
 	SpiNNaker architecture whose advanced state of development makes it an
 	appropriate target for realistic experimentation.
 	
-	The first section describes an experiment to conducted determine the way in
+	The first section describes an experiment conducted to determine the way in
 	which the choice of technologies on which an interconnection network is built
 	can affect its performance. As well as performance considerations, this choice
 	also has implications for the practicalities of constructing real systems. The
 	second section describes work which studies the practical issues faced when
 	wiring up SpiNNaker's chosen interconnect. The chapter concludes with an
-	experiment to test a simple extension to the SpiNNaker interconnect. The
-	proposed topology uses semi-random links to improve its performance while
+	experiment to test a simple extension to the SpiNNaker interconnect topology.
+	The proposed topology uses semi-random links to improve its performance while
 	still accounting for the practical issues involved in assembly.
 	
 	% Rly?
@@ -43,18 +43,17 @@
 		% In order to understand the effects of inserting non-uniformity to the
 		% SpiNNaker Interconnect caused by the high speed links.
 		
-		An important factor in designing interconnection networks is the
-		technologies used to implement the links in the network. These choices
-		influence the network's performance as they determine the costs involved in
-		sending a message across a link. This in turn can, for example, affect the
-		way packets need to be routed to make optimal use of the system's resources.
+		An important factor in designing interconnection networks is the technology
+		used to implement the links in the network. These choices influence the
+		network's performance as they determine the costs involved in sending a
+		message across a link. This in turn can, for example, affect the way packets
+		need to be routed to make optimal use of the system's resources.
 		
-		At the chip-to-chip level, the SpiNNaker system is extremely homogeneous
-		with identical links connecting chips to their (also identical) neighbours.
+		At the chip-to-chip level, the SpiNNaker system is homogeneous with
+		identical links connecting chips to their (also identical) neighbours.
 		Unfortunately, this homogeneity is broken when signals need to cross between
 		boards. The board-to-board links concentrate multiple chip-to-chip signals
-		onto a small number of high-speed serial links in order to reduce the cost
-		of wiring.
+		onto a small number of high-speed serial links to reduce the cost of wiring.
 		
 		Though the board-to-board connections are logically transparent, they
 		inevitably result in some additional latency at the board boundaries. Figure
@@ -141,7 +140,7 @@
 				Steps can be seen every time the number of hops passes a multiple of 8,
 				the number of consecutive chips in any single dimension on a board,
 				after which a board-to-board link is crossed causing increased latency.
-				This step change can be clearly seen in the exaggerated links but is
+				This step change can be seen clearly in the exaggerated links but is
 				also visible in realistic links.
 				
 				An extra step appears at 28 hops, the cause of which is not currently
@@ -364,15 +363,15 @@
 			into two on the Y-axis (figure \ref{fig:boardsFoldedSpaced}). It is
 			necessary to fold the X-axis into four as the long, diagonal wires don't
 			cross the entire system on the X-axis and instead reach half way. Folding
-			in two would not bring these points any closer\footnote{For example, the
-			wire travelling from the bottom left board to the top-middle board after
-			folding in two would now have to cross from one end of the system to the
-			other -- an even longer distance than it had to before.} while folding
-			into four brings them next to each other. As a result, the maximum wire
-			length is reduced which can be seen in figure
-			\ref{fig:boardsFoldedInterleaved}. While the wiring in this image appears
-			more complex, if only on direction (colour) is considered at once, a
-			certain amount of regularity can be seen.
+			in two would not bring these points any closer while folding into four
+			brings them next to each other. For example, the wire travelling from the
+			bottom left board to the top-middle board after folding in two would now
+			have to cross from one end of the system to the other, an even longer
+			distance than it had to before. As a result, the maximum wire length is
+			reduced which can be seen in figure \ref{fig:boardsFoldedInterleaved}.
+			While the wiring in this image appears more complex, if only one direction
+			(colour) is considered at once, a certain amount of regularity can be
+			seen.
 			
 			\label{sec:mapping-spinnaker-to-cabinets}
 			
@@ -394,8 +393,8 @@
 				\label{fig:spinnaker106}
 			\end{figure}
 			
-			Even though the system is physically several meters long, the longest wire
-			will only be around one meter in length which is within the tolerances of
+			Even though the system is physically several metres long, the longest wire
+			will only be around one metre in length which is within the tolerances of
 			the high-speed link technology. This placement scheme, therefore, meets
 			the wire-length requirement, and due to the use of high-speed serial links
 			using commodity cables as described earlier, the wire-cost requirement.
@@ -404,24 +403,24 @@
 			
 			The final concern is that it should not be too complex to
 			be installed by hand. The large-scale SpiNNaker machine will contain 3,600
-			wires and so it is clearly not practical to have to look up each
+			cables and so it is clearly not practical to have to look up each
 			individual connection before wiring it up. Though it is clear that the
 			folded arrangement is substantially less regular than the original layout,
 			some regularity remains.
 			
 			By splitting up the wiring tasks by the logical direction (and thus by the
 			connector on the board) it is clear that a large amount of regularity
-			exists in each group of wires (consider each colour separately in figure
+			exists in each group of cables (consider each colour separately in figure
 			\ref{fig:spinnaker106}). If the task is further split depending on whether
-			the wires stay with in a rack or cabinet, batches of identical racks and
+			the cables stay with in a rack or cabinet, batches of identical racks and
 			cabinets can be wired up independently before being linked together later.
-			For example, the wires connecting North to South (shown in red) remain
+			For example, the cables connecting North to South (shown in red) remain
 			entirely within a cabinet meaning all North/South wiring can be completed
 			independently for each cabinet.
 			
-			Based on the above observations, the connections for all 3,600 wires can
-			be described using only 53 instructions rather than 3,200. This satisfies the final
-			constraint on wiring complexity.
+			Based on the above observations, the connections for all 3,600 cables can
+			be described using only 53 instructions rather than 3,200. This satisfies
+			the final constraint on wiring complexity.
 		
 		\subsection{`SpiNNer' Wiring Guide Generator}
 			
@@ -439,7 +438,7 @@
 			
 			The wiring guide generator produces illustrated documents using \LaTeX{}
 			which describe the wiring for arbitrarily sized machines\footnote{Many of
-			the Figures in this section were adapted from wiring guides generated by
+			the figures in this section were adapted from wiring guides generated by
 			SpiNNer.}. Metrics such as the distribution of wire lengths are included
 			along with instructions for wiring the system up. At the time of writing,
 			the largest prototype system constructed, a single threeboard, has been
@@ -451,25 +450,25 @@
 			% Simplify instructions, alternative wirings.
 			
 			The wiring guide generator is currently only capable of producing
-			exhaustive wiring descriptions with one instruction for each of the 3,200
-			wires. The foundations for extracting regularity currently exist in
+			exhaustive wiring descriptions with one instruction for each of the 3,600
+			cables. The foundations for extracting regularity currently exist in
 			experimental form and must eventually be integrated into the wiring guide
 			generator.
 			
 			In addition, further work may be carried out to test alternative wiring
-			schemes. The current scheme, a huge number of wires cross between
+			schemes. The current scheme, a huge number of cables cross between
 			different cabinets. As a result a significant amount of the wiring cannot
 			be done in isolated batches. An alternative scheme may be able to reduce
 			this number and further simplify the task of wiring.
 	
-	\section{Small-World Super Computers}
+	\section{Small-World Super-Computers}
 		
 		\label{sec:small-world-super-computers}
 		
 		% In the same way that random search is generic (no free lunch), I tried
 		% adding random wires. This is backed up by Watts and Strogatz's small-world
 		% network producing algorithm. Built a model. Took into account wiring using
-		% techniques in Wiring-Up Super Computers.
+		% techniques in Wiring-Up Super-Computers.
 		
 		Small-world networks are graphs with a very large number of nodes but,
 		within which, the maximum shortest-path length is very small, despite each
@@ -481,13 +480,13 @@
 		social networks. This property was first observed in 1929 by Hungarian
 		author Frigyes Karinthy\cite{karinthy29} and has become popularly known as
 		the theory of `six degrees of separation'. This theory states that for any
-		two people, chosen at random, there is a chain of 6 acquaintances which
-		connects them.
+		two people, chosen at random, there is a chain of at most 6 acquaintances
+		which connects them.
 		
 		This property of maintaining low maximum shortest-path length while still
-		remaining locally well connected is desirable property for certain
+		remaining locally well connected is a desirable property for certain
 		computational problems. In neural simulations most communication is local
-		but with some longer connections remaining. The clustering property of small
+		but with some longer connections existing. The clustering property of small
 		world networks means these local connections can be well catered for while
 		the low maximum shortest-path length means longer connections are still
 		quick for very large models.
@@ -495,14 +494,14 @@
 		\subsection{Network Construction}
 		
 			Watts and Strogatz have proposed an algorithm for randomly constructing
-			networks with small-world properties\cite{watts98}. The algorithm begins
+			networks with small-world properties \cite{watts98}. The algorithm begins
 			by creating a ring network with each node connecting to a fixed number of
-			its consecutive neighbours (figure \ref{fig:ringNetworkB0}). In the next
-			step, with a probability of $\beta$, each edge may be replaced by a random
-			connection. For $0 < \beta < 1$, the networks produced exhibit varying
-			degrees of the small-world properties (figure \ref{fig:ringNetworkB02}).
-			Finally, in the extreme case where $\beta=1$, the network devolves into a
-			random network (figure \ref{fig:ringNetworkB1}).
+			its neighbours (figure \ref{fig:ringNetworkB0}). In the next step, with a
+			probability of $\beta$, each edge may be replaced by a random connection.
+			For $0 < \beta < 1$, the networks produced exhibit varying degrees of the
+			small-world properties (figure \ref{fig:ringNetworkB02}).  Finally, in the
+			extreme case where $\beta=1$, the network devolves into a random network
+			(figure \ref{fig:ringNetworkB1}).
 			
 			\begin{figure}
 				\center
@@ -601,7 +600,7 @@
 			be 3 units long (where a unit is the spacing between each node in a given
 			dimension). Even with this limitation on wire length, the maximum path
 			length still drops, this time to 2.73 (from 3 in the unwired network), but
-			now there are no long wires.
+			now there are no physically long wires.
 			
 			\begin{figure}
 				\center
@@ -638,12 +637,12 @@
 			It is clear that when wire lengths are most limited, the average
 			shortest-path length improves when the network has been folded. This
 			result is intuitive because after folding, physically neighbouring boards
-			are no-longer logically adjacent but instead is at opposite ends of the
+			are no-longer logically adjacent but instead are at opposite ends of the
 			system. As a result, limiting wire lengths essentially `prefers' the
-			creation of longer links which are most likely to pull the average wire
-			length down.
+			creation of logically longer links which are most likely to pull the
+			average path length down.
 			
-			The other interesting effect is that above a certain threshold, allowing
+			The other interesting effect is that, above a certain threshold, allowing
 			longer wires has no significant effect on the average shortest-path
 			length. This may be because wires which stretch further than half-way
 			($\frac{k}{2}$ hops) along a given axis could be just as easily reached by
@@ -667,7 +666,7 @@
 			possible random links in a small ring network after wire lengths have been
 			limited. The top and bottom nodes of the ring are likely to have a smaller
 			average shortest-paths than those near the left and right. This is because
-			random links created from the top and bottom nodes provide a longer
+			random links created from the top and bottom nodes provide a better
 			short-cut than those near the left and right.
 			
 			\begin{figure}

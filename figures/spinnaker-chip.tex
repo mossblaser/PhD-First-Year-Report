@@ -5,10 +5,11 @@
 	% Draw the cores
 	\coordinate (core last);
 	\foreach \n in {1,...,\numcores}{
+		\pgfmathtruncatemacro{\nn}{\n-1}
 		\node (core \n) [draw,rounded rectangle,minimum width=1.3cm]
 		      [below=0 of core last,anchor=north west,rotate=90,inner sep=0.4ex]
 		      [yshift=-0.1em]
-		      {\tiny CPU \n}
+		      {\tiny CPU \nn}
 		      ;
 		\draw (core \n.west) -- ++(0,-1.5);
 		\coordinate (core last) at (core \n.south west);
