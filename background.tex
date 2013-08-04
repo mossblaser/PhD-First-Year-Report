@@ -375,86 +375,214 @@
 		in the Top500's top five machines. Projects such as the Blue Brain project
 		\cite{markram06} are able to make use of such computationally powerful
 		machines in the simulation of relatively small ANNs of tens of thousands of
-		biologically realistic neurons. Large ANN using the less realistic models of
-		neuron behaviour change the balance between computation and communication.
-		Requiring relatively little computation for each neuron but needing vast
-		amounts of communication, conventional super computers are a poor fit and,
-		as a result, alternative architectures have been developed for neural
-		simulation.
+		biologically realistic neurons. Large ANNs using the less realistic models
+		of neuron behaviour change the balance between computation and
+		communication.  Requiring relatively little computation for each neuron but
+		needing vast amounts of communication, conventional super computers are a
+		poor fit and, as a result, alternative architectures have been developed for
+		neural simulation.
 		
-		There are three distinct approaches being taken to designing hardware for
-		neural simulation. One is to use analogue electronic components for the
-		entire system, another is to mix analogue and digital components and a final
-		approach is to use traditional digital components. These three approaches
-		and their merits are described below.
+		\subsection{Electrical Technology}
 		
-		\subsection{Analogue}
+			There are three distinct approaches being taken to designing (electrical)
+			hardware for neural simulation. One is to use analogue electronic components
+			for the entire system, another is to mix analogue and digital components and
+			a final approach is to use traditional digital components. These three
+			approaches and their merits are described below.
+			
+			\subsubsection{Analogue}
+			
+				Though analogue technology has long been out of favour for general purpose
+				computing, it has been suggested for neural simulation as it is ultimately
+				designed to model an analogue system: the brain. Neural models are highly
+				fault-tolerant and do not assume that values will be calculated or
+				communicated precisely. Modern digital computers, by contrast, have rigid
+				requirements for the precision of values and so dedicate vast amounts of
+				hardware and energy to guaranteeing such unnecessary precision making
+				analogue simulators an attractive approach.
+				
+				A wide range of techniques for implementing the required functions in
+				analogue circuitry has been proposed
+				\cite{graf86,holler89,agranat90,azghadi13}. The analogue circuits used
+				are often simple and replace more power-hungry general purpose
+				processors \cite{misra10}. Even though the lack of precision of analogue
+				circuits is not a problem for neural simulation, the lack of consistency
+				is. The same analogue circuit may have widely different characteristics
+				in one part of the chip compared to another due to variations in the
+				silicon wafer. In addition circuits must tolerate changes in temperature
+				and voltage, a task which is substantially more challenging for analogue
+				circuits compared to their digital counterparts. As a result, current
+				successful implementations such as the MIT Silicon Synapse have been
+				limited to small parts of a neural network, a single synapse connecting
+				two neurons in this case \cite{rachmuth11}.
+				
+				Finally, analogue systems make assumptions about the type of neural models
+				that will be simulated limiting them to simulating only a handful of
+				similar models. As a result, the current generation of analogue
+				simulators lag behind the state-of-the-art in terms of ease-of-use and
+				flexibility.
+			
+			\subsubsection{Mixed Mode}
+				
+				So-called `mixed mode' systems have been designed such as Neurogrid and
+				BrainScaleS which combine analogue computational components with digital
+				communication \cite{choudhary12,maguire07}. The use of digital
+				communication avoids issues with inconsistencies across the chip while
+				also simplifying routing of spikes which can then be completed using
+				conventional digital methods.
+				
+				While offering improvements over purely analogue systems, many of the same
+				drawbacks with variability and flexibility still apply.
+			
+			\subsubsection{Digital}
+				
+				Various groups have developed custom, digital, on-chip neural simulators
+				\cite{prange93,jahnke96,schoenauer99,mehrtash03}. While successful in
+				allowing relatively large numbers of neurons to be simulated, around 1
+				million in the case of SP$^2$INN, along with the analogue and mixed mode
+				designs above, these approaches are fundamentally restricted to only the
+				models the designers originally intended \cite{mehrtash03}. Due to the
+				lack of flexibility and increasing costs of designing custom silicon,
+				researchers, such as those behind SP$^2$INN, away from this approach.
+				
+				FPGAs (Field Programmable Gate Arrays) are, essentially, chips which can
+				be electrically reprogrammed with custom logic circuits. They are now
+				widely used in place of custom chips for performance-sensitive, highly
+				specialised tasks as well as prototyping and development of conventional
+				chips. Work using FPGAs to simulate neural models such as
+				\cite{hellmich05} has allowed around half a million neurons with realistic
+				numbers of connections between them to be simulated. Despite being
+				considerably cheaper and far more flexible than completely custom
+				hardware, FPGA development is still much slower than developing for
+				general purpose CPUs and so still yields relatively inflexible systems.
+				
+				Finally, architectures based on general purpose digital processors are
+				able to provide a great degree of flexibility at the expense of greater
+				overhead\cite{furber07}. The SpiNNaker project, described in detail in the
+				next section, has developed an architecture which combines many low-power
+				processors which run neural simulations in software.
 		
-			Though analogue technology has long been out of favour for general purpose
-			computing, it has been suggested for neural simulation as it is ultimately
-			designed to model an analogue system: the brain. Neural models are highly
-			fault-tolerant and do not assume that values will be calculated or
-			communicated precisely. Modern digital computers, by contrast, have rigid
-			requirements for the precision of values and so dedicate vast amounts of
-			hardware and energy to guaranteeing such unnecessary precision making
-			analogue simulators an attractive approach.
+		\subsection{Topologies}
 			
-			A wide range of techniques for implementing the required functions in
-			analogue circuitry has been proposed
-			\cite{graf86,holler89,agranat90,azghadi13}.  The analogue circuits used
-			are often simple and replace more power-hungry general purpose
-			processors \cite{misra10}. Even though the lack of precision of analogue
-			circuits is not a problem for neural simulation, the lack of consistency
-			is. The same analogue circuit may have widely different characteristics in
-			one part of the chip compared to another due to variations in the silicon
-			wafer. In addition circuits must tolerate changes in temperature and
-			voltage, a task which is substantially more challenging for analogue
-			circuits compared to their digital counterparts.  Finally, these systems
-			make assumptions about the type of neural models that will be simulated
-			limiting them to simulating only a handful of similar models. As a result,
-			the current generation of analogue simulators lag behind the
-			state-of-the-art in terms of ease-of-use and flexibility.
-		
-		\subsection{Mixed Mode}
+			% Various used, often constrained by technology but there is a focus on
+			% sub-board level interconnect. Here are some examples.
 			
-			So-called `mixed mode' systems have been designed such as
-			\cite{heittmann02} which combines analogue computational components with
-			digital memory yielding systems with efficient computation and dense
-			storage. In \cite{murray91} another mixed mode system is given which again
-			features analogue computation of neuron behaviour but uses digital signals
-			to distribute spike transmission allowing easier and more flexible routing.
+			Though various topologies have been used for hardware neural simulators
+			but these largely boil down to those based on to tori and trees. Unlike
+			those in super-computers, the granularity of these networks tends to be
+			higher reflecting the increased focus on communication over computation.
+			This subsection examines the topologies of two leading mixed-mode neural
+			simulators, Neurogrid and BrainScaleS.
 			
-			While offering improvements over purely analogue systems, many of the same
-			drawbacks with variability and flexibility still apply.
-		
-		\subsection{Digital}
+			\subsubsection{Neurogrid}
+				
+				% Chips which contain neuron implementations which can recieve and
+				% generate spikes (which are fed in/extracted a row at a time out of a 2D
+				% grid). These are combined onto a board using a tree-style topology.
+				% Notably the tree also has some horizontal links. Routing is implemented
+				% using lookup RAMs to select where spikes should go. Separate network
+				% used for configuration.
+				
+				The Neurogrid architecture, at the highest level, consists of a small
+				number of Neurogrid chips  (16 in current prototypes) arranged as leaves
+				in a binary-tree where spike events are routed to other chips
+				\cite{choudhary12}.
+				
+				\begin{figure}
+					\center
+					\input{figures/neurogrid-chip}
+					\caption{Neurogrid chip topology showing the mechanism used to
+					arbitrate the chip output port.}
+					\label{fig:neurogrid-chip}
+				\end{figure}
+				
+				Each Neurogrid chip then contains a 2D grid of $256\times256$ analogue
+				neuron models as shown in figure \ref{fig:neurogrid-chip}. When a neuron
+				produces a spike it asserts a signal sensed by the row-enabling arbiter.
+				This then selects a single row which is then allowed to assert a signal
+				on a column wire. The column arbiter then selects a single neuron from
+				the enabled row which can then output by the chip \cite{boahen04}. When
+				a spike arrives for a neuron in the chip, a similar process occurs to
+				single out the neuron for which it is destined \cite{boahen04receiver}.
+				
+				The on-chip topology is cheap to implement as row and column connections
+				are simple wires and the controlling logic is relatively simple.
+				Unfortunately, it doesn't exploit the available parallelism in the
+				system allowing only one spike to be emitted at once. In addition,
+				spikes destined for other neurons near-by in the chip are just as
+				expensive as spikes between distant neurons on the same chip.
+				
+				Off-chip, spikes traverse the binary tree structure which is easily
+				scaled to larger systems with the limit being the number of bits
+				available for neuron identification.
 			
-			Various groups have developed custom, digital, on-chip neural simulators
-			\cite{prange93,jahnke96,schoenauer99,mehrtash03}. While successful in
-			allowing relatively large numbers of neurons to be simulated, around 1
-			million in the case of \cite{mehrtash03}, along with the analogue and mixed
-			mode designs above, these approaches are fundamentally restricted to only
-			the models the designers originally intended. This lack of flexibility
-			along with the increasing costs of designing custom silicon has pushed
-			researchers away from this approach.
+			\subsubsection{BrainScaleS}
+				
+				% BrainScaleS viewed from one angle is a wafer with many chips connected
+				% via an overlay mask in a multi-lane mesh topology with rotating lanes
+				% and sparse switches. Mesh is good for locality and maps well onto the
+				% very-very 2D space. Twisty multi-lane simplifies routing decisions
+				% somewhat.
+				% 
+				% Zoom out a little and you have some FPGAs bonded onto the wafer where
+				% packets are now translated into UDP/IP and pumped into conventional 10
+				% gbit/s switches in what is at the moment a star network. It is projected
+				% multiple wafers will be combined at this level. Allows scaling but not
+				% as nice as an infinitely growing mesh.
+				% 
+				% Unfortunately the first level is somewhat hard to use so at the moment
+				% a lot is falling back to the FPGAs on the next layer.
+				
+				The BrainScaleS project makes use of wafer-scale integration where
+				multiple chips produced on the same silicon wafer are connected together
+				rather than split into separate dies. Each chip on the wafer contains a
+				number of Analog Neural-Network Chips (ANCs) which can be programmed to
+				model up to 254 neurons (depending on the number of connections to other
+				neurons) \cite{schemmel10}. There are two types of interconnect in the
+				system named `level 1' (L1) and `level 2' (L2) which are described
+				below.
 			
-			FPGAs (Field Programmable Gate Arrays) are, essentially, chips which can
-			be electrically reprogrammed with custom logic circuits. They are now
-			widely used in place of custom chips for performance-sensitive, highly
-			specialised tasks as well as prototyping and development of conventional
-			chips. Work using FPGAs to simulate neural models such as
-			\cite{hellmich05} has allowed around half a million neurons with realistic
-			numbers of connections between them to be simulated. Despite being
-			considerably cheaper and far more flexible than completely custom
-			hardware, FPGA development is still much slower than developing for
-			general purpose CPUs and so still yields relatively inflexible systems.
-			
-			Finally, architectures based on general purpose digital processors are
-			able to provide a great degree of flexibility at the expense of greater
-			overhead\cite{furber07}. The SpiNNaker project, described in detail in the
-			next section, has developed an architecture which combines many low-power
-			processors which run neural simulations in software.
-	
+				The L1 network is a mesh network (that is, a torus without wrap-around
+				links) which connects all the ANCs on the same wafer together.  The
+				links of the mesh are circuit-switched meaning that connecting a set of
+				points on the mesh `uses up' all the wires along the way preventing
+				others from using them.
+				
+				Since each link in the mesh may be useful/required by connections
+				between more than one set of ANCs, the links consist of 64 or 128
+				separate `lanes' for horizontal a vertical links respectively
+				\cite{fieres08}. Connecting up a particular set of ANCs now uses only
+				one lane out of each link allowing many more connections to pass along
+				the same link. At intersection points in the mesh, each lane can be
+				configured to be disconnected allowing the two parts to be used for
+				separate purposes. Sparse cross-bar switches are used at the
+				intersection points to relatively cheaply connect a subset of the lanes
+				in the intersecting links together.
+				
+				The mesh topology of this network allows cheap local communication as is
+				commonly found in neural networks.  In addition circuit switched
+				networks offer extremely low latency, low-power connections between ANCs
+				compared with a similar packet switched network as used in super
+				computers. This performance comes at the expense of flexibility as
+				lanes, once allocated, cannot be used for any other purpose even when
+				idle. This can make changes to the routing of the network during runtime
+				very difficult \cite{dally04}. This network is also limited by the size
+				of the wafer which presents a severe scaling limit.
+				
+				The L2 network in BrainScaleS is facilitated by connecting each ANC to a
+				custom chip which translates communications into UDP/IP network packets
+				which are sent via 10 gigabit Ethernet links to a commodity data-centre
+				network switch \cite{schemmel10}. This network suffers higher latencies
+				than the L1 network but allows signals to be routed much more flexibly
+				and offers the possibility of expanding the system to multiple wafers.
+				
+				The use of a central switch essentially results in a star topology
+				preventing significant scaling the system without introducing further
+				hierarchy into the network.
+				
+				Though well suited to the size of current BrainScaleS prototypes, both
+				the L1 and L2 network topologies represent a challenge to further
+				scaling.
 	
 	\section{SpiNNaker}
 		
@@ -467,7 +595,7 @@
 		it's designed to be flexible, making as few assumptions about the
 		function of individual neurons as possible \cite{furber06}.
 		
-		To achieve this flexibility SpiNNaker will combine over one million
+		To achieve this flexibility SpiNNaker is planned to combine over one million
 		energy-efficient, general purpose, mobile phone grade CPUs with a custom
 		interconnect network designed to tackle the communication bound problem of
 		simulating large networks of simple neurons. The machine is planned to
