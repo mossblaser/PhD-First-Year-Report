@@ -663,14 +663,14 @@
 				
 				\begin{table}
 					\center
-					\begin{tabular}{c c c}
+					\begin{tabular}{c c c c c}
 						\toprule
-							Route & Packet Hops & Router Entries \\
+							Route & Router Entries & Total Hops & Hops to $T_1$ & Hops to $T_2$ \\
 						\midrule
-							(a) & 5 & 4 \\
-							(b) & 4 & 5 \\
-							(c) & 4 & 4 \\
-							(d) & 4 & 4 \\
+							(a)   & 4              & 5          & 3             & 2             \\
+							(b)   & 5              & 4          & 4             & 2             \\
+							(c)   & 4              & 4          & 3             & 3             \\
+							(d)   & 4              & 4          & 3             & 2             \\
 						\bottomrule
 					\end{tabular}
 					
@@ -684,9 +684,11 @@
 				usage. Figure \ref{fig:multicast-routing} shows several examples of
 				valid multicast routes which fork at different points, each with
 				differing trade-offs, some of which are enumerated in table
-				\ref{tab:multicast-route-metrics}. For example, figures (b) - (d) are
-				all optimal in the total number of `hops' required while (a), (c) and
-				(d) are optimal in the number of routing entries required.
+				\ref{tab:multicast-route-metrics}.
+				
+				% For example, figures (b) - (d) are all optimal in the total number of
+				% `hops' required while (a), (c) and (d) are optimal in the number of
+				% routing entries required.
 				
 				As well as guaranteeing short paths and that no routing table requires
 				more than 1,024 entries, the multicast routing scheme chosen must
