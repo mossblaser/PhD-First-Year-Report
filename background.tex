@@ -493,8 +493,8 @@
 				\begin{figure}
 					\center
 					\input{figures/neurogrid-chip}
-					\caption{Neurogrid chip topology showing the mechanism used to
-					arbitrate the chip output port.}
+					\caption[Neurogrid chip topology.]{Neurogrid chip topology showing the
+					mechanism used to arbitrate the chip output port.}
 					\label{fig:neurogrid-chip}
 				\end{figure}
 				
@@ -536,23 +536,46 @@
 				% a lot is falling back to the FPGAs on the next layer.
 				
 				The BrainScaleS project makes use of wafer-scale integration where
-				multiple chips produced on the same silicon wafer are connected together
+				multiple reticles produced on the same silicon wafer are connected together
 				rather than split into separate dies. A system built from a single wafer
 				is able to simulate a network of around 200,000 neurons at up to $10^5$
 				times biological real-time while using 6,000 times less power than a
 				conventional super-computer \cite{schemmel08}.
 				
-				Each chip on the wafer contains a number of Analog Neural-Network Chips
-				(ANCs) which can be programmed to model up to 254 neurons (depending on
-				the number of connections to other neurons) \cite{schemmel10}. There are
-				two types of interconnect in the system named `level 1' (L1) and `level
-				2' (L2) which are described below.
+				\begin{figure}
+					\center
+					\begin{subfigure}[b]{0.45\textwidth}
+						\center
+						\input{figures/brainscales-wafer}
+						\caption{BrainScaleS wafer with usable reticles shown in light
+						grey with eight ANCs each.}
+						\label{fig:brainscales-wafer}
+					\end{subfigure}
+					\hspace{1ex}
+					\begin{subfigure}[b]{0.45\textwidth}
+						\center
+						\input{figures/brainscales-l1}
+						\caption{L1 interconnect between ANCs with sparse cross-bar
+						switches at intersections.}
+						\label{fig:brainscales-l1}
+					\end{subfigure}
+					
+					\caption{Overview of the BrainScaleS topology.}
+					\label{fig:brainscales-topology}
+				\end{figure}
+				
+				As shown in figure \ref{fig:brainscales-wafer}, each reticle, outlined
+				in black, on the wafer contains eight Analog Neural-Network Chips
+				(ANCs), outlined in grey, which can be programmed to model up to 254
+				neurons (depending on the number of connections to other neurons)
+				\cite{schemmel10}. There are two types of interconnect in the system
+				named `level 1' (L1) and `level 2' (L2) which are described below.
 			
 				The L1 network is a mesh network (that is, a torus without wrap-around
-				links) which connects all the ANCs on the same wafer together.  The
-				links of the mesh are circuit-switched meaning that connecting a set of
-				points on the mesh `uses up' all the wires along the way preventing
-				others from using them.
+				links) which connects all the ANCs on the same wafer together as shown
+				in figure \ref{fig:brainscales-l1}. The links of the mesh are
+				circuit-switched meaning that connecting a set of points on the mesh
+				`uses up' all the wires along the way preventing others from using them.
 				
 				Since each link in the mesh may be useful/required by connections
 				between more than one set of ANCs, the links consist of 64 or 128
