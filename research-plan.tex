@@ -127,7 +127,7 @@
 			
 			A possible alternative to INSEE is the simulator developed during the
 			preliminary interconnect study in \S\ref{sec:interconnect-modelling}.
-			Like INSEE, it has been already been used to simulate the SpiNNaker
+			Like INSEE, it has already been used to simulate the SpiNNaker
 			Interconnect and so configurations exist for SpiNNaker like machines.
 			Because of the author's familiarity with the tool, extending the router
 			model should be straight-forward.
@@ -195,7 +195,7 @@
 		load balancing \cite{dally04}. Given that systems such as SpiNNaker use
 		packet-dropping flow control, where congested routes can cause packets to be
 		dropped, the effects of load imbalance may cause localised areas of high
-		packet losses which may significantly affect simulations.
+		packet losses which may significantly affect simulations
 		\cite{greenfield10}.
 		
 		In this phase of work alternative routing algorithms which attempt to handle
@@ -238,8 +238,8 @@
 		Internally, the SpiNNaker chip uses an asynchronous NoC based on CHAIN
 		\cite{plana07,bainbridge02} using IP from (the now defunct) Silistix Ltd.
 		This interconnect is able to handle arbitration between the many incoming
-		signals from on board processors and external connections to other chips.
-		Since this technology is no-longer available, alternatives must be sought.
+		signals from on-board processors and external connections to other chips.
+		Since this technology is no longer available, alternatives must be sought.
 		
 		SpiNNaker chips are interconnected using parallel, delay insensitive
 		interconnects. These links, while adequate for the system's current scale,
@@ -253,7 +253,7 @@
 		% funding coming in soon. Based on the research into the interconnect here,
 		% would an alternative topology be appropriate?
 		
-		Based on the preceding work and on further developments within in the
+		Based on the preceding work and on further developments within the
 		SpiNNaker project, a new architecture for neural network simulation will be
 		proposed. In particular the architecture is intended to be a successor to
 		the SpiNNaker platform aimed at a similar communication-bound model.
@@ -264,7 +264,7 @@
 			will be available for this next generation architecture compared to the
 			previous revision. It is assumed that it will be possible to fit a larger
 			number of cores into a single chip along with larger memories both for the
-			on board processors and routers.
+			on-board processors and routers.
 			
 			The preceding work will be used to decide on the type of topology and
 			routing systems to be used. It is expected that access to larger routing
@@ -283,10 +283,10 @@
 			communication, typically with a relatively larger data payload. This is
 			currently facilitated by the SpiNNaker Datagram Protocol (SDP)
 			\cite{temple11} which allows non-guaranteed point-to-point transmission of
-			up to 64KB of data. Though this offers the ability to load configurations
-			to SpiNNaker chips, collecting data becomes more difficult.  With larger,
-			multi-board systems currently in testing, contention for the links
-			surrounding a central node during data collection become saturated
+			up to 64 kilobytes of data. Though this offers the ability to load
+			configurations to SpiNNaker chips, collecting data becomes more difficult.
+			With larger, multi-board systems currently in testing, contention for the
+			links surrounding a central node during data collection become saturated
 			resulting in a large number of packets being dropped.
 		
 		\subsection{Link Technology}

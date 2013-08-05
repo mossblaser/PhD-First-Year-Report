@@ -104,15 +104,15 @@
 			
 			\subsubsection{Packet Latency}
 			
-				To test the effect of board-to-board links on general packet latency, the network was
-				simulated with each chip generating a packet each CPU cycle with a
-				probability of 1\% to uniform-random destinations. The latency added by
-				the serial links can be seen in figure \ref{fig:min-time-for-hops} where
-				the minimum packet latency is shown against the number of links (hops)
-				used by a packet. The system is also shown as if using only chip-to-chip
-				links, with realistic high-speed serial links and with high-speed serial
-				links with exaggerated latencies (for illustrative purposes) as
-				board-to-board links.
+				To test the effect of board-to-board links on packet latency, the
+				network was simulated with each chip generating a packet every CPU
+				cycle, with a probability of 1\%, to uniform-random destinations. The
+				latency added by the serial links can be seen in figure
+				\ref{fig:min-time-for-hops} where the minimum packet latency is shown
+				against the number of links (hops) used by a packet. The system is also
+				shown as if using only chip-to-chip links, with realistic high-speed
+				serial links and with high-speed serial links with exaggerated latencies
+				(for illustrative purposes) as board-to-board links.
 				
 				\begin{figure}
 					\centering
@@ -204,11 +204,11 @@
 		\subsection{Conclusions}
 			
 			Though at first sight the 80.4\% latency penalty seems severe, for
-			SpiNNaker's target of SNNs running at 1ms time steps this is not fatal.
+			SpiNNaker's target of SNNs running at 1 ms time steps this is not fatal.
 			The new median latency is still only around 7.5 $\mu$s for the longest
-			possible path, very much smaller than 1ms deadline.  For much the same
+			possible path, very much smaller than 1 ms deadline.  For much the same
 			reason, the effects of na\"ively routing packets should also not affect
-			current simulation schemes too significantly.
+			current simulation schemes significantly.
 			
 			% XXX: Do gossiping algorithms care about latency?
 			
@@ -343,7 +343,7 @@
 					\center
 					\input{|"python figures/boardsFoldedInterleaved.py"}
 					\caption{The (more complex) wiring after folding. (Shown here with
-					squares as hexagons don't visually fit together after folding and
+					squares as hexagons do not visually fit together after folding and
 					interleaving.)}
 					\label{fig:boardsFoldedInterleaved}
 				\end{subfigure}
@@ -361,7 +361,7 @@
 			
 			In the next step, the design is folded into four parts on the X-axis and
 			into two on the Y-axis (figure \ref{fig:boardsFoldedSpaced}). It is
-			necessary to fold the X-axis into four as the long, diagonal wires don't
+			necessary to fold the X-axis into four as the long, diagonal wires do not
 			cross the entire system on the X-axis and instead reach half way. Folding
 			in two would not bring these points any closer while folding into four
 			brings them next to each other. For example, the wire travelling from the
@@ -412,7 +412,7 @@
 			connector on the board) it is clear that a large amount of regularity
 			exists in each group of cables (consider each colour separately in figure
 			\ref{fig:spinnaker106}). If the task is further split depending on whether
-			the cables stay with in a rack or cabinet, batches of identical racks and
+			the cables stay within a rack or cabinet, batches of identical racks and
 			cabinets can be wired up independently before being linked together later.
 			For example, the cables connecting North to South (shown in red) remain
 			entirely within a cabinet meaning all North/South wiring can be completed
@@ -456,10 +456,10 @@
 			generator.
 			
 			In addition, further work may be carried out to test alternative wiring
-			schemes. The current scheme, a huge number of cables cross between
-			different cabinets. As a result a significant amount of the wiring cannot
-			be done in isolated batches. An alternative scheme may be able to reduce
-			this number and further simplify the task of wiring.
+			schemes. In the current scheme, a large proportion of the cables cross
+			between different cabinets. As a result a significant amount of the wiring
+			cannot be done in isolated batches. An alternative scheme may be able to
+			reduce this number and further simplify the task of wiring.
 	
 	\section{Small-World Super-Computers}
 		
@@ -472,9 +472,9 @@
 		
 		Small-world networks are graphs with a very large number of nodes but,
 		within which, the maximum shortest-path length is very small, despite each
-		node having a only relatively small number of edges. They also contain
-		`clusters' of well connected nodes, in contrast with random graphs (which
-		may also fulfil the first criterion).
+		node having a relatively small number of edges. They also contain `clusters'
+		of well connected nodes, in contrast with random graphs (which may also
+		fulfil the first criterion).
 		
 		This type of network is often found in nature, perhaps most famously in
 		social networks. This property was first observed in 1929 by Hungarian
@@ -484,12 +484,12 @@
 		which connects them.
 		
 		This property of maintaining low maximum shortest-path length while still
-		remaining locally well connected is a desirable property for certain
-		computational problems. In neural simulations most communication is local
-		but with some longer connections existing. The clustering property of small
-		world networks means these local connections can be well catered for while
-		the low maximum shortest-path length means longer connections are still
-		quick for very large models.
+		remaining locally well connected is desirable for certain computational
+		problems. In neural simulations most communication is local but with some
+		longer connections existing. The clustering property of small world networks
+		means these local connections can be well catered for while the low maximum
+		shortest-path length means longer connections are still quick for very large
+		models.
 		
 		\subsection{Network Construction}
 		
@@ -669,36 +669,40 @@
 			% Must try this with SpiNNaker topology and racks (maybe even better). Would
 			% like to formalise the result into a formula.
 			
-			When wire lengths are constrained, the uniformity of the connectivity in
-			the system is reduced. Figure \ref{fig:ringNetworkLimitedWires} shows the
-			possible random links in a small ring network after wire lengths have been
-			limited. The top and bottom nodes of the ring are likely to have a smaller
-			average shortest-paths than those near the left and right. This is because
-			random links created from the top and bottom nodes provide a better
-			short-cut than those near the left and right.
+			% When wire lengths are constrained, the uniformity of the connectivity in
+			% the system is reduced.
+			
+			Figure \ref{fig:ringNetworkLimitedWires} shows valid random links in a
+			small ring network with limited wire lengths. Nodes near the top and
+			bottom of the ring potentially have shorter average path lengths to all
+			other nodes than nodes near the left and right of the ring. This is
+			because the allowed random links for top and bottom nodes connect nodes at
+			greater logical distances in the ring than those allowed on the left and
+			right. The result is that the average path length from two different nodes
+			becomes non-uniform across nodes in different parts of the system.
 			
 			\begin{figure}
 				\center
 				\input{figures/ringNetworkLimitedWires}
-				\caption[Possible random links in a folded ring network with
-				short wires.]{Possible random links in a singly-folded ring network with
-				random wires limited to a length of 1 unit after laying out as in Figure
-				\ref{fig:ringInterleaved}.}
+				\caption[Valid random links in a folded ring network with short
+				wires.]{Valid random links in ring network when wires limited to a
+				length of 1 unit and the network is folded as in figure
+				\ref{fig:folding}.}
 				\label{fig:ringNetworkLimitedWires}
 			\end{figure}
 			
 			Further work may study the effects of this non-uniformity of average path
-			length. The non-uniformity may be reduced in magnitude by using greater
-			degrees of folding or higher dimensional topologies. Further study may
-			show that realistic networks may have acceptable levels of non-uniformity
-			in practice.
+			length. The effects of the non-uniformity may be reduced by using greater
+			degrees of folding or higher dimensional topologies. In addition, real
+			systems are constrained to standard cabinets and racks, as in
+			\S\ref{sec:mapping-spinnaker-to-cabinets}, which may change distribution
+			of average path lengths in the system.
 			
-			In addition, real systems are usually constrained to using standard
-			cabinets and racks as in \S\ref{sec:mapping-spinnaker-to-cabinets}. This
-			mapping may further alter the way length-limited random links can cause
-			non-uniform average shortest-path lengths. This work could be extended to
-			include this final mapping into more realistic physical placements by
-			building on the SpiNNer wiring modelling library introduced previously.
+			This work could be extended to include this final mapping into more
+			realistic physical placements, for example by building on the SpiNNer
+			wiring modelling library. It is anticipated that the more complex
+			placements resulting from higher-dimensions and realistic placement will
+			result in a more uniform distribution of average path lengths.
 	
 	%\section{Place and Route}
 	%	

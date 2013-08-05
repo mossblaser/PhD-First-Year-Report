@@ -1,7 +1,9 @@
 \begin{tikzpicture}[thick,inner sep=0.1cm]
 	\foreach [count=\n] \t in {30,60,...,360}{
-		\node [fill,circle] at (90-\t:2) (node \n) {};
 		\draw [help lines] (\t:2) -- (\t+30:2);
+	}
+	\foreach [count=\n] \t in {30,60,...,360}{
+		\node [fill,circle] at (90-\t:2) (node \n) {};
 	}
 	
 	\draw (node 8) to (node 10);

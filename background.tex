@@ -38,9 +38,9 @@
 			of connectivity in the network define the behaviour of the network as a
 			whole.
 			
-			It was realised that communication between neurons was not level-based but
-			instead appeared to be based on the rate at which `spikes' are produced
-			(or `fired') by neurons to their neighbours. The second generation of ANNs
+			It was realised that communication between neurons is not level-based but
+			instead appears to be based on the rate at which `spikes' are produced (or
+			`fired') by neurons to their neighbours. The second generation of ANNs
 			seek to model this by representing the `firing rate' as their output in a
 			continuous value \cite{maass97}. Once again, the network's behaviour was
 			defined by the functions computed by each neuron and the network's
@@ -83,16 +83,16 @@
 			must take place between the processing nodes simulating the neurons.  By
 			contrast, conventional electronic circuits, and consequently conventional
 			computing systems, tend to feature one-to-one and one-to-few connections
-			the power needed to send a signal to many places at once can be large.
+			as the power needed to send a signal to many places at once can be large.
 			
 			Luckily most communication occurring in the brain is highly local which
-			means that spikes don't usually need to be transmitted to neurons far
+			means that spikes do not usually need to be transmitted to neurons far
 			away. Neurons also tend to fire at a relatively slow rate compared to
 			electronic components with firing rates being measured in terms of hertz
 			while modern electronics operates at multiple gigahertz. As a result
-			time-division multiplexing can be used to use a single processing node or
-			communication channel for many different neurons and spikes at once
-			respectively.
+			time-division multiplexing can be used in order to use a single processing
+			node or communication channel for many different neurons and spikes at
+			once respectively.
 	
 	
 	\section{Super-Computers}
@@ -145,7 +145,7 @@
 		rely on having efficient point-to-point communication between different
 		parts of the system where each section of the graph resides. With the
 		exception of Titan, which was not measured, the top five Top500 computers
-		also sit within in the top six places of Graph500 \cite{murphy13}. As a
+		also sit within the top six places of Graph500 \cite{murphy13}. As a
 		result, due to its maturity and wider scope, the Top500 list is discussed in
 		this section.
 		
@@ -194,7 +194,7 @@
 			
 			The topology of the system-wide interconnect has a great influence on the
 			performance of a super-computer. Typically the topology of these networks
-			is such that communication between near by nodes is cheap and doesn't
+			is such that communication between near-by nodes is cheap and does not
 			compete with distant nodes for communication resources. The top five
 			machines in the Top500 list achieve this using the `fat tree' and `torus'
 			topologies described below.
@@ -323,8 +323,7 @@
 				
 				Higher dimensional tori are also easily partitioned into a number of
 				lower-dimensional tori or meshes to allow machines to be shared between
-				many independent computing tasks, for example rings can be partitioned
-				from figure \ref{fig:forming-a-torus} \cite{yokokawa11,chen11}.
+				many independent computing tasks \cite{yokokawa11,chen11}.
 		
 		\subsection{Interconnect}
 			
@@ -351,7 +350,7 @@
 			result, for torus networks of more than two dimensions, links which are
 			physically short in higher dimensions can result in long wires between
 			distant cabinets. For hierarchical networks such as fat trees, long wires
-			arise from the need to connect together disparate parts of a system at the
+			arise from the need to connect together distant parts of a system at the
 			higher levels of the hierarchy. Long wires are both more difficult to
 			install and require more expensive link technologies. The preliminary work
 			described in \S\ref{sec:wiring-up-large-spinnaker-machines} explores these
@@ -372,15 +371,14 @@
 		
 		Current super-computers are heavily focused on computation-heavy tasks as is
 		apparent from the use of hundreds of thousands of high-end processor cores
-		in the Top500's top five machines. Projects such as the Blue Brain project
-		\cite{markram06} are able to make use of such computationally powerful
-		machines in the simulation of relatively small ANNs of tens of thousands of
-		biologically realistic neurons. Large ANNs using the less realistic models
-		of neuron behaviour change the balance between computation and
-		communication.  Requiring relatively little computation for each neuron but
-		needing vast amounts of communication, conventional super computers are a
-		poor fit and, as a result, alternative architectures have been developed for
-		neural simulation.
+		in the Top500's top five machines. The Blue Brain project \cite{markram06}
+		makes use of such computationally powerful machines to simulate relatively
+		small ANNs of tens of thousands of realistic neurons. Large ANNs using the
+		less realistic models of neuron behaviour change the balance between
+		computation and communication.  Requiring relatively little computation for
+		each neuron but needing vast amounts of communication, conventional super
+		computers are a poor fit and, as a result, alternative architectures have
+		been developed for neural simulation.
 		
 		\subsection{Electrical Technology}
 		
@@ -392,14 +390,15 @@
 			
 			\subsubsection{Analogue}
 			
-				Though analogue technology has long been out of favour for general purpose
-				computing, it has been suggested for neural simulation as it is ultimately
-				designed to model an analogue system: the brain. Neural models are highly
-				fault-tolerant and do not assume that values will be calculated or
-				communicated precisely. Modern digital computers, by contrast, have rigid
-				requirements for the precision of values and so dedicate vast amounts of
-				hardware and energy to guaranteeing such unnecessary precision making
-				analogue simulators an attractive approach.
+				Though analogue technology has long been out of favour for general
+				purpose computing, it has been suggested for neural simulation as it is
+				ultimately designed to model an analogue system: the brain. Neural
+				models are highly fault-tolerant and do not assume that values will be
+				calculated or communicated precisely. Modern digital computers, by
+				contrast, have rigid requirements for the precision of values and so
+				dedicate vast amounts of hardware and energy to guaranteeing precision,
+				which is unnecessary in this case, making analogue simulators an
+				attractive approach.
 				
 				A wide range of techniques for implementing the required functions in
 				analogue circuitry has been proposed
@@ -443,7 +442,8 @@
 				designs above, these approaches are fundamentally restricted to only the
 				models the designers originally intended \cite{mehrtash03}. Due to the
 				lack of flexibility and increasing costs of designing custom silicon,
-				researchers, such as those behind SP$^2$INN, away from this approach.
+				researchers, such as those behind SP$^2$INN, have moved away from this
+				approach.
 				
 				FPGAs (Field Programmable Gate Arrays) are, essentially, chips which can
 				be electrically reprogrammed with custom logic circuits. They are now
@@ -467,11 +467,11 @@
 			% Various used, often constrained by technology but there is a focus on
 			% sub-board level interconnect. Here are some examples.
 			
-			Though various topologies have been used for hardware neural simulators
-			but these largely boil down to those based on to tori and trees. Unlike
-			those in super-computers, the granularity of these networks tends to be
-			higher reflecting the increased focus on communication over computation.
-			This subsection examines the topologies of two leading mixed-mode neural
+			Though various topologies have been used in hardware neural simulators
+			these largely boil down to those based on to tori and trees. Unlike those
+			in super-computers, the granularity of these networks tends to be higher
+			reflecting the increased focus on communication over computation.  This
+			subsection examines the topologies of two leading mixed-mode neural
 			simulators, Neurogrid and BrainScaleS.
 			
 			\subsubsection{Neurogrid}
@@ -503,13 +503,13 @@
 				produces a spike it asserts a signal sensed by the row-enabling arbiter.
 				This then selects a single row which is then allowed to assert a signal
 				on a column wire. The column arbiter then selects a single neuron from
-				the enabled row which can then output by the chip \cite{boahen04}. When
-				a spike arrives for a neuron in the chip, a similar process occurs to
+				the enabled row which is then output by the chip \cite{boahen04}. When a
+				spike arrives for a neuron in the chip, a similar process occurs to
 				single out the neuron for which it is destined \cite{boahen04receiver}.
 				
 				The on-chip topology is cheap to implement as row and column connections
 				are simple wires and the controlling logic is relatively simple.
-				Unfortunately, it doesn't exploit the available parallelism in the
+				Unfortunately, it does not exploit the available parallelism in the
 				system allowing only one spike to be emitted at once. In addition,
 				spikes destined for other neurons near-by in the chip are just as
 				expensive as spikes between distant neurons on the same chip.
@@ -577,16 +577,16 @@
 				circuit-switched meaning that connecting a set of points on the mesh
 				`uses up' all the wires along the way preventing others from using them.
 				
-				Since each link in the mesh may be useful/required by connections
+				Since each link in the mesh may be useful or required by connections
 				between more than one set of ANCs, the links consist of 64 or 128
-				separate `lanes' for horizontal a vertical links respectively
+				separate `lanes' for horizontal and vertical links respectively
 				\cite{fieres08}. Connecting up a particular set of ANCs now uses only
 				one lane out of each link allowing many more connections to pass along
 				the same link. At intersection points in the mesh, each lane can be
 				configured to be disconnected allowing the two parts to be used for
 				separate purposes. Sparse cross-bar switches are used at the
-				intersection points to relatively cheaply connect a subset of the lanes
-				in the intersecting links together.
+				intersection points to cheaply connect a subset of the lanes in the
+				intersecting links.
 				
 				The mesh topology of this network allows cheap local communication as is
 				commonly found in neural networks.  In addition circuit switched
@@ -606,7 +606,7 @@
 				and offers the possibility of expanding the system to multiple wafers.
 				
 				The use of a central switch essentially results in a star topology
-				preventing significant scaling the system without introducing further
+				preventing significant scaling of the system without introducing further
 				hierarchy into the network.
 				
 				Though well suited to the size of current BrainScaleS prototypes, both
@@ -621,8 +621,8 @@
 		
 		The SpiNNaker project is developing a super-computer architecture designed
 		for running real-time simulations of large networks of SNNs. In particular,
-		it's designed to be flexible, making as few assumptions about the
-		function of individual neurons as possible \cite{furber06}.
+		it is designed to be flexible, making as few assumptions about the function
+		of individual neurons as possible \cite{furber06}.
 		
 		To achieve this flexibility SpiNNaker is planned to combine over one million
 		energy-efficient, general purpose, mobile phone grade CPUs with a custom
@@ -690,10 +690,10 @@
 			% to be requested). All routing (currently) static and offline.
 			
 			The on-chip router is table-based meaning that routing decisions are taken
-			based on a set of pre-determined choices loaded into a memory before
+			based on a set of predetermined choices loaded into a memory before
 			simulations begin. The router operates on individual packets of data which
-			are either 40 or 72 bits in length. These packets are short compared
-			with those commonly used in super-computers which can be several kilobytes
+			are either 40 or 72 bits in length. These packets are short compared with
+			those commonly used in super-computers which can be several kilobytes
 			long.  Such networks are typically designed to transfer larger blocks of
 			data, possibly many kilobytes long. SpiNNaker, however, is designed to
 			primarily deal with SNNs where only the spikes' existence needs to be
@@ -832,7 +832,7 @@
 				\end{figure}
 				
 				In multicast routing, the choice of where a route should fork can have a
-				great impact on both system load, packet latency and routing table entry
+				great impact on system load, packet latency and routing table entry
 				usage. Figure \ref{fig:multicast-routing} shows several examples of
 				valid multicast routes which fork at different points, each with
 				differing trade-offs.
@@ -866,10 +866,10 @@
 			
 			Each board is equipped with a number of high-speed links, six of which are
 			used to connect the board's chips to their neighbours on other boards. The
-			other links are reserved for connecting other I/O such as sensors, such as
-			silicon retinas and robotic platforms \cite{davies10}. An Ethernet
-			connection is also present to provide a simple, low-bandwidth link to an
-			external host system.
+			other links are reserved for connecting other I/O such as silicon retinas
+			and robotic platforms \cite{davies10}. An Ethernet connection is also
+			present to provide a simple, low-bandwidth link to an external host
+			system.
 			
 			\begin{figure}[p!]
 				\center
@@ -883,7 +883,7 @@
 			cabinets to complete the largest planned machine. Further details of this
 			arrangement are given later in
 			\S\ref{sec:wiring-up-large-spinnaker-machines} where preliminary work on
-			wiring schemes for the machine is described.
+			wiring schemes for the machine are described.
 		
 		\subsection{Connecting Boards Together}
 			
@@ -947,7 +947,7 @@
 		% than many running slow? Where are these used. What do they replace.
 		
 		High-speed serial is the general name for a technology which allows
-		high-bandwidth links to be constructed using few electrical wires.
+		high-bandwidth links to be constructed using only a few electrical wires.
 		These links are the basis of many widely used technologies ranging from
 		S-ATA, used for attaching consumer-grade hard disks to computers
 		\cite{sataio}, to the InfiniBand interconnect designed for super-computers

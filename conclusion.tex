@@ -11,7 +11,7 @@
 	
 	Conventional super-computers feature large amounts of computational resource
 	interconnected by a topology designed for moving large blocks of data at high
-	bandwidths.  Large scale simulations of simple neuron models don't fit the
+	bandwidths.  Large scale simulations of simple neuron models do not fit the
 	expectations of such machines as they feature only a limited computational
 	need instead requiring the transmission of large numbers of extremely small or
 	empty messages with a high sensitivity to latency. This mismatch has led to
@@ -37,9 +37,9 @@
 	
 	These limitations are being tackled by the SpiNNaker system which combines
 	large numbers of small-low power general purpose processors in a scalable
-	network with the aim of simulating networks of 1 billion neurons in biological
-	real time. The SpiNNaker topology forms a regular 2D toroid built out of
-	boards containing a 48 chips connected together by delay-insensitive
+	network with the aim of simulating networks of one billion neurons in
+	biological real time. The SpiNNaker topology forms a regular 2D toroid built
+	out of boards containing 48 chips connected together by delay-insensitive
 	asynchronous parallel links. The boards are then connected using high-speed
 	serial links to reduce the number of wires required to connect the boards
 	together.
@@ -47,12 +47,10 @@
 	A simulation of the non-homogeneous topology used by SpiNNaker was analysed to
 	test the effects on the network latency. Though an 80\% increase in latency
 	was measured, this is not expected to significantly affect the system's
-	real-time performance. This is because the system is planned to simulate
-	neural models using discrete 1 ms time steps during which all messages must be
-	delivered. Since the expected median latency of messages is only 7.5 $\mu$s,
-	even after the increase due to the non-homogeneous topology. Should the period
-	of the discrete time-steps be reduced to improve simulation accuracy this
-	problem may become a problem.
+	real-time performance. Since the expected median latency increases to only 7.5
+	$\mu$s this is still far shorter than the 1 ms time steps used by planned
+	neural simulations. Should the period of the time-steps be reduced to improve
+	simulation accuracy this problem may become a problem.
 	
 	A preliminary model of an unconventional semi-random topology was assessed as
 	an alternative with results showing improved latencies. Unlike previous work,
@@ -69,7 +67,7 @@
 	Work on a new interconnect simulator will allow for the analysis of
 	alternative topologies, including the semi-random topology already developed,
 	to be tested in a more realistic manner. This simulator will be compared
-	against actual SpiNNaker hardware and another hardware-accelerated simulator
+	against actual SpiNNaker hardware and another, hardware-accelerated simulator
 	which will allow the accuracy of the simulator to be assessed.
 	
 	Based on further refinement of the simulation to account for details such as
