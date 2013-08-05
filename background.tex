@@ -209,7 +209,7 @@
 						\label{fig:fat-tree-concept}
 					\end{subfigure}
 					
-					\vspace{1em}
+					\vspace{1.5em}
 					
 					\begin{subfigure}[t]{\textwidth}
 						\center
@@ -788,7 +788,7 @@
 				won't need to include an entry in their routing table. As a result this
 				small size of routing table is hoped to be adequate.
 				
-				\begin{figure}
+				\begin{figure}[t!]
 					\begin{subfigure}[b]{0.24\textwidth}
 						\center
 						\input{figures/multicast-routing-a}
@@ -813,12 +813,7 @@
 						\caption{}
 						\label{fig:multicast-routing-d}
 					\end{subfigure}
-					\caption[Multicast routing examples.]{Multicast routing examples from
-					$S$ to $T_1$ and $T_2$.}
-					\label{fig:multicast-routing}
-				\end{figure}
-				
-				\begin{table}
+					
 					\center
 					\begin{tabular}{c c c c c}
 						\toprule
@@ -831,17 +826,16 @@
 						\bottomrule
 					\end{tabular}
 					
-					\caption{Properties of the multicast routes in figure
-					\ref{fig:multicast-routing}.}
-					\label{tab:multicast-route-metrics}
-				\end{table}
+					\caption[Multicast routing examples.]{Multicast routing examples from
+					$S$ to $T_1$ and $T_2$.}
+					\label{fig:multicast-routing}
+				\end{figure}
 				
 				In multicast routing, the choice of where a route should fork can have a
 				great impact on both system load, packet latency and routing table entry
 				usage. Figure \ref{fig:multicast-routing} shows several examples of
 				valid multicast routes which fork at different points, each with
-				differing trade-offs, some of which are enumerated in table
-				\ref{tab:multicast-route-metrics}.
+				differing trade-offs.
 				
 				% For example, figures (b) - (d) are all optimal in the total number of
 				% `hops' required while (a), (c) and (d) are optimal in the number of
@@ -863,7 +857,7 @@
 			over 57,600 chips.  These chips are split up on 1,200 circuit boards of
 			48 chips each as shown in figure \ref{fig:spinn4labelled}.
 			
-			\begin{figure}
+			\begin{figure}[p!]
 				\center
 				\input{figures/spinn4labelled}
 				\caption{48-chip SpiNNaker circuit board.}
@@ -877,7 +871,7 @@
 			connection is also present to provide a simple, low-bandwidth link to an
 			external host system.
 			
-			\begin{figure}
+			\begin{figure}[p!]
 				\center
 				\includegraphics[width=0.5\textwidth]{figures/spiNNaker103.jpg}
 				\caption{Partially populated rack of SpiNNaker boards.}
@@ -944,6 +938,7 @@
 			Arbitrarily large systems can be produced by repeating the threeboard
 			pattern to create larger toroids.
 	
+	\break
 	\section{High-Speed Serial}
 		
 		\label{sec:high-speed-serial}
