@@ -483,10 +483,12 @@
 				% using lookup RAMs to select where spikes should go. Separate network
 				% used for configuration.
 				
-				The Neurogrid architecture, at the highest level, consists of a small
-				number of Neurogrid chips  (16 in current prototypes) arranged as leaves
-				in a binary-tree where spike events are routed to other chips
-				\cite{choudhary12}.
+				The largest prototype Neurogrid system is able to support around 1
+				million neurons in biological real-time using 100,000 times less power
+				than a conventional super-computer. Its architecture, at the highest
+				level, consists of a small number of Neurogrid chips  (16 in current
+				prototypes) arranged as leaves in a binary-tree where spike events are
+				routed to other chips \cite{choudhary12}.
 				
 				\begin{figure}
 					\center
@@ -535,12 +537,16 @@
 				
 				The BrainScaleS project makes use of wafer-scale integration where
 				multiple chips produced on the same silicon wafer are connected together
-				rather than split into separate dies. Each chip on the wafer contains a
-				number of Analog Neural-Network Chips (ANCs) which can be programmed to
-				model up to 254 neurons (depending on the number of connections to other
-				neurons) \cite{schemmel10}. There are two types of interconnect in the
-				system named `level 1' (L1) and `level 2' (L2) which are described
-				below.
+				rather than split into separate dies. A system built from a single wafer
+				is able to simulate a network of around 200,000 neurons at up to $10^5$
+				times biological real-time while using 6,000 times less power than a
+				conventional super-computer \cite{schemmel08}.
+				
+				Each chip on the wafer contains a number of Analog Neural-Network Chips
+				(ANCs) which can be programmed to model up to 254 neurons (depending on
+				the number of connections to other neurons) \cite{schemmel10}. There are
+				two types of interconnect in the system named `level 1' (L1) and `level
+				2' (L2) which are described below.
 			
 				The L1 network is a mesh network (that is, a torus without wrap-around
 				links) which connects all the ANCs on the same wafer together.  The

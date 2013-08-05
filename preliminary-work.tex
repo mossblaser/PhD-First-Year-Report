@@ -205,7 +205,7 @@
 			
 			Though at first sight the 80.4\% latency penalty seems severe, for
 			SpiNNaker's target of SNNs running at 1ms time steps this is not fatal.
-			The new median latency is still only around 7.5$\mu$s for the longest
+			The new median latency is still only around 7.5 $\mu$s for the longest
 			possible path, very much smaller than 1ms deadline.  For much the same
 			reason, the effects of na\"ively routing packets should also not affect
 			current simulation schemes too significantly.
@@ -573,7 +573,9 @@
 			rapidly but, as more links are rewired, returns quickly diminish. As a
 			result, it can be concluded that the amount of rewiring required to
 			produce a significant impact on the shortest-path length can be very
-			small.
+			small. These results are similar to the findings of others such as Shin et
+			al. who found an increase in bandwidth (but did not test latency) when
+			using small-world networks \cite{shin11}.
 			
 			\begin{figure}
 				\center
@@ -590,6 +592,12 @@
 			wiring can cause many such links to be created. For example, in figure
 			\ref{fig:torusNetworkB01} a long wire from the top right node stretches
 			almost to the bottom left node.
+			
+			Work by others such as Koibuchi et al. have attempted to solve this
+			problem in completely random topologies \cite{koibuchi13}.  Unfortunately
+			their approaches are not applicable to networks which already feature a
+			high degree of structure such as the underlying torus network used in
+			these experiments. As a result, a new scheme was devised.
 			
 			To work around this problem, we first fold the network (as discussed
 			previously in \S\ref{sec:folding-toroids}) to eliminate the long
