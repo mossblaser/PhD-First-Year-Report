@@ -21,13 +21,6 @@
 	
 	\section{SpiNNaker Modelling}
 		
-		% In order to experiment with the way new interconnection options affect
-		% SpiNNaker an accurate model is required. Will work with Mikel and Javier to
-		% extend the SpiNNaker simulator used in the original paper to include models
-		% of inter-board links.
-		%
-		% How long will this take?
-		
 		As part of the ongoing SpiNNaker project a study is being carried out to
 		compare how network simulations compare with the real hardware. As part of
 		this work, researchers have built an FPGA-accelerated model of SpiNNaker's
@@ -50,8 +43,6 @@
 			networks. Unfortunately, INSEE's router model is different from that found
 			in SpiNNaker and the FPGA model. The differences in their behaviour are
 			outlined below.
-			
-			% TODO: elaborate
 			
 			One of the major limitations of INSEE is that it is only able to model
 			point-to-point traffic and will require extending to support multicast
@@ -101,11 +92,6 @@
 			modelled by INSEE and thus the results produced will be less well matched
 			with the actual SpiNNaker system.
 			
-			% Part of the aim of the work is to produce a comparison between this
-			% software model, an FPGA model and a prototype system. Successful
-			% comparison of the three will allow higher certainty in results obtained
-			% from other work (namely the interconnect experiments to follow).
-		
 		\subsection{Simulator Improvement Plan}
 			
 			\label{sec:simulator-improvement-plan}
@@ -160,9 +146,6 @@
 	
 	
 	\section{Topology Comparison}
-		
-		% Look at a whole load of popular topologies and possibly look at having
-		% two/more networks.
 		
 		With the small-world network testing complete, the simulator should now be
 		mature enough to begin further experiments with alternative, potentially
@@ -224,9 +207,6 @@
 	
 	\section{Interconnect Technology Evaluation}
 		
-		% Can't use Silistix any more, HSS is nice but should we be using it
-		% on-chip?
-		
 		Given a suitable topology, a further question is that of the actual
 		implementation of the interconnect. Historically small-scale systems have
 		used synchronous signals to communicate between various parts of the system.
@@ -248,10 +228,6 @@
 		\S\ref{sec:high-speed-serial}.
 		
 		\section{`SpiNNaker 2' Architecture}
-		
-		% It is likely that a new version of SpiNNaker will be designed with some
-		% funding coming in soon. Based on the research into the interconnect here,
-		% would an alternative topology be appropriate?
 		
 		Based on the preceding work and on further developments within the
 		SpiNNaker project, a new architecture for neural network simulation will be
@@ -290,12 +266,6 @@
 			resulting in a large number of packets being dropped.
 		
 		\subsection{Link Technology}
-			
-			% Switching away from Silistix (they went bye-bye!), alternative
-			% technologies, e.g. high-speed serial, might be used to link chips
-			% together. Such technologies may have very different cost structures and
-			% call for new network topologies. Given we currently have concentrated
-			% multiplexed links, why not have the same for stuff lower down?
 			
 			The underlying Silistix technology used by SpiNNaker's links is not
 			available for new systems and must be replaced. Based on research into

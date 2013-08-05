@@ -1,9 +1,5 @@
 \chapter{Preliminary Work}
 	
-	% Various work done to build experience with interconnect simulation, SpiNNaker,
-	% built some useful tools (wiring) and to test the principle of adding
-	% connections (small world).
-	
 	The preliminary work conducted so far aims to explore some of the practical
 	issues faced when designing interconnection networks. The work focuses on the
 	SpiNNaker architecture whose advanced state of development makes it an
@@ -19,29 +15,9 @@
 	The proposed topology uses semi-random links to improve its performance while
 	still accounting for the practical issues involved in assembly.
 	
-	% Rly?
-	%\section{PCI-Express and High-Speed Serial}
-	%	
-	%	One way of getting data from one part of the machine to the other would be
-	%	not to just dump it through another link but to pull it straight out into a
-	%	conventional computer via PCI-Express and then maybe re-route it with
-	%	fancier software or via the web.
-	%	
-	%	\subsection{PCI-Express}
-	%		
-	%		What is PCI-Express? How does it work? Where is it found?
-	%	
-	%	\subsection{High Speed Serial on FPGA}
-	%		
-	%		What is an FPGA? We have one on the boards. FPGAs contain hard-wired
-	%		blocks which do special purpose things, one such job is to do PCI-Express.
-	
 	\section{SpiNNaker Interconnect Modelling}
 		
 		\label{sec:interconnect-modelling}
-		
-		% In order to understand the effects of inserting non-uniformity to the
-		% SpiNNaker Interconnect caused by the high speed links.
 		
 		An important factor in designing interconnection networks is the technology
 		used to implement the links in the network. These choices influence the
@@ -95,9 +71,6 @@
 			modelled using the expected latency values for the completed system.
 			
 		\subsection{Results}
-			% Found a significant increase in average latency. Maybe this could be
-			% overcome by making more use of that added processing time by jumping on
-			% further ahead? Further simulation needs to be done anyhow...
 			
 			Simulations of systems containing a toroid of $4\times4$ threeboards (48
 			boards, 2,304 chips) were performed under various conditions.
@@ -145,10 +118,6 @@
 				
 				An extra step appears at 28 hops, the cause of which is not currently
 				known by the author.
-				
-				% 2-of-7 gradient: 27.2751
-				% S-ATA gradient: 49.209
-				% Extreme gradient: 118.013
 				
 				The median latency of an $n$-hop path increases smoothly as shown in
 				figure \ref{fig:median-time-for-hops-with-errbars} as the probability of
@@ -210,9 +179,7 @@
 			reason, the effects of na\"ively routing packets should also not affect
 			current simulation schemes significantly.
 			
-			% XXX: Do gossiping algorithms care about latency?
-			
-			For other more latency sensitve applications such as finer-grained neural
+			For other more latency sensitive applications such as finer-grained neural
 			simulations, the increase in latency due to poor routing choices may still
 			be problematic.
 			
@@ -220,18 +187,13 @@
 			duration and traffic complexity by the performance of the simulator. An
 			improved simulator would allow larger models to be simulated using more
 			realistic networks. One possible approach is to extend the simulator used
-			by Navaridas et al. and this is discussed in \S\ref{sec:simulator-improvement-plan}.
+			by Navaridas et al. and this is discussed in
+			\S\ref{sec:simulator-improvement-plan}.
 		
 	
 	\section{Wiring-Up Large SpiNNaker Machines}
 		
 		\label{sec:wiring-up-large-spinnaker-machines}
-		
-		% A practical constraint on any interconnect is that it should be possible to
-		% wire it up. In particular constraints exist on both on wire length and the
-		% practical difficulty of connecting up the wires into the correct places.
-		% Computers usually placed in racks. Tool can be used to study wiring
-		% constraints of new links.
 		
 		One of the practical constraints on the topologies is the use of wires to
 		connect parts of the system together.  Chief amongst these concerns are the
@@ -239,8 +201,6 @@
 		
 		\begin{description}
 			
-			% TODO: Explain this one since I moved the spinnaker machine description
-			% elsewhere
 			\item[Wire Cost] The choice of cabling used has a direct impact on the
 			financial cost of the wiring. Higher quality materials or increased
 			numbers of wires can substantially drive up the cost of the cable and
@@ -447,8 +407,6 @@
 		
 		\subsection{Further Work}
 			
-			% Simplify instructions, alternative wirings.
-			
 			The wiring guide generator is currently only capable of producing
 			exhaustive wiring descriptions with one instruction for each of the 3,600
 			cables. The foundations for extracting regularity currently exist in
@@ -464,11 +422,6 @@
 	\section{Small-World Super-Computers}
 		
 		\label{sec:small-world-super-computers}
-		
-		% In the same way that random search is generic (no free lunch), I tried
-		% adding random wires. This is backed up by Watts and Strogatz's small-world
-		% network producing algorithm. Built a model. Took into account wiring using
-		% techniques in Wiring-Up Super-Computers.
 		
 		Small-world networks are graphs with a very large number of nodes but,
 		within which, the maximum shortest-path length is very small, despite each
@@ -666,12 +619,6 @@
 		
 		\subsection{Further Work}
 			
-			% Must try this with SpiNNaker topology and racks (maybe even better). Would
-			% like to formalise the result into a formula.
-			
-			% When wire lengths are constrained, the uniformity of the connectivity in
-			% the system is reduced.
-			
 			Figure \ref{fig:ringNetworkLimitedWires} shows valid random links in a
 			small ring network with limited wire lengths. Nodes near the top and
 			bottom of the ring potentially have shorter average path lengths to all
@@ -703,16 +650,3 @@
 			wiring modelling library. It is anticipated that the more complex
 			placements resulting from higher-dimensions and realistic placement will
 			result in a more uniform distribution of average path lengths.
-	
-	%\section{Place and Route}
-	%	
-	%	Tests written for the Place and Route system for SpiNNaker-103. Gained some
-	%	experience with the task. 
-	%	
-	%	\subsection{Potential Improvements}
-	%		
-	%		The algorithms used for placement and routing are naive: generally greedy
-	%		algorithms.
-
-
-

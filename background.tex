@@ -16,8 +16,6 @@
 		
 		\label{sec:simulating-brains}
 		
-		% Background on brain simulation techniques.
-		
 		Efforts to simulate the brain focus on building approximate but
 		representative models of its behaviour. Most current brain models attempt to
 		capture the way that neurons behave and communicate with each other.
@@ -151,10 +149,6 @@
 		
 		\subsection{Anatomy of a Super-Computer}
 			
-			% Networks usually have a macro topology on the nodes and some local
-			% topology within a node connecting many cores together.
-			% Cabinets and racks
-			
 			Large computer systems are typically built by combining a large number of
 			`processing elements' in such a way that they are able to communicate
 			efficiently. These processing elements come in many forms though the three
@@ -183,14 +177,8 @@
 			create a single `node' in the system. Typically the cores within a node
 			are able to communicate relatively cheaply while messages to remote nodes
 			must traverse a slower system-wide interconnection network.
-			
-			% TODO: Why does this section exist?
 		
 		\subsection{Topology}
-			
-			% Many cores lumped together under a single node. General topologies listed
-			% in table. Inside, this depends. Xeon-Phi is a ring, GPUs are SIMD array
-			% processors, some are just muti-core chips.
 			
 			The topology of the system-wide interconnect has a great influence on the
 			performance of a super-computer. Typically the topology of these networks
@@ -327,9 +315,6 @@
 		
 		\subsection{Interconnect}
 			
-			%Many now using optical to transmit between cabinets. Electrical still
-			%rules the waters for inter-card stuff.
-			
 			The physical links responsible for connecting machines are another
 			important factor in the performance achievable by a given interconnection
 			system. The current state-of-the-art techniques fall into two categories:
@@ -355,19 +340,8 @@
 			install and require more expensive link technologies. The preliminary work
 			described in \S\ref{sec:wiring-up-large-spinnaker-machines} explores these
 			issues in further detail.
-			
-			% TODO: What am I trying to say here?
-			
-			% At a very high level, these two systems operate in a similar fashion.
-			% Messages are broken down into individual bits by a transmitter and then
-			% sent one bit at a time across a pair of wires or a glass fibre for
-			% high-speed serial and optical transmission respectively. At the receiver
-			% the bits are reassembled into a complete message.
 	
 	\section{Hardware Neural Simulators}
-		
-		% Discuss various neural-simulation based approaches, e.g. neuromorphic
-		% computers, Blue Brain, BrainScaleS, FPGA based things, speak to Franchesco.
 		
 		Current super-computers are heavily focused on computation-heavy tasks as is
 		apparent from the use of hundreds of thousands of high-end processor cores
@@ -464,9 +438,6 @@
 		
 		\subsection{Topologies}
 			
-			% Various used, often constrained by technology but there is a focus on
-			% sub-board level interconnect. Here are some examples.
-			
 			Though various topologies have been used in hardware neural simulators
 			these largely boil down to those based on to tori and trees. Unlike those
 			in super-computers, the granularity of these networks tends to be higher
@@ -475,13 +446,6 @@
 			simulators, Neurogrid and BrainScaleS.
 			
 			\subsubsection{Neurogrid}
-				
-				% Chips which contain neuron implementations which can recieve and
-				% generate spikes (which are fed in/extracted a row at a time out of a 2D
-				% grid). These are combined onto a board using a tree-style topology.
-				% Notably the tree also has some horizontal links. Routing is implemented
-				% using lookup RAMs to select where spikes should go. Separate network
-				% used for configuration.
 				
 				The largest prototype Neurogrid system is able to support around 1
 				million neurons in biological real-time using 100,000 times less power
@@ -519,21 +483,6 @@
 				available for neuron identification.
 			
 			\subsubsection{BrainScaleS}
-				
-				% BrainScaleS viewed from one angle is a wafer with many chips connected
-				% via an overlay mask in a multi-lane mesh topology with rotating lanes
-				% and sparse switches. Mesh is good for locality and maps well onto the
-				% very-very 2D space. Twisty multi-lane simplifies routing decisions
-				% somewhat.
-				% 
-				% Zoom out a little and you have some FPGAs bonded onto the wafer where
-				% packets are now translated into UDP/IP and pumped into conventional 10
-				% gbit/s switches in what is at the moment a star network. It is projected
-				% multiple wafers will be combined at this level. Allows scaling but not
-				% as nice as an infinitely growing mesh.
-				% 
-				% Unfortunately the first level is somewhat hard to use so at the moment
-				% a lot is falling back to the FPGAs on the next layer.
 				
 				The BrainScaleS project makes use of wafer-scale integration where
 				multiple reticles produced on the same silicon wafer are connected together
@@ -617,8 +566,6 @@
 		
 		\label{sec:spinnaker}
 		
-		% The architecture focused on by my research.
-		
 		The SpiNNaker project is developing a super-computer architecture designed
 		for running real-time simulations of large networks of SNNs. In particular,
 		it is designed to be flexible, making as few assumptions about the function
@@ -638,11 +585,6 @@
 		
 		\subsection{Architecture}
 			
-			% Due to the neural networks we're using, this is the sort of topology that
-			% was made. Good for sending short messages to many targets at once. Bad at
-			% system stuff though, also currently very much 2D unlike the brain. Have a
-			% hexagonal toroid (picture) which is nice and regular but a pain to wire up.
-			
 			SpiNNaker is made up of a 2D toroid\footnote{A toroid, in this context, is
 			the generalisation of a torus where nodes are connected to more than $2n$
 			neighbours where $n$ is the number of dimensions.} of chips where each
@@ -659,9 +601,6 @@
 			contains a router responsible for sending and receiving messages from the
 			six neighbouring chips as well as forwarding messages destined for another
 			chip.
-			
-			% TODO: Fix this figure as the CPUs don't really go through the NoC to the
-			% router for normal use...
 			
 			\begin{figure}
 				\center
@@ -684,10 +623,6 @@
 			\end{figure}
 		
 		\subsection{Routing}
-			
-			% Routing is done by table based router. Entries for each turn or fork in a
-			% packet path. Limited number of entries. Source address based routing (TLA
-			% to be requested). All routing (currently) static and offline.
 			
 			The on-chip router is table-based meaning that routing decisions are taken
 			based on a set of predetermined choices loaded into a memory before
@@ -725,10 +660,6 @@
 			
 			\subsubsection{Routing Scheme}
 				
-				% Current routing is very naive dimension order routing. Also highly
-				% static and doesn't respond to network utilisation. The internet is
-				% dynamic, maybe this should be too?
-				
 				Table based routing allows a wide array of possible routing schemes to
 				be implemented conditional to two key constraints. First, the route
 				taken by a packet with a particular source/destination address will
@@ -758,9 +689,6 @@
 				minimal in the number of hops required.
 			
 			\subsubsection{Multicast}
-				
-				% Not much stuff on this at the moment. I am so shit I've not read
-				% anything about it anyway so that needs to change.
 				
 				Multicast packets allow SpiNNaker to handle the efficient distribution
 				of spikes from heavily connected neurons in the system without requiring
@@ -837,10 +765,6 @@
 				valid multicast routes which fork at different points, each with
 				differing trade-offs.
 				
-				% For example, figures (b) - (d) are all optimal in the total number of
-				% `hops' required while (a), (c) and (d) are optimal in the number of
-				% routing entries required.
-				
 				As well as guaranteeing short paths and that no routing table requires
 				more than 1,024 entries, the multicast routing scheme chosen must
 				attempt to ensure an even load-balance by avoiding over-using certain
@@ -849,9 +773,6 @@
 				software\cite{davidson13}.
 		
 		\subsection{Hardware Abstractions}
-			
-			% SpiNNaker is made up of 18 core chips on 48-chip boards in 12 card racks
-			% in 5-rack cabinets in a 10 cabinet system. Woah.
 			
 			The largest SpiNNaker system is planned to contain 1,036,800 cores spread
 			over 57,600 chips.  These chips are split up on 1,200 circuit boards of
@@ -886,11 +807,6 @@
 			wiring schemes for the machine are described.
 		
 		\subsection{Connecting Boards Together}
-			
-			% Describe what the edge links have.  Boards are connected together via high
-			% speed serial links. 8 links per board. First gen had two spare
-			% connections, new one has ring and one spare. What can the spares be used
-			% for?
 			
 			Logically, the chips on each circuit board are laid out as shown in figure
 			\ref{fig:chipsOnBoard}. Touching edges represent chip-to-chip connections
@@ -942,9 +858,6 @@
 	\section{High-Speed Serial}
 		
 		\label{sec:high-speed-serial}
-		
-		% Always on, power hungry. Better to have few of these running fast rather
-		% than many running slow? Where are these used. What do they replace.
 		
 		High-speed serial is the general name for a technology which allows
 		high-bandwidth links to be constructed using only a few electrical wires.
