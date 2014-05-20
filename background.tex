@@ -67,6 +67,23 @@
 			a spike and its charge is reset. This process is illustrated in figure
 			\ref{fig:snn-example}
 		
+		
+		\subsection{Learning}
+			
+			One of the least understood areas of brain function is the mechanism by
+			which learning occurs in the brain. Learning models in spiking neural
+			networks largely revolve around adjusting the `weights' associated with
+			connections between neurons based on the relative timing \cite{pfister06}
+			or rate \cite{bienenstock82} of spike arrivals at a neuron. These weights
+			control the amount of current that flows into a neuron when a spike
+			arrives and thus the impact it may have on the neuron's spiking behaviour.
+			Some learning rules can also form entirely new connections between
+			previously disconnected neurons, essentially assigning a weight non-zero
+			to the connection. As with the neuron models used, there are many
+			learning rules in use, each with many variations.
+			
+			% Weights can be changed from 0 meaning new connections
+		
 		\subsection{Computational Challenges}
 			
 			Simulating ANNs, and in particular SNNs, presents a number of
@@ -74,26 +91,34 @@
 			
 			The first issue is that real, biological neural networks can contain
 			billions of neurons. An adult human, for example, has around 85 billion
-			neurons \cite{herculano09}. As a result, the size of biological-scale
-			networks can be extremely large requiring vast amounts of conventional
-			computational resource to model. Conventionally this is achieved using
-			large, parallel computers.
+			neurons \cite{herculano09}. As a result, biological-scale networks can
+			require vast amounts of conventional computational resource to model,
+			especially when sophisticated neuron and learning models are used.
+			Conventionally this is achieved by spreading the network across large,
+			parallel computers.
 			
-			The second issue is that each neuron is typically connected to thousands
-			of others. As a result of this, huge amounts of one-to-many communication
-			must take place between the processing nodes simulating the neurons.  By
-			contrast, conventional electronic circuits, and consequently conventional
-			computing systems, tend to feature one-to-one and one-to-few connections
-			as the power needed to send a signal to many places at once can be large.
+			The second issue is that each neuron may typically be connected to
+			thousands of others. In distributed systems, this results in spikes being
+			transmitted between processing elements in the system. Electronic
+			circuits, and consequently conventional computing systems, tend to support
+			efficient one-to-one and one-to-few connections. Unfortunately, since a
+			single spike may be forwarded to thousands of destinations, an efficient
+			means of multicasting these messages is required for efficient
+			communication.
 			
-			Luckily most communication occurring in the brain is highly local which
-			means that spikes do not usually need to be transmitted to neurons far
-			away. Neurons also tend to fire at a relatively slow rate compared to
-			electronic components with firing rates being measured in terms of hertz
-			while modern electronics operates at multiple gigahertz. As a result
-			time-division multiplexing can be used in order to use a single processing
-			node or communication channel for many different neurons and spikes at
-			once respectively.
+			Luckily, much of the communication occurring in the brain is highly local
+			which means that spikes do not usually need to be transmitted to many
+			neurons physically far away. This means that with sensible allocation of
+			neuron models to compute nodes spikes generally are not required to be
+			transmitted great distances through the simulator's interconnection
+			network.
+			
+			Additionally, neurons operate on comparatively long time scales, producing
+			spikes at around 10 Hz while modern digital computers operate at multiple
+			gigahertz. This means that both compute and network resource can
+			potentially be time-multiplexed. This means that biological networks
+			containing trillions of links between billions of neurons may not require
+			a similar number of digital links or processing elements.
 	
 	
 	\section{Super-Computers}
