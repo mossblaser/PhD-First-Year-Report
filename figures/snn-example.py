@@ -42,7 +42,7 @@ for time, spike in enumerate(spikes):
 
 ################################################################################
 
-def chart(d, y_label, x_label = "Time", threshold = None):
+def chart(d, y_label, x_label = "Time", threshold = None, spikes = True):
 	"""
 	Generate the tikz for a chart.
 	"""
@@ -67,9 +67,14 @@ def chart(d, y_label, x_label = "Time", threshold = None):
 	print r"\node [left=of y-axis] {%s};"%y_label
 	
 	# Data
-	print r"\draw %s;"%(
-		" -- ".join(t(time,v) for (time,v) in enumerate(d))
-	)
+	if spikes:
+		for time, v in enumerate(d):
+			if v > 0.0:
+				print r"\draw %s -- %s;"%(t(time,0), t(time,v))
+	else:
+		print r"\draw %s;"%(
+			" -- ".join(t(time,v) for (time,v) in enumerate(d))
+		)
 	
 	if threshold is not None:
 		print r"\draw [help lines] %s -- %s node [right] {Threshold};"%(
@@ -90,7 +95,7 @@ print r"\end{scope}"
 
 # Draw the neuron charge
 print r"\begin{scope}[xscale=%f,yshift=-2cm,yscale=%f]"%(WIDTH,HEIGHT)
-chart(charges, "Neuron Charge", threshold = THRESHOLD)
+chart(charges, "Neuron Charge", threshold = THRESHOLD, spikes = False)
 print r"\end{scope}"
 
 # Draw the outgoing spikes

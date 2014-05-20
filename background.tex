@@ -44,25 +44,28 @@
 			defined by the functions computed by each neuron and the network's
 			connectivity.
 			
-			The third generation of ANNs extends the idea further by realising that
-			the firing rate is not the only significant factor but the timing of the
-			arrival of spikes is too \cite{maass01}. Typically these Spiking Neural
-			Networks (SNNs) work on the principle related to the `leaky integrate and
-			fire' model. Here each spike either positively or negatively contributes
-			to the amount of `charge' stored in the neuron (that is, the charge is
-			integrated over time). Once the charge reaches a certain threshold, the
-			neuron `fires' causing a spike to be transmitted and the charge in the
-			neuron to return to zero. Charge in the neuron also constantly `leaks'
-			away such that if the neuron doesn't receive any spikes its charge will
-			eventually return to 0. This process is illustrated in figure
-			\ref{fig:snn-example}
-			
 			\begin{figure}
 				\center
 				\input{|"python2 figures/snn-example.py"}
-				\caption{Simple leaky-intergrate-and-fire neuron example.}
+				\caption{Simple leaky-integrate-and-fire neuron example.}
 				\label{fig:snn-example}
 			\end{figure}
+			
+			The third generation of ANNs extends the idea further by realising that
+			the firing rate is not the only significant factor but that the timing of
+			the arrival of spikes is significant too \cite{maass01}. In addition, many
+			of these models aim to reproduce observed physiological behaviours of
+			individual neurons, rather than simply recreate higher-level behaviours of
+			populations of neurons. The level of biological detail of such models
+			varies greatly but all tend to build on the `leaky integrate and fire'
+			model.
+			
+			Spikes arriving at a neuron cause ion channels to open temporarily
+			allowing a flow of current in or out of the neuron. The neuron integrates
+			the current over time, accumulating charge which gradually leaks away over
+			time. If the charge in the neuron reaches a certain threshold, it produces
+			a spike and its charge is reset. This process is illustrated in figure
+			\ref{fig:snn-example}
 		
 		\subsection{Computational Challenges}
 			
