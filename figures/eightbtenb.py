@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 five_six_code = {
 	0b00000: ("D.00",   (0b111001,0b000110)),

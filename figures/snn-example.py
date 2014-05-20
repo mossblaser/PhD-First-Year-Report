@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 """
 Generates a tikzpicture containing three plots showing the incoming spikes to a
